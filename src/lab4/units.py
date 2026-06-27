@@ -6,6 +6,26 @@ import re
 
 NUMERIC_RE = re.compile(r"^[+-]?\d+(?:\.\d+)?(?:e[+-]?\d+)?$", re.IGNORECASE)
 
+TARGET_UNIT_PATTERNS = [
+    re.compile(r"（单位[:：]\s*([^）]+)）"),
+    re.compile(r"\(单位[:：]\s*([^)]+)\)"),
+    re.compile(r"单位为\s*([^。；，,\n]+)"),
+    re.compile(r"以\s*([^，。；\n]+?)\s*为单位"),
+    re.compile(r"为\s*X\s*[*x]\s*(10\s*\^\s*[-+]?\d+\s*[^，。；\n]*)", re.IGNORECASE),
+]
+
+
+def infer_target_unit(question_text: str, explicit_unit: str | None = None) -> str | None:
+    """Return an explicitly stated target unit/form from metadata or the question text."""
+
+    if explicit_unit:
+        return explicit_unit.strip()
+    for pattern in TARGET_UNIT_PATTERNS:
+        match = pattern.search(question_text)
+        if match:
+            return match.group(1).strip()
+    return None
+
 
 def _unit_power_of_ten(unit: str | None) -> int | None:
     if not unit:

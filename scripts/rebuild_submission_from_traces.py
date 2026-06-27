@@ -11,7 +11,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from lab4.data import load_questions, write_submission  # noqa: E402
 from lab4.extract import extract_answer  # noqa: E402
-from lab4.units import normalize_for_unit  # noqa: E402
+from lab4.units import infer_target_unit, normalize_for_unit  # noqa: E402
 
 
 def is_bad_verified_answer(answer: str) -> bool:
@@ -46,7 +46,7 @@ def main() -> None:
     args = parser.parse_args()
 
     questions = load_questions(args.data)
-    units = {question.id: question.unit for question in questions}
+    units = {question.id: infer_target_unit(question.question, question.unit) for question in questions}
     answers: dict[int, str] = (
         load_existing_submission(args.fill_from_submission) if args.fill_from_submission else {}
     )

@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from lab4.data import load_questions, write_submission  # noqa: E402
-from lab4.units import normalize_for_unit  # noqa: E402
+from lab4.units import infer_target_unit, normalize_for_unit  # noqa: E402
 
 
 def main() -> None:
@@ -20,7 +20,7 @@ def main() -> None:
     args = parser.parse_args()
 
     questions = load_questions(args.data)
-    units = {question.id: question.unit for question in questions}
+    units = {question.id: infer_target_unit(question.question, question.unit) for question in questions}
     with Path(args.submission).open("r", encoding="utf-8", newline="") as f:
         answers = {
             int(row["id"]): normalize_for_unit(row["answer"], units.get(int(row["id"])))

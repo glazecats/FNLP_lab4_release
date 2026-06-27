@@ -5,10 +5,16 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from lab4.units import normalize_for_unit  # noqa: E402
+from lab4.units import infer_target_unit, normalize_for_unit  # noqa: E402
 
 
 class UnitNormalizationTest(unittest.TestCase):
+    def test_infer_target_unit_from_question_text(self):
+        self.assertEqual(infer_target_unit("求速度。（单位：10 ^ 4 m/s）"), "10 ^ 4 m/s")
+        self.assertEqual(infer_target_unit("事件视界半径为 X * 10^3 m，那么 X 是多少？"), "10^3 m")
+        self.assertEqual(infer_target_unit("计算周期。请以地球日为单位给出答案。"), "地球日")
+        self.assertEqual(infer_target_unit("任意题干", "$10^{14} \\mathrm{Hz}$"), "$10^{14} \\mathrm{Hz}$")
+
     def test_positive_power_unit(self):
         self.assertEqual(normalize_for_unit("4.74e14", "$10^{14} \\mathrm{Hz}$"), "4.74")
         self.assertEqual(normalize_for_unit("4.74", "$10^{14} \\mathrm{Hz}$"), "4.74")

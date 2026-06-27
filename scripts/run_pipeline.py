@@ -18,7 +18,7 @@ from lab4.llm import ChatClient, LLMConfig  # noqa: E402
 from lab4.prompts import build_user_prompt, build_verifier_prompt, get_system_prompt, VERIFIER_SYSTEM_PROMPT  # noqa: E402
 from lab4.query import expand_query  # noqa: E402
 from lab4.retrieval import TextbookIndex, load_or_build_index  # noqa: E402
-from lab4.units import normalize_for_unit  # noqa: E402
+from lab4.units import infer_target_unit, normalize_for_unit  # noqa: E402
 
 
 MIN_RAG_SCORE = 20.0
@@ -143,7 +143,7 @@ def solve_one(
             )
             answer = verified_answer
         if normalize_units:
-            answer = normalize_for_unit(answer, question.unit)
+            answer = normalize_for_unit(answer, infer_target_unit(question.question, question.unit))
             trace["answer"] = answer
         traces.append(trace)
         answers.append(answer)
