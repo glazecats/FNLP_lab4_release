@@ -279,7 +279,12 @@ def main() -> None:
     parser.add_argument("--max-tokens", type=int, default=4096)
     parser.add_argument("--top-k", type=int, default=4)
     parser.add_argument("--prompt-style", choices=["baseline"], default="baseline")
-    parser.add_argument("--normalize-units", action="store_true", help="Post-process obvious 10^n/prefix unit scaling mistakes")
+    parser.add_argument(
+        "--normalize-units",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Post-process obvious 10^n/prefix unit scaling mistakes",
+    )
     parser.add_argument("--limit", type=int, default=0)
     parser.add_argument("--ids", default="", help="Comma-separated ids to run, for example: 13,161,192")
     parser.add_argument("--fill-from-submission", default="", help="Existing submission used to fill ids that are not rerun")
