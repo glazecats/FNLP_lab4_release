@@ -16,7 +16,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--data", default="student_zh.json")
     parser.add_argument("--submission-out", default="outputs/submission.csv")
     parser.add_argument("--trace-out", default="outputs/traces.jsonl")
-    parser.add_argument("--top-k", type=int, default=4)
+    parser.add_argument("--top-k", type=int, default=6)
     parser.add_argument("--workers", type=int, default=1)
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--max-tokens", type=int, default=4096)
@@ -52,4 +52,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
