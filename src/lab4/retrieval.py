@@ -10,56 +10,7 @@ from pathlib import Path
 from .data import Question
 
 
-TOKEN_RE = re.compile(r"[A-Za-z][A-Za-z0-9_+\-]*|\d+(?:\.\d+)?")
-
-
-CHINESE_HINTS: dict[str, str] = {
-    "黑洞": "black hole event horizon Schwarzschild radius gravitation",
-    "事件视界": "event horizon Schwarzschild radius",
-    "引力": "gravity gravitation gravitational force potential",
-    "轨道": "orbit orbital angular momentum",
-    "开普勒": "Kepler law orbit period",
-    "波": "wave wavelength frequency speed interference diffraction",
-    "光": "light optics photon wavelength frequency",
-    "射线": "x ray diffraction Bragg wavelength crystal",
-    "岩盐": "rock salt NaCl sodium chloride crystal spacing Bragg diffraction nearest neighbor equilibrium separation",
-    "食盐": "rock salt NaCl sodium chloride crystal spacing Bragg diffraction nearest neighbor equilibrium separation",
-    "衍射": "diffraction interference grating Bragg",
-    "干涉": "interference diffraction phase",
-    "电": "electric charge current voltage field potential capacitance",
-    "磁": "magnetic field flux induction",
-    "热": "thermodynamics heat temperature entropy enthalpy",
-    "温度": "temperature Kelvin thermal",
-    "压强": "pressure gas ideal",
-    "量子": "quantum photon electron energy level wavefunction",
-    "原子": "atomic atom electron orbital spectrum",
-    "分子": "molecule molecular vibration rotation spectroscopy",
-    "半导体": "semiconductor band gap carrier Fermi",
-    "相对论": "relativity Lorentz energy momentum",
-    "动量": "momentum impulse collision",
-    "能量": "energy work kinetic potential",
-    "概率": "probability distribution statistical",
-    "熵": "entropy thermodynamics statistical",
-    "焓": "enthalpy heat reaction",
-    "自由能": "Gibbs Helmholtz free energy",
-    "平衡": "equilibrium constant chemical potential",
-    "反应速率": "reaction rate kinetics Arrhenius",
-    "活化能": "activation energy Arrhenius",
-    "电池": "cell electrode Nernst electrochemistry",
-    "酸": "acid base pH equilibrium",
-    "碱": "acid base pH equilibrium",
-    "积分": "integral distribution probability average",
-    "截面": "cross section probability number density target thickness absorption capture scattering",
-    "俘获": "capture absorption cross section probability number density target thickness",
-    "金箔": "gold foil Rutherford alpha scattering nucleus impact parameter fraction target thickness",
-    "偏转": "deflection scattering angle impact parameter Rutherford",
-    "alpha": "alpha particle Rutherford scattering gold foil nucleus",
-    "阿尔法": "alpha particle Rutherford scattering gold foil nucleus",
-    "频率": "frequency wavelength angular frequency",
-    "波长": "wavelength frequency photon",
-    "折射": "refraction Snell lens optics",
-    "透镜": "lens focal length optics",
-}
+TOKEN_RE = re.compile(r"[A-Za-z][A-Za-z0-9_+\-]*|\d+(?:\.\d+)?|[\u4e00-\u9fff]")
 
 
 @dataclass(frozen=True)
@@ -198,11 +149,7 @@ def _query_tokens(question: Question) -> Counter[str]:
         question.unit or "",
         question.question or "",
     ]
-    hints = []
-    for zh, en in CHINESE_HINTS.items():
-        if zh in question.question:
-            hints.append(en)
-    raw = " ".join(parts + hints)
+    raw = " ".join(parts)
     tokens = Counter(_tokenize(raw))
     for token in list(tokens):
         if token.isdigit() and len(token) < 3:
