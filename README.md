@@ -18,6 +18,7 @@
 
 ```powershell
 $env:DASHSCOPE_API_KEY="sk-ws-H.RPYRERE.m79C.MEQCIH6iUjF69ExfBeCmhmrQO0SlEw3p4UBbgHUlWvwrRSlOAiBpQzEl6WAN-zomno3ZQrHvx0ePfaa9EUMO5eYUg-fqWA"
+$env:DASHSCOPE_API_KEY="sk-ws-H.RYPLLIH.RB9q.MEUCIGYmcJEayhmS9cBDpX8D_tawM-z8i5UQsj08seJPI_hYAiEAtmD85C4SzcMxng8SRhb_n3qVj5zHXPMZAKkcD7RxB1I"
 $env:LLM_MODEL="qwen3-8b"
 ```
 
