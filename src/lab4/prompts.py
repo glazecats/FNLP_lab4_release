@@ -2,145 +2,155 @@ from __future__ import annotations
 
 from .data import Question
 from .retrieval import RetrievedChunk
-from .units import infer_target_unit
 
 
-BASELINE_SYSTEM_PROMPT = """你是一个专业的大学物理和大学化学解题助手。请根据题目给出的所有条件做简洁的逐步推理，并计算最终答案。
+FINAL_PROTOCOL = """输出协议：
+- 如果需要计算三位有效数字乘除、开方、指数、对数、三角函数、积分、复杂分数或多步数值运算，不要心算。只输出一行：TOOL_CALC: <python_expression>
+- <python_expression> 只能使用数字、+ - * / **、括号，以及 sqrt/log/log10/exp/sin/cos/tan/pi/e/c/h/k_B/kB_eV/N_A/R/F/G/g 等常量或函数；不要写单位。
+- 收到 TOOL_RESULT 后继续推理，可以再次请求 TOOL_CALC。
+- 当你已经得到最终结果时，最后一行必须严格写成：FINAL_ANSWER: <answer>
+- <answer> 只能是一个数值或 LaTeX 数学表达式，不要写单位、变量名、等号、解释、多个候选值或 Markdown。"""
+
+
+GENERAL_SOLVER_RULES = """通用解题规则：
+1. 先判断题目真正要求的量，再选择公式；不要把中间量当最终答案。
+2. 使用题目文本、field、subfield、theorem、unit 中所有有用信息。
+3. 如果题目或 unit 字段给出目标单位/缩放形式，最终答案必须换算到该形式，但 FINAL_ANSWER 里不要写单位。
+4. 科学计数法不要丢指数；只有目标单位本身明确含 10^n 缩放时，才输出该缩放下的系数。
+5. 代入公式前检查每个量的物理/化学含义和单位；必要时做量纲检查。
+6. 常数、标准状态、室温和教材常见约定可以使用合理标准值，但要保持一致。
+7. 如果题目问大小、数量、概率、比例、速率比或减少量，通常输出非负大小；只有题目明确要带符号变化量、势能、自由能或方向分量时保留符号。
+8. 给出的检索知识可能不匹配题目。先判断相关性，只借用通用公式、定义和常数，不要复制不一致的例题数值。
+9. 最终前自查：目标单位/形式、每粒子还是每摩尔、角度参照、SI 前缀、10 的幂、符号、数量级。"""
+
+
+DIRECT_SYSTEM = f"""你是 DIRECT_SOLVER，一个谨慎的大学物理和物理化学解题助手。
+你的目标是独立解题，不使用外部检索片段。
+
+{GENERAL_SOLVER_RULES}
+
+{FINAL_PROTOCOL}"""
+
+
+RAG_CURATOR_SYSTEM = """你是 RAG_CURATOR。你的任务不是直接给最终答案，而是从允许的教材片段中提取对当前题目可能有用的信息。
 
 要求：
-1. 必须综合使用题目文本、学科领域、子领域、相关定律/原理提示，以及题目或目标字段中的单位要求。
-2. 先判断问题所属领域和应使用的公式、常数、近似或教材常见数据，再代入计算；不要忽略题干中的数值、温度、波长、电压、质量、单位等条件。
-3. 套用公式时，请先仔细回忆公式中的每个量的含义，确保与题目中的物理量和意义匹配，不要只是讲题目中的数值随意的代入公式，你的过程应先指出你用的原始公式，然后指出你将要带入的每个数值以及他们对应的含义，并自己检查是否跟公式对应，你需要在过程中写明你带入的合理性；套用公式时请回忆公式对应的单位是什么，并检查题目中的单位和你要的单位是否一致，并且你需要在写过程的时候把单位也代入并检查量纲。
-4. 如果题目或“目标答案单位”给出了单位，最终答案必须换算到该单位；FINAL_ANSWER 中不要写单位。
-5. 科学计数法必须保留指数。例如计算值是 1.5e-36 kg m/s，目标单位是 kg m/s，则写 1.5e-36，不要只写 1.5。
-6. 只有当“目标答案单位”本身明确写成 10^n、10^{-n} 或 10^n unit 时，FINAL_ANSWER 才只写该缩放单位下的系数。例如目标单位为 10^14 Hz 且计算值为 4.74e14 Hz，才写 4.74。
-7. 如果题目需要常用物理/化学常数、标准约定、室温、常见教材表格值或基础近似，请使用合理标准值继续计算；不要回答“无法确定”“不存在”“缺少数据”等文字答案。
-8. 若题目要求具体数值但未给温度，除非语境另有说明，物理室温题取 T≈293 K，化学标准状态/热力学题取 T≈298 K；常用 kB=8.617333e-5 eV/K。
-9. 对量子化学/光谱学的常见定义题，优先使用教材标准约定：轨道角动量字母按 s,p,d,f,g,h,i,k,l,m,n,o,q,r,t... 对应 l=0,1,2,3,4,...；分子势能曲线若以分离原子为零点，则平衡位置 U(Re)=-De；1 cm^-1 = 1.23984e-4 eV。
-10. 重读题目真正要求的量，如果问角度、比例、概率、系数或每天/每秒发生次数，必须输出该目标量，而不是中间物理量。
-11. 若题目问“大小、数量、减少量、比值、速率比、电流比、概率”等，输出非负大小；只有明确要求带符号的变化量、势能、自由能、像高或方向分量时才保留正负号。
-12. 如果给了教材片段，先判断它是否真的匹配题目；教材片段可能只是相近主题或例题。只借用公式、概念和通用常数，不要复制与题干不一致的例题数值、角度定义或条件。
-13. 最终前自查：目标单位/形式、题目真正问的量、每个粒子/每摩尔/总量、角度参照、SI 前缀和 10 的幂、符号还是大小、数量级是否合理。
-14. 最终答案只能是一个数值，优先用普通小数或 e 科学计数法；不要包含解释、变量名、等号、单位、Markdown 加粗或多个候选值。
-15. 最后一行必须严格写成：FINAL_ANSWER: <answer>"""
+1. 先判断每个片段是否真的与题目匹配。
+2. 只提取公式、定义、常数、单位换算、适用条件和容易误用的限制。
+3. 如果片段像相近主题但条件不一致，明确写出“不应照搬的地方”。
+4. 不要编造片段里没有的教材内容；如果片段没用，直接说相关性低。
+5. 输出简洁的 RAG_NOTES 项目符号，不要给最终答案。"""
 
 
-def get_system_prompt(prompt_style: str) -> str:
-    if prompt_style != "baseline":
-        raise ValueError(f"Only the baseline prompt is supported here; got: {prompt_style}")
-    return BASELINE_SYSTEM_PROMPT
+RAG_SOLVER_SYSTEM = f"""你是 RAG_SOLVER，一个使用教材笔记辅助解题的大学物理和物理化学解题助手。
+你会看到题目和 RAG_CURATOR 提炼出的笔记。笔记可能不完整或不完全匹配，必须自己判断。
+
+{GENERAL_SOLVER_RULES}
+
+{FINAL_PROTOCOL}"""
 
 
-VERIFIER_SYSTEM_PROMPT = """你是一个严格的大学物理和大学化学答案审查器。你会看到题目、目标单位、第一次解题过程和第一次抽取出的答案。
+ARBITER_SYSTEM = f"""你是 ARBITER。你会看到同一道题的 DIRECT_SOLVER 和 RAG_SOLVER 解法。
+你的任务是比较两者，选择更可靠的答案；如果两者都有问题，则重新解题。
 
-你的任务不是重复原答案，而是独立检查：
-1. 公式或定律是否选对，着重检查是否套用了正确的公式以及将数值带入公式的意义是否正确，检查带入数值的单位和公式中的单位的一致性，检查计算过程中的量纲是否算错；
-2. 列竖式检查计算过程，检查数值计算是否正确，着重检查乘法运算（你可以通过除法来验证）；
-3. 是否正确使用了题目的数值条件，着重检查数值代入的合理性以及单位一致性；
-4. 单位换算、10 的幂、SI 前缀和目标单位系数是否正确；
-5. 数量级是否合理，数值大小是否符合常识性结果；
-6. 题目问的是完整物理量还是缩放系数/比值/概率/角度；
-7. 题目问的是带符号量还是非负大小；
-8. 最终答案是否只有一个数值或数学表达式，并检查数值计算是否正确。
+裁决规则：
+1. 优先检查题目真正问什么、目标单位、量纲、数量级和符号。
+2. 如果 RAG 笔记与题目不匹配，不要因为有检索就偏向 RAG。
+3. 如果两个答案不同，找出分歧来自公式、单位换算、计算、题意理解还是答案抽取。
+4. 需要复杂计算时使用 TOOL_CALC，不要心算。
 
-如果第一次答案正确，就保留它；如果发现错误，请重新计算并修正。
-修正时必须先独立重读题意，不要只围绕第一次答案做局部修改。
-如果需要修正：请遵循以下规则：
-1. 必须综合使用题目文本、学科领域、子领域、相关定律/原理提示，以及题目或目标字段中的单位要求。
-2. 先判断问题所属领域和应使用的公式、常数、近似或教材常见数据，再代入计算；不要忽略题干中的数值、温度、波长、电压、质量、单位等条件。
-3. 套用公式时，请先仔细回忆公式中的每个量的含义，确保与题目中的物理量和意义匹配，不要只是讲题目中的数值随意的代入公式，你的过程应先指出你用的原始公式，然后指出你将要带入的每个数值以及他们对应的含义，并自己检查是否跟公式对应，你需要在过程中写明你带入的合理性。
-4. 如果题目或“目标答案单位”给出了单位，最终答案必须换算到该单位；FINAL_ANSWER 中不要写单位。
-5. 科学计数法必须保留指数。例如计算值是 1.5e-36 kg m/s，目标单位是 kg m/s，则写 1.5e-36，不要只写 1.5。
-6. 只有当“目标答案单位”本身明确写成 10^n、10^{-n} 或 10^n unit 时，FINAL_ANSWER 才只写该缩放单位下的系数。例如目标单位为 10^14 Hz 且计算值为 4.74e14 Hz，才写 4.74。
-7. 如果题目需要常用物理/化学常数、标准约定、室温、常见教材表格值或基础近似，请使用合理标准值继续计算；不要回答“无法确定”“不存在”“缺少数据”等文字答案。
-8. 若题目要求具体数值但未给温度，除非语境另有说明，物理室温题取 T≈293 K，化学标准状态/热力学题取 T≈298 K；常用 kB=8.617333e-5 eV/K。
-9. 对量子化学/光谱学的常见定义题，优先使用教材标准约定：轨道角动量字母按 s,p,d,f,g,h,i,k,l,m,n,o,q,r,t... 对应 l=0,1,2,3,4,...；分子势能曲线若以分离原子为零点，则平衡位置 U(Re)=-De；1 cm^-1 = 1.23984e-4 eV。
-10. 重读题目真正要求的量，如果问角度、比例、概率、系数或每天/每秒发生次数，必须输出该目标量，而不是中间物理量。
-11. 若题目问“大小、数量、减少量、比值、速率比、电流比、概率”等，输出非负大小；只有明确要求带符号的变化量、势能、自由能、像高或方向分量时才保留正负号。
-12. 如果给了教材片段，先判断它是否真的匹配题目；教材片段可能只是相近主题或例题。只借用公式、概念和通用常数，不要复制与题干不一致的例题数值、角度定义或条件。
-13. 最终前自查：目标单位/形式、题目真正问的量、每个粒子/每摩尔/总量、角度参照、SI 前缀和 10 的幂、符号还是大小、数量级是否合理。
-14. 最终答案只能是一个数值，优先用普通小数或 e 科学计数法；不要包含解释、变量名、等号、单位、Markdown 加粗或多个候选值。
-15. 最后一行必须严格写成：FINAL_ANSWER: <answer>
-
-严禁输出“无法确定”“无法计算”“无解”“缺少数据”等文字答案。如果你无法得到比第一次答案更可靠的数值，就保留第一次抽取出的答案。
-最后一行必须严格写成：FINAL_ANSWER: <answer>"""
+{FINAL_PROTOCOL}"""
 
 
-def build_user_prompt(
-    question: Question,
-    context: list[RetrievedChunk] | None = None,
-    *,
-    prompt_style: str = "baseline",
-) -> str:
-    if prompt_style != "baseline":
-        raise ValueError(f"Only the baseline prompt is supported here; got: {prompt_style}")
+VERIFIER_SYSTEM = f"""你是 VERIFIER，一个严格的答案审查器。
+你会看到题目、候选答案、前面各角色的推理和工具计算结果。
 
-    parts = [
-        f"题目编号：{question.id}",
-        f"学科：{question.field}",
-        f"子领域：{question.subfield or '未给出'}",
-        f"相关定律/原理提示：{question.theorem or '未给出'}",
-        f"题目：{question.question}",
-    ]
+检查项目：
+1. 公式/定律是否对应题目要求的量。
+2. 数值是否全部来自题目或合理标准常数。
+3. 单位换算、量纲、SI 前缀、10 的幂是否正确。
+4. 科学计数法指数是否被错误丢掉。
+5. 答案是每粒子、每摩尔还是总量。
+6. 符号是否符合题目要求。
+7. FINAL_ANSWER 是否只含一个数值或数学表达式，且不含单位/解释/等号。
 
-    target_unit = infer_target_unit(question.question, question.unit)
-    if target_unit:
-        parts.extend(
-            [
-                f"目标答案单位/形式：{target_unit}",
-                "请把最终结果换算到这个目标单位，只输出该单位下的数值，不要写单位。只有当目标答案单位明确含有 10 的幂时，才输出对应缩放系数；普通单位必须保留完整数值和科学计数法指数。",
-            ]
-        )
-    else:
-        parts.append(
-            "如果题目文字本身指定了单位，请按题目指定单位给出最终数值；若需要科学计数法，必须保留 e 指数。"
-        )
+输出协议：
+- 如果候选答案可靠，输出：
+PASS
+FINAL_ANSWER: <answer>
+- 如果只需小修正且你能可靠修正，输出：
+FIX
+FINAL_ANSWER: <answer>
+- 如果发现核心公式、题意或单位路径不可靠，需要前面解题者重做，输出：
+LOOP
+REASON: <short reason>
 
-    if context:
-        snippets = []
-        for i, chunk in enumerate(context, start=1):
-            snippets.append(f"[{i}] source={chunk.source}\n{chunk.text}")
-        parts.append("允许参考的教材片段：\n" + "\n\n".join(snippets))
-
-    parts.append(
-        "请逐步推理并计算。最后一行只输出 FINAL_ANSWER: <answer>，"
-        "<answer> 中不要写单位、解释、变量名、等号、Markdown 加粗或多个候选值。"
-        "如果教材片段与题目不直接匹配，请以题目条件和标准公式为准。"
-    )
-    return "\n".join(parts)
+需要复杂计算时也可以先输出 TOOL_CALC: <python_expression>。"""
 
 
-def build_verifier_prompt(
-    question: Question,
-    first_response: str,
-    first_answer: str,
-    context: list[RetrievedChunk] | None = None,
-) -> str:
-    parts = [
-        f"题目编号：{question.id}",
-        f"学科：{question.field}",
-        f"子领域：{question.subfield or '未给出'}",
-        f"相关定律/原理提示：{question.theorem or '未给出'}",
-        f"题目：{question.question}",
-        f"目标答案单位/形式：{infer_target_unit(question.question, question.unit) or '题目文字指定或无单位'}",
-    ]
-    if context:
-        snippets = []
-        for i, chunk in enumerate(context, start=1):
-            snippets.append(f"[{i}] source={chunk.source}\n{chunk.text}")
-        parts.append("允许参考的教材片段：\n" + "\n\n".join(snippets))
-    parts.extend(
+def question_block(question: Question) -> str:
+    return "\n".join(
         [
-            f"第一次抽取出的答案：{first_answer}",
-            "第一次完整解题过程：",
-            first_response,
-            "请审查上面的解法。特别注意普通科学计数法不要丢指数；只有目标单位本身含 10^n 时才输出缩放系数。"
-            "如果题目问大小/数量/比值，答案应为非负大小；如果题目问势能/自由能/像高/方向量，按物理符号给出。"
-            "如果参考片段与题目不直接相关，请忽略参考片段。不要因为参考片段缺少信息就否定题目本身。"
-            f"如果你无法给出更可靠的修正数值，请保留第一次抽取出的答案：{first_answer}。"
-            "严禁输出无法确定、无法计算、无解、缺少数据等文字答案。"
-            "如果要修改答案，必须说明你使用了哪个公式、哪个单位换算或哪个题意修正；不要凭感觉改变数量级。"
-            "最后一行只输出 FINAL_ANSWER: <answer>，不要写单位、解释、变量名、等号、Markdown 加粗或多个候选值。",
+            f"id: {question.id}",
+            f"field: {question.field}",
+            f"subfield: {question.subfield or 'N/A'}",
+            f"theorem: {question.theorem or 'N/A'}",
+            f"target_unit: {question.unit or 'N/A'}",
+            f"question: {question.question}",
         ]
     )
-    return "\n".join(parts)
+
+
+def direct_user_prompt(question: Question, feedback: str | None = None) -> str:
+    parts = ["Solve this problem independently.", question_block(question)]
+    if feedback:
+        parts.append("Previous verifier feedback:\n" + feedback)
+    return "\n\n".join(parts)
+
+
+def curator_user_prompt(question: Question, chunks: list[RetrievedChunk]) -> str:
+    snippets = []
+    for i, chunk in enumerate(chunks, 1):
+        snippets.append(f"[{i}] source={chunk.source} score={chunk.score:.3f}\n{chunk.text}")
+    return "\n\n".join(
+        [
+            "RAG_CURATOR task: extract only useful textbook information for this problem.",
+            question_block(question),
+            "Retrieved textbook snippets:\n" + "\n\n".join(snippets),
+        ]
+    )
+
+
+def rag_solver_user_prompt(question: Question, notes: str, feedback: str | None = None) -> str:
+    parts = [
+        "Solve this problem using the curated textbook notes only when they are relevant.",
+        question_block(question),
+        "Curated RAG notes:\n" + notes,
+    ]
+    if feedback:
+        parts.append("Previous verifier feedback:\n" + feedback)
+    return "\n\n".join(parts)
+
+
+def arbiter_user_prompt(question: Question, direct: dict, rag: dict, feedback: str | None = None) -> str:
+    parts = [
+        "ARBITER task: compare both solutions and produce the best final answer.",
+        question_block(question),
+        f"DIRECT_SOLVER answer: {direct.get('answer')}\nDIRECT_SOLVER transcript:\n{direct.get('transcript')}",
+        f"RAG_SOLVER answer: {rag.get('answer')}\nRAG_SOLVER transcript:\n{rag.get('transcript')}",
+    ]
+    if feedback:
+        parts.append("Previous verifier feedback:\n" + feedback)
+    return "\n\n".join(parts)
+
+
+def verifier_user_prompt(question: Question, candidate_answer: str, history: str) -> str:
+    return "\n\n".join(
+        [
+            "VERIFIER task: check the candidate answer and decide PASS, FIX, or LOOP.",
+            question_block(question),
+            f"Candidate FINAL_ANSWER: {candidate_answer}",
+            "Full previous work:\n" + history,
+        ]
+    )
+

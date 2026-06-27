@@ -1,0 +1,355 @@
+from __future__ import annotations
+
+import csv
+import json
+import traceback
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from dataclasses import asdict
+from pathlib import Path
+from typing import Any
+
+from .calculator import CalculatorError, evaluate_expression
+from .data import Question, load_questions, select_questions
+from .extract import equivalent_answer_text, extract_final_answer, extract_tool_expression, looks_invalid_answer
+from .llm import LLMClient, Message
+from .prompts import (
+    ARBITER_SYSTEM,
+    DIRECT_SYSTEM,
+    RAG_CURATOR_SYSTEM,
+    RAG_SOLVER_SYSTEM,
+    VERIFIER_SYSTEM,
+    arbiter_user_prompt,
+    curator_user_prompt,
+    direct_user_prompt,
+    rag_solver_user_prompt,
+    verifier_user_prompt,
+)
+from .retrieval import RetrievedChunk, TextbookIndex
+
+
+class Solver:
+    def __init__(
+        self,
+        *,
+        client: LLMClient,
+        index: TextbookIndex | None,
+        top_k: int,
+        temperature: float,
+        max_tokens: int,
+        enable_thinking: bool,
+        max_tool_rounds: int = 3,
+        max_verify_loops: int = 1,
+    ) -> None:
+        self.client = client
+        self.index = index
+        self.top_k = top_k
+        self.temperature = temperature
+        self.max_tokens = max_tokens
+        self.enable_thinking = enable_thinking
+        self.max_tool_rounds = max_tool_rounds
+        self.max_verify_loops = max_verify_loops
+
+    def solve(self, question: Question, method: str) -> dict[str, Any]:
+        if method == "baseline":
+            direct = self._direct(question)
+            return self._trace(question, method, direct.get("answer"), direct=direct)
+        if method == "rag":
+            rag = self._rag(question)
+            return self._trace(question, method, rag.get("answer"), rag=rag, retrieval=rag.get("retrieval", []))
+        if method == "verify":
+            direct = self._direct(question)
+            verified = self._verify(question, direct.get("answer") or "", self._history(direct))
+            answer = verified.get("answer") or direct.get("answer")
+            return self._trace(question, method, answer, direct=direct, verifier=verified)
+        if method in {"dual", "rag-verify", "full"}:
+            return self._full(question, method)
+        raise ValueError(f"unknown method: {method}")
+
+    def _full(self, question: Question, method: str) -> dict[str, Any]:
+        feedback: str | None = None
+        attempts = []
+        for loop_index in range(self.max_verify_loops + 1):
+            direct = self._direct(question, feedback=feedback)
+            rag = self._rag(question, feedback=feedback)
+            if equivalent_answer_text(direct.get("answer"), rag.get("answer")):
+                final = {
+                    "role": "agreement",
+                    "answer": direct.get("answer"),
+                    "transcript": "DIRECT_SOLVER and RAG_SOLVER produced equivalent final answers.",
+                }
+            else:
+                final = self._arbiter(question, direct, rag, feedback=feedback)
+
+            history = "\n\n".join(
+                [
+                    "DIRECT_SOLVER:\n" + self._history(direct),
+                    "RAG_SOLVER:\n" + self._history(rag),
+                    "FINAL_CANDIDATE:\n" + self._history(final),
+                ]
+            )
+            verifier = self._verify(question, final.get("answer") or "", history)
+            attempts.append(
+                {
+                    "loop": loop_index,
+                    "direct": direct,
+                    "rag": rag,
+                    "final": final,
+                    "verifier": verifier,
+                }
+            )
+            decision = verifier.get("decision")
+            if decision in {"PASS", "FIX"}:
+                answer = verifier.get("answer") or final.get("answer")
+                return self._trace(
+                    question,
+                    method,
+                    answer,
+                    attempts=attempts,
+                    direct=direct,
+                    rag=rag,
+                    arbiter=final if final.get("role") != "agreement" else None,
+                    verifier=verifier,
+                    retrieval=rag.get("retrieval", []),
+                )
+            feedback = verifier.get("reason") or "Verifier requested a full redo."
+        last = attempts[-1]
+        answer = last["final"].get("answer") or last["direct"].get("answer") or last["rag"].get("answer")
+        return self._trace(
+            question,
+            method,
+            answer,
+            attempts=attempts,
+            direct=last["direct"],
+            rag=last["rag"],
+            arbiter=last["final"],
+            verifier=last["verifier"],
+            retrieval=last["rag"].get("retrieval", []),
+        )
+
+    def _direct(self, question: Question, feedback: str | None = None) -> dict[str, Any]:
+        messages = [
+            {"role": "system", "content": DIRECT_SYSTEM},
+            {"role": "user", "content": direct_user_prompt(question, feedback)},
+        ]
+        return self._run_role("direct", messages)
+
+    def _rag(self, question: Question, feedback: str | None = None) -> dict[str, Any]:
+        chunks = self.index.search(question, self.top_k) if self.index else []
+        curator_messages = [
+            {"role": "system", "content": RAG_CURATOR_SYSTEM},
+            {"role": "user", "content": curator_user_prompt(question, chunks)},
+        ]
+        notes = self.client.chat(
+            curator_messages,
+            temperature=0.0,
+            max_tokens=min(self.max_tokens, 2048),
+            enable_thinking=self.enable_thinking,
+        )
+        solver_messages = [
+            {"role": "system", "content": RAG_SOLVER_SYSTEM},
+            {"role": "user", "content": rag_solver_user_prompt(question, notes, feedback)},
+        ]
+        result = self._run_role("rag", solver_messages)
+        result["curator_notes"] = notes
+        result["retrieval"] = [asdict(chunk) for chunk in chunks]
+        return result
+
+    def _arbiter(
+        self,
+        question: Question,
+        direct: dict[str, Any],
+        rag: dict[str, Any],
+        feedback: str | None = None,
+    ) -> dict[str, Any]:
+        messages = [
+            {"role": "system", "content": ARBITER_SYSTEM},
+            {"role": "user", "content": arbiter_user_prompt(question, direct, rag, feedback)},
+        ]
+        return self._run_role("arbiter", messages)
+
+    def _verify(self, question: Question, candidate_answer: str, history: str) -> dict[str, Any]:
+        messages = [
+            {"role": "system", "content": VERIFIER_SYSTEM},
+            {"role": "user", "content": verifier_user_prompt(question, candidate_answer, history)},
+        ]
+        result = self._run_role("verifier", messages)
+        response = result.get("transcript", "")
+        decision = "PASS"
+        for line in response.splitlines():
+            marker = line.strip().upper()
+            if marker in {"PASS", "FIX", "LOOP"}:
+                decision = marker
+                break
+        result["decision"] = decision
+        if decision == "LOOP":
+            result["reason"] = _extract_reason(response)
+        if decision in {"PASS", "FIX"} and not result.get("answer"):
+            result["answer"] = candidate_answer
+        return result
+
+    def _run_role(self, role: str, messages: list[Message]) -> dict[str, Any]:
+        transcript: list[dict[str, str]] = []
+        answer = None
+        for _ in range(self.max_tool_rounds + 1):
+            response = self.client.chat(
+                messages,
+                temperature=self.temperature,
+                max_tokens=self.max_tokens,
+                enable_thinking=self.enable_thinking,
+            )
+            transcript.append({"assistant": response})
+            messages.append({"role": "assistant", "content": response})
+
+            answer = extract_final_answer(response)
+            if answer:
+                break
+
+            expression = extract_tool_expression(response)
+            if not expression:
+                break
+            try:
+                calculation = evaluate_expression(expression)
+                tool_text = f"TOOL_RESULT: {calculation.expression} = {calculation.text}"
+            except CalculatorError as exc:
+                tool_text = f"TOOL_ERROR: {expression} failed with {exc}. Rewrite a valid Python expression."
+            transcript.append({"tool": tool_text})
+            messages.append({"role": "user", "content": tool_text + "\nContinue from the tool result."})
+
+        return {
+            "role": role,
+            "answer": answer,
+            "invalid_reason": looks_invalid_answer(answer or ""),
+            "transcript": _format_transcript(transcript),
+            "messages": messages,
+        }
+
+    def _trace(self, question: Question, method: str, answer: str | None, **extra: Any) -> dict[str, Any]:
+        return {
+            "id": question.id,
+            "field": question.field,
+            "subfield": question.subfield,
+            "theorem": question.theorem,
+            "unit": question.unit,
+            "question": question.question,
+            "method": method,
+            "answer": answer or "",
+            "invalid_reason": looks_invalid_answer(answer or ""),
+            **extra,
+        }
+
+    @staticmethod
+    def _history(result: dict[str, Any]) -> str:
+        return f"answer: {result.get('answer')}\n{result.get('transcript', '')}"
+
+
+def solve_questions(
+    *,
+    method: str,
+    data_path: str | Path,
+    submission_out: str | Path,
+    trace_out: str | Path,
+    top_k: int = 4,
+    workers: int = 1,
+    temperature: float = 0.0,
+    max_tokens: int = 4096,
+    enable_thinking: bool = False,
+    ids: str | None = None,
+    limit: int | None = None,
+    resume_from_trace: bool = False,
+    max_verify_loops: int = 1,
+) -> None:
+    all_questions = load_questions(data_path)
+    selected = select_questions(all_questions, ids=ids, limit=limit)
+    done = _load_existing_traces(trace_out) if resume_from_trace else {}
+    to_run = [q for q in selected if q.id not in done]
+
+    needs_rag = method in {"rag", "dual", "rag-verify", "full"}
+    index = TextbookIndex.load_or_build() if needs_rag else None
+    client = LLMClient()
+    solver = Solver(
+        client=client,
+        index=index,
+        top_k=top_k,
+        temperature=temperature,
+        max_tokens=max_tokens,
+        enable_thinking=enable_thinking,
+        max_verify_loops=max_verify_loops,
+    )
+
+    Path(trace_out).parent.mkdir(parents=True, exist_ok=True)
+    mode = "a" if resume_from_trace and Path(trace_out).exists() else "w"
+    with Path(trace_out).open(mode, encoding="utf-8") as trace_file:
+        if workers <= 1:
+            for question in to_run:
+                trace = _safe_solve(solver, question, method)
+                trace_file.write(json.dumps(trace, ensure_ascii=False) + "\n")
+                trace_file.flush()
+                done[question.id] = trace
+        else:
+            with ThreadPoolExecutor(max_workers=workers) as executor:
+                futures = {executor.submit(_safe_solve, solver, question, method): question for question in to_run}
+                for future in as_completed(futures):
+                    trace = future.result()
+                    trace_file.write(json.dumps(trace, ensure_ascii=False) + "\n")
+                    trace_file.flush()
+                    done[trace["id"]] = trace
+
+    traces = [done.get(q.id) for q in selected]
+    write_submission(selected, traces, submission_out)
+
+
+def write_submission(questions: list[Question], traces: list[dict[str, Any] | None], path: str | Path) -> None:
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    with Path(path).open("w", encoding="utf-8", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["id", "answer"])
+        for question, trace in zip(questions, traces, strict=True):
+            answer = trace.get("answer", "") if trace else ""
+            writer.writerow([question.id, answer])
+
+
+def _safe_solve(solver: Solver, question: Question, method: str) -> dict[str, Any]:
+    try:
+        return solver.solve(question, method)
+    except Exception as exc:  # trace failures so resume can target them later.
+        return {
+            "id": question.id,
+            "field": question.field,
+            "question": question.question,
+            "method": method,
+            "answer": "",
+            "error": str(exc),
+            "traceback": traceback.format_exc(),
+        }
+
+
+def _load_existing_traces(path: str | Path) -> dict[int, dict[str, Any]]:
+    trace_path = Path(path)
+    if not trace_path.exists():
+        return {}
+    done: dict[int, dict[str, Any]] = {}
+    for line in trace_path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        item = json.loads(line)
+        if item.get("answer"):
+            done[int(item["id"])] = item
+    return done
+
+
+def _format_transcript(items: list[dict[str, str]]) -> str:
+    lines = []
+    for item in items:
+        if "assistant" in item:
+            lines.append("ASSISTANT:\n" + item["assistant"])
+        if "tool" in item:
+            lines.append(item["tool"])
+    return "\n\n".join(lines)
+
+
+def _extract_reason(response: str) -> str:
+    for line in response.splitlines():
+        if line.strip().upper().startswith("REASON"):
+            return line.split(":", 1)[-1].strip()
+    return response.strip()[:500]
+
