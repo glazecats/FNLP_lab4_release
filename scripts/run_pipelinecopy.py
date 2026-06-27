@@ -16,7 +16,7 @@ from lab4.data import Question, load_questions, write_submission  # noqa: E402
 from lab4.extract import extract_answer  # noqa: E402
 from lab4.calculator import extract_calc_expr, evaluate_expression, format_calculated_value, looks_calculable  # noqa: E402
 from lab4.llm import ChatClient, LLMConfig  # noqa: E402
-from lab4.prompts import build_user_prompt, build_verifier_prompt, get_system_prompt, VERIFIER_SYSTEM_PROMPT  # noqa: E402
+from lab4.promptscopy import build_user_prompt, build_verifier_prompt, get_system_prompt, VERIFIER_SYSTEM_PROMPT  # noqa: E402
 from lab4.query import expand_query  # noqa: E402
 from lab4.retrieval import TextbookIndex, load_or_build_index  # noqa: E402
 from lab4.units import normalize_for_unit  # noqa: E402
