@@ -14,7 +14,6 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from lab4.data import Question, load_questions, write_submission  # noqa: E402
 from lab4.extract import extract_answer  # noqa: E402
-from lab4.calculator import extract_calc_expr, evaluate_expression, format_calculated_value, looks_calculable  # noqa: E402
 from lab4.llm import ChatClient, LLMConfig  # noqa: E402
 from lab4.prompts import build_user_prompt, build_verifier_prompt, get_system_prompt, VERIFIER_SYSTEM_PROMPT  # noqa: E402
 from lab4.query import expand_query  # noqa: E402
@@ -81,7 +80,6 @@ def solve_one(
     top_k: int,
     prompt_style: str,
     normalize_units: bool,
-    calculator_mode: str,
 ) -> dict:
     uses_rag = method in {"rag", "rag-verify"}
     uses_verify = method in {"verify", "rag-verify"}
@@ -104,31 +102,6 @@ def solve_one(
 
     traces = []
     answers = []
-    def maybe_apply_calculator(response: str, answer: str, prefix: str = "") -> tuple[str, dict]:
-        if calculator_mode == "off":
-            return answer, {}
-        calc_expr = extract_calc_expr(response)
-        calc_source = "calc_expr"
-        if not calc_expr and looks_calculable(answer):
-            calc_expr = answer
-            calc_source = "answer"
-        if not calc_expr:
-            return answer, {}
-
-        fields: dict[str, str | bool] = {
-            f"{prefix}calc_expr": calc_expr,
-            f"{prefix}calc_source": calc_source,
-        }
-        try:
-            calc_answer = format_calculated_value(evaluate_expression(calc_expr))
-            fields[f"{prefix}calc_answer"] = calc_answer
-            if calculator_mode == "replace":
-                answer = calc_answer
-                fields[f"{prefix}calculator_replaced_answer"] = True
-        except Exception as exc:
-            fields[f"{prefix}calc_error"] = str(exc)
-        return answer, fields
-
     for sample_idx in range(samples):
         response = client.chat(
             messages,
@@ -137,9 +110,6 @@ def solve_one(
         )
         answer = extract_answer(response)
         trace = {"sample": sample_idx, "response": response, "answer": answer}
-        answer, calc_fields = maybe_apply_calculator(response, answer)
-        trace.update(calc_fields)
-        trace["answer"] = answer
         if uses_verify:
             verify_messages = [
                 {"role": "system", "content": VERIFIER_SYSTEM_PROMPT},
@@ -159,11 +129,6 @@ def solve_one(
                 max_tokens=max_tokens,
             )
             verified_answer = extract_answer(verified_response)
-            verified_answer, verified_calc_fields = maybe_apply_calculator(
-                verified_response,
-                verified_answer,
-                prefix="verified_",
-            )
             if is_bad_verified_answer(verified_answer):
                 verified_answer = answer
             if is_bad_verified_answer(verified_answer):
@@ -176,7 +141,6 @@ def solve_one(
                     "answer": verified_answer,
                 }
             )
-            trace.update(verified_calc_fields)
             answer = verified_answer
         if normalize_units:
             answer = normalize_for_unit(answer, question.unit)
@@ -211,12 +175,6 @@ def main() -> None:
     parser.add_argument("--top-k", type=int, default=4)
     parser.add_argument("--prompt-style", choices=["baseline"], default="baseline")
     parser.add_argument("--normalize-units", action="store_true", help="Post-process obvious 10^n/prefix unit scaling mistakes")
-    parser.add_argument(
-        "--calculator-mode",
-        choices=["off", "trace", "replace"],
-        default="off",
-        help="Evaluate CALC_EXPR or calculable final-answer expressions. trace records values; replace uses them as answers.",
-    )
     parser.add_argument("--limit", type=int, default=0)
     parser.add_argument("--ids", default="", help="Comma-separated ids to run, for example: 13,161,192")
     parser.add_argument("--fill-from-submission", default="", help="Existing submission used to fill ids that are not rerun")
@@ -292,7 +250,6 @@ def main() -> None:
             top_k=args.top_k,
             prompt_style=args.prompt_style,
             normalize_units=args.normalize_units,
-            calculator_mode=args.calculator_mode,
         )
 
     with trace_path.open(trace_mode, encoding="utf-8") as f:

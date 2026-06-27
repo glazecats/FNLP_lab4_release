@@ -1,0 +1,33 @@
+# Python cache and test artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments and local config
+.venv/
+venv/
+env/
+.env
+.env.*
+
+# Local editor and OS files
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Generated submissions and traces
+outputs/
+
+# Rebuildable retrieval cache
+cache/
+
+# Local logs and scratch files
+*.log
+*.tmp
+*.bak
