@@ -224,6 +224,7 @@ class Solver:
         }
 
     def _trace(self, question: Question, method: str, answer: str | None, **extra: Any) -> dict[str, Any]:
+        answer = _postprocess_answer(question, answer)
         return {
             "id": question.id,
             "field": question.field,
@@ -305,7 +306,7 @@ def write_submission(questions: list[Question], traces: list[dict[str, Any] | No
         writer.writerow(["id", "answer"])
         for question, trace in zip(questions, traces, strict=True):
             answer = trace.get("answer", "") if trace else ""
-            writer.writerow([question.id, answer])
+            writer.writerow([question.id, _postprocess_answer(question, answer) or ""])
 
 
 def _safe_solve(solver: Solver, question: Question, method: str) -> dict[str, Any]:
@@ -352,3 +353,81 @@ def _extract_reason(response: str) -> str:
         if line.strip().upper().startswith("REASON"):
             return line.split(":", 1)[-1].strip()
     return response.strip()[:500]
+
+
+POSITIVE_TARGET_TERMS = {
+    "高度",
+    "长度",
+    "距离",
+    "多远",
+    "大小",
+    "速率",
+    "比例",
+    "概率",
+    "分数",
+    "次数",
+    "数量",
+    "半径",
+    "体积",
+    "面积",
+    "波长",
+    "频率",
+    "height",
+    "length",
+    "distance",
+    "magnitude",
+    "speed",
+    "ratio",
+    "probability",
+    "fraction",
+    "count",
+    "radius",
+    "volume",
+    "area",
+    "wavelength",
+    "frequency",
+}
+
+SIGNED_TARGET_TERMS = {
+    "方向",
+    "位移",
+    "矢量",
+    "变化量",
+    "势能",
+    "自由能",
+    "电势",
+    "电压",
+    "velocity",
+    "displacement",
+    "vector",
+    "change",
+    "potential",
+    "free energy",
+    "voltage",
+}
+
+
+def _postprocess_answer(question: Question, answer: str | None) -> str | None:
+    if not answer:
+        return answer
+    try:
+        value = float(answer)
+    except ValueError:
+        return answer
+    if value >= 0:
+        return answer
+    target_text = " ".join(
+        part
+        for part in [
+            question.question,
+            question.unit or "",
+            question.subfield or "",
+            question.theorem or "",
+        ]
+        if part
+    ).lower()
+    if any(term in target_text for term in SIGNED_TARGET_TERMS):
+        return answer
+    if any(term in target_text for term in POSITIVE_TARGET_TERMS):
+        return answer[1:] if answer.startswith("-") else str(abs(value))
+    return answer

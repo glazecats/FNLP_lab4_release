@@ -5,7 +5,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from lab4.pipeline import Solver
+from lab4.data import Question
+from lab4.pipeline import Solver, _postprocess_answer
 
 
 class FakeClient:
@@ -32,6 +33,13 @@ class PipelineTests(unittest.TestCase):
         )
         result = solver._run_role("test", [{"role": "user", "content": "x"}])
         self.assertEqual(result["answer"], "2")
+
+    def test_postprocess_abs_for_magnitude_targets_only(self) -> None:
+        height_question = Question(id=1, field="physics", question="像的高度是多少 cm？")
+        energy_question = Question(id=2, field="physics", question="求势能变化量。")
+
+        self.assertEqual(_postprocess_answer(height_question, "-3.67"), "3.67")
+        self.assertEqual(_postprocess_answer(energy_question, "-3.67"), "-3.67")
 
 
 if __name__ == "__main__":
