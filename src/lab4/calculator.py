@@ -12,6 +12,7 @@ class CalculatorError(ValueError):
 ALLOWED_FUNCS = {
     "sqrt": math.sqrt,
     "log": math.log,
+    "ln": math.log,
     "log10": math.log10,
     "exp": math.exp,
     "sin": lambda x: math.sin(math.radians(x)) if abs(x) > 2 * math.pi else math.sin(x),
@@ -34,6 +35,9 @@ ALLOWED_FUNCS = {
     "sinh": math.sinh,
     "cosh": math.cosh,
     "tanh": math.tanh,
+    "asinh": math.asinh,
+    "acosh": math.acosh,
+    "atanh": math.atanh,
     "floor": math.floor,
     "ceil": math.ceil,
     "fabs": math.fabs,
@@ -84,6 +88,7 @@ def evaluate_expression(expression: str) -> Calculation:
         tree = ast.parse(expression, mode="eval")
     except SyntaxError as exc:
         raise CalculatorError(str(exc)) from exc
+    _reject_ambiguous_power(tree)
     value = _eval_node(tree.body)
     if isinstance(value, float) and not math.isfinite(value):
         raise CalculatorError("non-finite result")
@@ -101,23 +106,31 @@ def format_number(value: float | int) -> str:
     return f"{value:.12e}".replace("e+0", "e").replace("e+", "e").replace("e-0", "e-")
 
 
-def _eval_node(node: ast.AST) -> float | int:
+def _eval_node(node: ast.AST, variables: dict[str, float | int] | None = None) -> float | int:
+    variables = variables or {}
     if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
         return node.value
     if isinstance(node, ast.Name):
+        if node.id in variables:
+            return variables[node.id]
         if node.id in ALLOWED_NAMES:
             return ALLOWED_NAMES[node.id]
         raise CalculatorError(f"unknown name: {node.id}")
+    if isinstance(node, ast.Attribute):
+        prefix = getattr(node.value, "id", None)
+        if prefix in {"math", "np", "numpy"} and node.attr in ALLOWED_NAMES:
+            return ALLOWED_NAMES[node.attr]
+        raise CalculatorError("only math/np constants are allowed")
     if isinstance(node, ast.UnaryOp):
-        value = _eval_node(node.operand)
+        value = _eval_node(node.operand, variables)
         if isinstance(node.op, ast.UAdd):
             return +value
         if isinstance(node.op, ast.USub):
             return -value
         raise CalculatorError("unsupported unary operator")
     if isinstance(node, ast.BinOp):
-        left = _eval_node(node.left)
-        right = _eval_node(node.right)
+        left = _eval_node(node.left, variables)
+        right = _eval_node(node.right, variables)
         if isinstance(node.op, ast.Add):
             return left + right
         if isinstance(node.op, ast.Sub):
@@ -133,12 +146,14 @@ def _eval_node(node: ast.AST) -> float | int:
         raise CalculatorError("unsupported binary operator")
     if isinstance(node, ast.Call):
         func_name = _call_name(node.func)
+        if func_name in {"integral", "integrate"}:
+            return _eval_integral(node, variables)
         func = ALLOWED_FUNCS.get(func_name)
         if func is None:
             raise CalculatorError(f"unknown function: {func_name}")
         if node.keywords:
             raise CalculatorError("keyword arguments are not allowed")
-        args = [_eval_node(arg) for arg in node.args]
+        args = [_eval_node(arg, variables) for arg in node.args]
         return func(*args)
     raise CalculatorError(f"unsupported expression element: {type(node).__name__}")
 
@@ -149,7 +164,52 @@ def _call_name(node: ast.AST) -> str:
     if (
         isinstance(node, ast.Attribute)
         and isinstance(node.value, ast.Name)
-        and node.value.id == "math"
+        and node.value.id in {"math", "np", "numpy"}
     ):
         return node.attr
-    raise CalculatorError("only direct function calls or math.<func> calls are allowed")
+    raise CalculatorError("only direct function calls or math/np.<func> calls are allowed")
+
+
+def _reject_ambiguous_power(tree: ast.AST) -> None:
+    for node in ast.walk(tree):
+        if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Pow) and isinstance(node.right, ast.BinOp):
+            if isinstance(node.right.op, ast.Pow):
+                raise CalculatorError("ambiguous chained exponentiation; use sqrt((...)**3) or split the powers")
+
+
+def _eval_integral(node: ast.Call, variables: dict[str, float | int]) -> float:
+    if node.keywords:
+        raise CalculatorError("integral does not accept keyword arguments")
+    if len(node.args) != 4:
+        raise CalculatorError("integral syntax is integral(expr, x, lower, upper)")
+    expr_node, var_node, lower_node, upper_node = node.args
+    if not isinstance(var_node, ast.Name):
+        raise CalculatorError("integral variable must be a bare name, for example x")
+    lower = float(_eval_node(lower_node, variables))
+    upper = float(_eval_node(upper_node, variables))
+    if not (math.isfinite(lower) and math.isfinite(upper)):
+        raise CalculatorError("integral bounds must be finite")
+    if lower == upper:
+        return 0.0
+
+    steps = 4096
+    width = (upper - lower) / steps
+
+    def sample(x_value: float) -> float:
+        scoped = dict(variables)
+        scoped[var_node.id] = x_value
+        value = float(_eval_node(expr_node, scoped))
+        if not math.isfinite(value):
+            raise CalculatorError("integral sampled a non-finite value")
+        return value
+
+    total = sample(lower) + sample(upper)
+    odd_sum = 0.0
+    even_sum = 0.0
+    for i in range(1, steps):
+        value = sample(lower + i * width)
+        if i % 2:
+            odd_sum += value
+        else:
+            even_sum += value
+    return width * (total + 4 * odd_sum + 2 * even_sum) / 3

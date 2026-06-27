@@ -200,20 +200,20 @@ class Solver:
             transcript.append({"assistant": response})
             messages.append({"role": "assistant", "content": response})
 
+            expression = extract_tool_expression(response)
+            if expression:
+                try:
+                    calculation = evaluate_expression(expression)
+                    tool_text = f"TOOL_RESULT: {calculation.expression} = {calculation.text}"
+                except Exception as exc:
+                    tool_text = f"TOOL_ERROR: {expression} failed with {exc}. Rewrite a valid Python expression."
+                transcript.append({"tool": tool_text})
+                messages.append({"role": "user", "content": tool_text + "\nContinue from the tool result."})
+                continue
+
             answer = extract_final_answer(response)
             if answer:
                 break
-
-            expression = extract_tool_expression(response)
-            if not expression:
-                break
-            try:
-                calculation = evaluate_expression(expression)
-                tool_text = f"TOOL_RESULT: {calculation.expression} = {calculation.text}"
-            except Exception as exc:
-                tool_text = f"TOOL_ERROR: {expression} failed with {exc}. Rewrite a valid Python expression."
-            transcript.append({"tool": tool_text})
-            messages.append({"role": "user", "content": tool_text + "\nContinue from the tool result."})
 
         return {
             "role": role,
