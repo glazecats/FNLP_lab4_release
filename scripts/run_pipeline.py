@@ -15,7 +15,14 @@ sys.path.insert(0, str(ROOT / "src"))
 from lab4.data import Question, load_questions, write_submission  # noqa: E402
 from lab4.extract import extract_answer  # noqa: E402
 from lab4.llm import ChatClient, LLMConfig  # noqa: E402
-from lab4.prompts import build_user_prompt, build_verifier_prompt, get_system_prompt, VERIFIER_SYSTEM_PROMPT  # noqa: E402
+from lab4.prompts import (  # noqa: E402
+    ARBITER_SYSTEM_PROMPT,
+    VERIFIER_SYSTEM_PROMPT,
+    build_arbiter_prompt,
+    build_user_prompt,
+    build_verifier_prompt,
+    get_system_prompt,
+)
 from lab4.query import expand_query  # noqa: E402
 from lab4.retrieval import TextbookIndex, load_or_build_index  # noqa: E402
 from lab4.units import infer_target_unit, normalize_for_unit  # noqa: E402
@@ -81,24 +88,118 @@ def solve_one(
     prompt_style: str,
     normalize_units: bool,
 ) -> dict:
-    uses_rag = method in {"rag", "rag-verify"}
-    uses_verify = method in {"verify", "rag-verify"}
+    uses_rag = method in {"rag", "rag-verify", "rag-dual-verify"}
+    uses_verify = method in {"verify", "rag-verify", "rag-dual-verify"}
     retrieved = index.search(expand_query(question), field=question.field, top_k=top_k) if index else []
     retrieved = [chunk for chunk in retrieved if chunk.score >= MIN_RAG_SCORE]
     system_prompt = get_system_prompt(prompt_style)
-    messages = []
-    if system_prompt:
-        messages.append({"role": "system", "content": system_prompt})
-    messages.append(
-        {
-            "role": "user",
-            "content": build_user_prompt(
-                question,
-                retrieved if uses_rag else None,
-                prompt_style=prompt_style,
-            ),
+
+    def build_messages(context: list | None) -> list[dict[str, str]]:
+        messages = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append(
+            {
+                "role": "user",
+                "content": build_user_prompt(
+                    question,
+                    context,
+                    prompt_style=prompt_style,
+                ),
+            }
+        )
+        return messages
+
+    def solve_candidate(context: list | None, *, label: str) -> dict:
+        response = client.chat(
+            build_messages(context),
+            temperature=temperature if samples > 1 else min(temperature, 0.2),
+            max_tokens=max_tokens,
+        )
+        answer = extract_answer(response)
+        trace = {f"{label}_response": response, f"{label}_answer": answer}
+        if uses_verify:
+            verify_messages = [
+                {"role": "system", "content": VERIFIER_SYSTEM_PROMPT},
+                {
+                    "role": "user",
+                    "content": build_verifier_prompt(
+                        question,
+                        first_response=response,
+                        first_answer=answer,
+                        context=context,
+                    ),
+                },
+            ]
+            verified_response = client.chat(
+                verify_messages,
+                temperature=0.0,
+                max_tokens=max_tokens,
+            )
+            verified_answer = extract_answer(verified_response)
+            if is_bad_verified_answer(verified_answer):
+                verified_answer = answer
+            if is_bad_verified_answer(verified_answer):
+                verified_answer = "0"
+            trace.update(
+                {
+                    f"{label}_draft_response": response,
+                    f"{label}_draft_answer": answer,
+                    f"{label}_response": verified_response,
+                    f"{label}_answer": verified_answer,
+                }
+            )
+            answer = verified_answer
+            response = verified_response
+        return {"response": response, "answer": answer, "trace": trace}
+
+    if method == "rag-dual-verify":
+        rag_candidate = solve_candidate(retrieved, label="rag")
+        no_rag_candidate = solve_candidate(None, label="no_rag")
+        arbiter_response = client.chat(
+            [
+                {"role": "system", "content": ARBITER_SYSTEM_PROMPT},
+                {
+                    "role": "user",
+                    "content": build_arbiter_prompt(
+                        question,
+                        rag_response=rag_candidate["response"],
+                        rag_answer=rag_candidate["answer"],
+                        no_rag_response=no_rag_candidate["response"],
+                        no_rag_answer=no_rag_candidate["answer"],
+                        context=retrieved,
+                    ),
+                },
+            ],
+            temperature=0.0,
+            max_tokens=max_tokens,
+        )
+        answer = extract_answer(arbiter_response)
+        if is_bad_verified_answer(answer):
+            answer = rag_candidate["answer"]
+        if normalize_units:
+            answer = normalize_for_unit(answer, infer_target_unit(question.question, question.unit))
+        return {
+            "id": question.id,
+            "field": question.field,
+            "subfield": question.subfield,
+            "theorem": question.theorem,
+            "unit": question.unit,
+            "question": question.question,
+            "retrieved": [chunk.__dict__ for chunk in retrieved],
+            "traces": [
+                {
+                    "sample": 0,
+                    **rag_candidate["trace"],
+                    **no_rag_candidate["trace"],
+                    "response": arbiter_response,
+                    "answer": answer,
+                }
+            ],
+            "answer": answer,
         }
-    )
+
+    messages = build_messages(retrieved if uses_rag else None)
 
     traces = []
     answers = []
@@ -167,7 +268,11 @@ def main() -> None:
     parser.add_argument("--data", default=str(ROOT / "student_zh.json"))
     parser.add_argument("--tex-dir", default=str(ROOT / "textbooks-tex"))
     parser.add_argument("--index-cache", default=str(ROOT / "cache" / "textbook_index.json"))
-    parser.add_argument("--method", choices=["baseline", "rag", "verify", "rag-verify"], default="baseline")
+    parser.add_argument(
+        "--method",
+        choices=["baseline", "rag", "verify", "rag-verify", "rag-dual-verify"],
+        default="baseline",
+    )
     parser.add_argument("--samples", type=int, default=1)
     parser.add_argument("--workers", type=int, default=1, help="Number of concurrent questions to solve")
     parser.add_argument("--temperature", type=float, default=0.0)
@@ -210,7 +315,7 @@ def main() -> None:
         print(f"Resuming from {args.trace_out}: {len(completed_ids)} completed, {len(run_questions)} remaining")
 
     index = None
-    if args.method in {"rag", "rag-verify"}:
+    if args.method in {"rag", "rag-verify", "rag-dual-verify"}:
         index = load_or_build_index(args.tex_dir, args.index_cache)
 
     llm_config = LLMConfig()
