@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import random
+import socket
 import time
 import urllib.error
 import urllib.request
@@ -61,7 +62,14 @@ class LLMClient:
                     raw = response.read().decode("utf-8")
                 body = json.loads(raw)
                 return body["choices"][0]["message"]["content"]
-            except (urllib.error.URLError, urllib.error.HTTPError, KeyError, json.JSONDecodeError) as exc:
+            except (
+                urllib.error.URLError,
+                urllib.error.HTTPError,
+                TimeoutError,
+                socket.timeout,
+                KeyError,
+                json.JSONDecodeError,
+            ) as exc:
                 last_error = exc
                 if attempt == 3:
                     break
