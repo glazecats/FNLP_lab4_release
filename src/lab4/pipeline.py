@@ -37,7 +37,7 @@ class Solver:
         temperature: float,
         max_tokens: int,
         enable_thinking: bool,
-        max_tool_rounds: int = 3,
+        max_tool_rounds: int = 5,
         max_verify_loops: int = 1,
     ) -> None:
         self.client = client
@@ -210,7 +210,7 @@ class Solver:
             try:
                 calculation = evaluate_expression(expression)
                 tool_text = f"TOOL_RESULT: {calculation.expression} = {calculation.text}"
-            except CalculatorError as exc:
+            except Exception as exc:
                 tool_text = f"TOOL_ERROR: {expression} failed with {exc}. Rewrite a valid Python expression."
             transcript.append({"tool": tool_text})
             messages.append({"role": "user", "content": tool_text + "\nContinue from the tool result."})
@@ -352,4 +352,3 @@ def _extract_reason(response: str) -> str:
         if line.strip().upper().startswith("REASON"):
             return line.split(":", 1)[-1].strip()
     return response.strip()[:500]
-

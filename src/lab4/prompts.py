@@ -6,7 +6,8 @@ from .retrieval import RetrievedChunk
 
 FINAL_PROTOCOL = """输出协议：
 - 如果需要计算三位有效数字乘除、开方、指数、对数、三角函数、积分、复杂分数或多步数值运算，不要心算。只输出一行：TOOL_CALC: <python_expression>
-- <python_expression> 只能使用数字、+ - * / **、括号，以及 sqrt/log/log10/exp/sin/cos/tan/pi/e/c/h/k_B/kB_eV/N_A/R/F/G/g 等常量或函数；不要写单位。
+- <python_expression> 只能使用数字、+ - * / **、括号，以及 sqrt/log/log10/exp/sin/cos/tan/asin/acos/atan/sind/cosd/tand/asind/acosd/atand/radians/degrees/pi/e/c/h/k_B/kB_eV/N_A/R/F/G/g 等常量或函数；不要写单位。
+- Python 的 sin/cos/tan/asin/acos/atan 使用弧度。题目角度若以 degree/度/° 给出，优先使用 sind/cosd/tand/asind/acosd/atand，或显式乘 pi/180。
 - 收到 TOOL_RESULT 后继续推理，可以再次请求 TOOL_CALC。
 - 当你已经得到最终结果时，最后一行必须严格写成：FINAL_ANSWER: <answer>
 - <answer> 只能是一个数值或 LaTeX 数学表达式，不要写单位、变量名、等号、解释、多个候选值或 Markdown。"""
@@ -21,7 +22,14 @@ GENERAL_SOLVER_RULES = """通用解题规则：
 6. 常数、标准状态、室温和教材常见约定可以使用合理标准值，但要保持一致。
 7. 如果题目问大小、数量、概率、比例、速率比或减少量，通常输出非负大小；只有题目明确要带符号变化量、势能、自由能或方向分量时保留符号。
 8. 给出的检索知识可能不匹配题目。先判断相关性，只借用通用公式、定义和常数，不要复制不一致的例题数值。
-9. 最终前自查：目标单位/形式、每粒子还是每摩尔、角度参照、SI 前缀、10 的幂、符号、数量级。"""
+9. 对角度题，先判断题目角度是相对法线、竖直方向、表面、入射方向还是两束光/粒子之间的夹角；反三角函数若题目没有另给单位，通常输出度数。
+10. 对含容器、皮重、空载/满载、背景/初始值的题，先求净量，再代入密度、热容、质量或物质的量公式。
+11. 密度、力密度、质量密度、摩尔量和体积量不能混用；先用量纲判断公式两边是否一致，必要时完整转换到同一单位体系。
+12. 对截面、吸收、俘获、衰减概率，必须包含靶粒子数密度；密度、摩尔质量、长度和截面必须在同一单位体系中使用。
+13. 对薄靶散射、俘获或碰撞“比例/概率”题，通常是“数密度 × 厚度 × 有效截面积/截面”；不要把单个粒子的偏转角直接当比例。
+14. 对正向/反向偏置、正负电压、增长/衰减比值，先从原始公式带符号推导比值，不要凭直觉把指数加倍。
+15. 对 Bragg 衍射、散射角、反射角等题，确认公式中的 θ 定义；若题目给的是入射束和散射束之间的夹角，Bragg 角通常是该角的一半；若没有给 Miller 指数，不要任意改用特定晶面间距。
+16. 最终前自查：目标单位/形式、每粒子还是每摩尔、角度参照、SI 前缀、10 的幂、符号、数量级。"""
 
 
 DIRECT_SYSTEM = f"""你是 DIRECT_SOLVER，一个谨慎的大学物理和物理化学解题助手。
@@ -58,6 +66,7 @@ ARBITER_SYSTEM = f"""你是 ARBITER。你会看到同一道题的 DIRECT_SOLVER 
 2. 如果 RAG 笔记与题目不匹配，不要因为有检索就偏向 RAG。
 3. 如果两个答案不同，找出分歧来自公式、单位换算、计算、题意理解还是答案抽取。
 4. 需要复杂计算时使用 TOOL_CALC，不要心算。
+5. 如果 verifier feedback 明确指出上一轮公式或单位错误，必须按 feedback 重新推导，不要继续选择被指出错误的候选。
 
 {FINAL_PROTOCOL}"""
 
@@ -85,6 +94,7 @@ FINAL_ANSWER: <answer>
 LOOP
 REASON: <short reason>
 
+如果你能从前面任一解法、工具结果或自己的检查中确定正确答案，就输出 FIX，而不是 LOOP。只有无法可靠修正时才输出 LOOP。
 需要复杂计算时也可以先输出 TOOL_CALC: <python_expression>。"""
 
 
@@ -153,4 +163,3 @@ def verifier_user_prompt(question: Question, candidate_answer: str, history: str
             "Full previous work:\n" + history,
         ]
     )
-

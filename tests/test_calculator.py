@@ -18,6 +18,12 @@ class CalculatorTests(unittest.TestCase):
         self.assertGreater(result.value, 3.9e-19)
         self.assertLess(result.value, 4.1e-19)
 
+    def test_degree_helpers_and_math_prefix(self) -> None:
+        self.assertAlmostEqual(evaluate_expression("sind(30)").value, 0.5)
+        self.assertAlmostEqual(evaluate_expression("sin(30)").value, 0.5)
+        self.assertAlmostEqual(evaluate_expression("sin(pi/6)").value, 0.5)
+        self.assertAlmostEqual(evaluate_expression("math.asin(0.5)").value, evaluate_expression("asin(0.5)").value)
+
 
 if __name__ == "__main__":
     unittest.main()

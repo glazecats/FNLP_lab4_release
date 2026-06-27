@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import re
 
+from .calculator import format_number
+
 
 FINAL_RE = re.compile(r"FINAL_ANSWER\s*[:：]\s*(.+)", re.IGNORECASE)
 TOOL_RE = re.compile(r"TOOL_CALC\s*[:：]\s*(.+)", re.IGNORECASE)
@@ -31,7 +33,24 @@ def normalize_answer(answer: str) -> str:
         answer = answer[1:-1].strip()
     answer = re.sub(r"\s+", " ", answer)
     answer = answer.rstrip(".。;,，")
+    numeric_fraction = _fraction_to_decimal(answer)
+    if numeric_fraction is not None:
+        return numeric_fraction
     return answer.strip()
+
+
+def _fraction_to_decimal(answer: str) -> str | None:
+    text = answer.strip()
+    latex = re.fullmatch(r"\\frac\s*\{\s*([-+]?\d+(?:\.\d+)?)\s*\}\s*\{\s*([-+]?\d+(?:\.\d+)?)\s*\}", text)
+    simple = re.fullmatch(r"([-+]?\d+(?:\.\d+)?)\s*/\s*([-+]?\d+(?:\.\d+)?)", text)
+    match = latex or simple
+    if not match:
+        return None
+    numerator = float(match.group(1))
+    denominator = float(match.group(2))
+    if denominator == 0:
+        return None
+    return format_number(numerator / denominator)
 
 
 def equivalent_answer_text(left: str | None, right: str | None) -> bool:
@@ -76,4 +95,3 @@ def looks_invalid_answer(answer: str) -> str | None:
         if re.search(pattern, answer, re.IGNORECASE):
             return "appears to contain a unit"
     return None
-

@@ -14,12 +14,23 @@ ALLOWED_FUNCS = {
     "log": math.log,
     "log10": math.log10,
     "exp": math.exp,
-    "sin": math.sin,
-    "cos": math.cos,
-    "tan": math.tan,
+    "sin": lambda x: math.sin(math.radians(x)) if abs(x) > 2 * math.pi else math.sin(x),
+    "cos": lambda x: math.cos(math.radians(x)) if abs(x) > 2 * math.pi else math.cos(x),
+    "tan": lambda x: math.tan(math.radians(x)) if abs(x) > 2 * math.pi else math.tan(x),
     "asin": math.asin,
     "acos": math.acos,
     "atan": math.atan,
+    "arcsin": math.asin,
+    "arccos": math.acos,
+    "arctan": math.atan,
+    "radians": math.radians,
+    "degrees": math.degrees,
+    "sind": lambda x: math.sin(math.radians(x)),
+    "cosd": lambda x: math.cos(math.radians(x)),
+    "tand": lambda x: math.tan(math.radians(x)),
+    "asind": lambda x: math.degrees(math.asin(x)),
+    "acosd": lambda x: math.degrees(math.acos(x)),
+    "atand": lambda x: math.degrees(math.atan(x)),
     "sinh": math.sinh,
     "cosh": math.cosh,
     "tanh": math.tanh,
@@ -28,6 +39,8 @@ ALLOWED_FUNCS = {
     "fabs": math.fabs,
     "pow": pow,
     "abs": abs,
+    "min": min,
+    "max": max,
 }
 
 ALLOWED_NAMES = {
@@ -62,11 +75,15 @@ class Calculation:
 
 def evaluate_expression(expression: str) -> Calculation:
     expression = expression.strip()
+    expression = expression.replace("^", "**")
     if not expression:
         raise CalculatorError("empty expression")
     if len(expression) > 500:
         raise CalculatorError("expression too long")
-    tree = ast.parse(expression, mode="eval")
+    try:
+        tree = ast.parse(expression, mode="eval")
+    except SyntaxError as exc:
+        raise CalculatorError(str(exc)) from exc
     value = _eval_node(tree.body)
     if isinstance(value, float) and not math.isfinite(value):
         raise CalculatorError("non-finite result")
@@ -115,14 +132,24 @@ def _eval_node(node: ast.AST) -> float | int:
             return left % right
         raise CalculatorError("unsupported binary operator")
     if isinstance(node, ast.Call):
-        if not isinstance(node.func, ast.Name):
-            raise CalculatorError("only direct function calls are allowed")
-        func = ALLOWED_FUNCS.get(node.func.id)
+        func_name = _call_name(node.func)
+        func = ALLOWED_FUNCS.get(func_name)
         if func is None:
-            raise CalculatorError(f"unknown function: {node.func.id}")
+            raise CalculatorError(f"unknown function: {func_name}")
         if node.keywords:
             raise CalculatorError("keyword arguments are not allowed")
         args = [_eval_node(arg) for arg in node.args]
         return func(*args)
     raise CalculatorError(f"unsupported expression element: {type(node).__name__}")
 
+
+def _call_name(node: ast.AST) -> str:
+    if isinstance(node, ast.Name):
+        return node.id
+    if (
+        isinstance(node, ast.Attribute)
+        and isinstance(node.value, ast.Name)
+        and node.value.id == "math"
+    ):
+        return node.attr
+    raise CalculatorError("only direct function calls or math.<func> calls are allowed")

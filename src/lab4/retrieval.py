@@ -22,6 +22,8 @@ CHINESE_HINTS: dict[str, str] = {
     "波": "wave wavelength frequency speed interference diffraction",
     "光": "light optics photon wavelength frequency",
     "射线": "x ray diffraction Bragg wavelength crystal",
+    "岩盐": "rock salt NaCl sodium chloride crystal spacing Bragg diffraction nearest neighbor equilibrium separation",
+    "食盐": "rock salt NaCl sodium chloride crystal spacing Bragg diffraction nearest neighbor equilibrium separation",
     "衍射": "diffraction interference grating Bragg",
     "干涉": "interference diffraction phase",
     "电": "electric charge current voltage field potential capacitance",
@@ -47,6 +49,12 @@ CHINESE_HINTS: dict[str, str] = {
     "酸": "acid base pH equilibrium",
     "碱": "acid base pH equilibrium",
     "积分": "integral distribution probability average",
+    "截面": "cross section probability number density target thickness absorption capture scattering",
+    "俘获": "capture absorption cross section probability number density target thickness",
+    "金箔": "gold foil Rutherford alpha scattering nucleus impact parameter fraction target thickness",
+    "偏转": "deflection scattering angle impact parameter Rutherford",
+    "alpha": "alpha particle Rutherford scattering gold foil nucleus",
+    "阿尔法": "alpha particle Rutherford scattering gold foil nucleus",
     "频率": "frequency wavelength angular frequency",
     "波长": "wavelength frequency photon",
     "折射": "refraction Snell lens optics",
@@ -204,4 +212,3 @@ def _query_tokens(question: Question) -> Counter[str]:
 
 def _tokenize(text: str) -> list[str]:
     return [match.group(0).lower() for match in TOKEN_RE.finditer(text)]
-
