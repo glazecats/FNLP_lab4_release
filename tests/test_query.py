@@ -40,6 +40,22 @@ class QueryExpansionTest(unittest.TestCase):
         self.assertIn("mean molecular speed", gas_query)
         self.assertIn("molar mass", gas_query)
 
+    def test_scattering_waves_and_quantum_terms(self):
+        scattering_query = expand_query(make_question("金箔使 alpha 粒子发生大角度偏转。"))
+        self.assertIn("Rutherford scattering", scattering_query)
+        shock_query = expand_query(make_question("飞机以马赫数飞行，问何时听到音爆。"))
+        self.assertIn("sonic boom", shock_query)
+        tunneling_query = expand_query(make_question("电子穿透半导体器件中的势垒。"))
+        self.assertIn("quantum tunneling", tunneling_query)
+
+    def test_chemistry_process_terms(self):
+        thermo_query = expand_query(make_question("用量热仪测燃烧热并求生成焓。"))
+        self.assertIn("calorimeter", thermo_query)
+        self.assertIn("enthalpy of formation", thermo_query)
+        gas_query = expand_query(make_question("计算气体平均自由程和泻流速率。"))
+        self.assertIn("mean free path", gas_query)
+        self.assertIn("effusion", gas_query)
+
 
 if __name__ == "__main__":
     unittest.main()
