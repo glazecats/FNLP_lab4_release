@@ -1,0 +1,3 @@
+# 默认情况下，本流水线只使用 Python 标准库。
+# 如需调用 Qwen3-8B，请设置 DASHSCOPE_API_KEY。
+

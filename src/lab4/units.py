@@ -1,0 +1,94 @@
+from __future__ import annotations
+
+import math
+import re
+
+
+NUMERIC_RE = re.compile(r"^[+-]?\d+(?:\.\d+)?(?:e[+-]?\d+)?$", re.IGNORECASE)
+
+
+def _unit_power_of_ten(unit: str | None) -> int | None:
+    if not unit:
+        return None
+    patterns = [
+        r"10\s*\^\s*\{\s*([+-]?\d+)\s*\}",
+        r"10\s*\^\s*([+-]?\d+)",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, unit)
+        if match:
+            return int(match.group(1))
+    return None
+
+
+def _format_number(value: float) -> str:
+    if value == 0:
+        return "0"
+    if abs(value - round(value)) < 1e-10 and abs(value) < 1e12:
+        return str(int(round(value)))
+    return f"{value:.10g}"
+
+
+def _parse_numeric_answer(answer: str) -> tuple[float, bool] | tuple[None, bool]:
+    value = answer.strip()
+    scientific_like = bool(re.search(r"e[+-]?\d+|\\times\s*10|10\s*\^", value, flags=re.I))
+    value = value.replace("−", "-")
+    value = value.replace(" ", "")
+    value = re.sub(
+        r"^([-+]?\d+(?:\.\d+)?)\\times10\^\{?([+-]?\d+)\}?$",
+        r"\1e\2",
+        value,
+    )
+    value = re.sub(r"^10\^\{?([+-]?\d+)\}?$", r"1e\1", value)
+    if NUMERIC_RE.fullmatch(value):
+        return float(value), scientific_like
+    return None, scientific_like
+
+
+def _prefix_scale(unit: str | None) -> float | None:
+    if not unit:
+        return None
+    normalized = unit.replace(" ", "")
+    if r"\mu" in normalized or "μ" in normalized:
+        return 1e-6
+    if "pm" in normalized:
+        return 1e-12
+    if "nm" in normalized:
+        return 1e-9
+    if "mJ" in normalized:
+        return 1e-3
+    return None
+
+
+def normalize_for_unit(answer: str, unit: str | None) -> str:
+    """Convert obvious absolute numeric answers to coefficients for 10^n units.
+
+    Example: answer=4.74e14, unit=10^14 Hz -> 4.74.
+    If the answer already looks like a coefficient, leave it unchanged.
+    """
+
+    value = answer.strip()
+    number, scientific_like = _parse_numeric_answer(value)
+    exponent = _unit_power_of_ten(unit)
+    if number is None or number == 0:
+        return answer
+
+    if exponent is not None:
+        scale = 10.0**exponent
+        coefficient = number / scale
+        looks_absolute = (
+            (exponent >= 0 and abs(number) >= abs(scale) * 1e-2)
+            or (exponent < 0 and abs(number) <= abs(scale) * 1e4)
+            or scientific_like
+        )
+        if looks_absolute and 1e-3 <= abs(coefficient) <= 1e3:
+            return _format_number(coefficient)
+
+    prefix_scale = _prefix_scale(unit)
+    prefix_looks_absolute = scientific_like or (prefix_scale == 1e-3 and "mJ" in (unit or "") and abs(number) < 1)
+    if prefix_scale is not None and prefix_looks_absolute:
+        coefficient = number / prefix_scale
+        if 1e-6 <= abs(coefficient) <= 1e6:
+            return _format_number(coefficient)
+
+    return answer

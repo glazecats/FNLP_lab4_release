@@ -1,0 +1,1822 @@
+[
+    {
+        "id": 19,
+        "field": "physics",
+        "question": "天体物理学理论表明，一颗质量至少为三个太阳质量的燃烧殆尽的恒星将在其自身引力作用下塌缩形成黑洞。如果是这样，其事件视界的半径为 X * 10^3 m，那么 X 是多少？",
+        "answer": null,
+        "subfield": "Celestial mechanics",
+        "theorem": "black hole"
+    },
+    {
+        "id": 13,
+        "field": "physics",
+        "question": "观察到从岩盐 (NaCl) 散射的 X 射线在与入射方向成 20° 角处有一个强极大值。假设 n = 1（根据强度），入射辐射的波长是多少 nm？",
+        "answer": null,
+        "subfield": "Wave",
+        "theorem": "wave theorem"
+    },
+    {
+        "id": 10,
+        "field": "physics",
+        "question": "计算一个被限制在围绕球场、长度为 35 m 的栅栏围栏内的网球的动量不确定度，单位为 kg m/s。",
+        "answer": null,
+        "subfield": "Quantum",
+        "theorem": "quantum theorem"
+    },
+    {
+        "id": 14,
+        "field": "physics",
+        "question": "4He原子的原子质量为 4.002603 u。求4He原子核的结合能，单位为 MeV。",
+        "answer": null,
+        "subfield": "Relativity",
+        "theorem": "relativity"
+    },
+    {
+        "id": 15,
+        "field": "physics",
+        "question": "当在正向和反向均施加相同的 1.5 V 电压时，求正向偏置电流与反向偏置电流的比值。假设室温为 293 K。",
+        "answer": null,
+        "subfield": "Condensed matter physics",
+        "theorem": "semiconductor theory"
+    },
+    {
+        "id": 16,
+        "field": "physics",
+        "question": "假设一个 62-kg 的人，其质量的一半由质子组成。如果质子的半衰期是 10^33 年，计算该人体内每天发生的质子衰变次数。",
+        "answer": null,
+        "subfield": "Particle",
+        "theorem": "particle"
+    },
+    {
+        "id": 21,
+        "field": "physics",
+        "question": "以 eV 为单位计算单个理想气体分子的平均平动动能。",
+        "answer": null,
+        "subfield": "Statistical physics",
+        "theorem": "statistical physics"
+    },
+    {
+        "id": 17,
+        "field": "physics",
+        "question": "一艘船使用声呐系统来定位水下物体。求一个262-Hz的波在水中的波长。（单位：m）",
+        "answer": null,
+        "subfield": "Wave",
+        "theorem": "wave theorem"
+    },
+    {
+        "id": 8,
+        "field": "physics",
+        "question": "能量为 10 eV 的中子被银俘获的截面为 17 barns。当一个中子穿过厚度为 2 mm 的银层时，被俘获的概率是多少？",
+        "answer": null,
+        "subfield": "Atomic physics",
+        "theorem": "nuclear physics"
+    },
+    {
+        "id": 20,
+        "field": "physics",
+        "question": "光从水（n=1.33）射入钻石（n=2.42）。如果入射角为 13 度，求折射角。",
+        "answer": null,
+        "subfield": "Optics",
+        "theorem": "snell's law"
+    },
+    {
+        "id": 6,
+        "field": "physics",
+        "question": "你想在水平地面上移动一个 500-N 的箱子。为了让箱子开始运动，你必须施加 230-N 的水平拉力。一旦箱子被拉动并开始运动，你只需 200 N 的力就能使其保持匀速运动。动摩擦系数是多少？",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "friction"
+    },
+    {
+        "id": 18,
+        "field": "physics",
+        "question": "水星绕太阳运行的平均轨道半径为 5.8x10^10 m。太阳的质量为 1.99x10^30 kg。利用开普勒第三定律的牛顿形式，确定水星绕太阳公转一周需要多长时间。请以地球日为单位给出你的答案。",
+        "answer": null,
+        "subfield": "Celestial mechanics",
+        "theorem": "kepler's third law"
+    },
+    {
+        "id": 3,
+        "field": "physics",
+        "question": "一家汽车杂志报道称，某款跑车前轮承受其53%的重量，后轮承受其47%的重量。（也就是说，前轮和后轮受到的总法向力分别为0.53w和0.47w，其中w是汽车的重量。）前后轴之间的距离为2.46 m。该汽车的重心在后轴前方多远的位置？",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "center of gravity"
+    },
+    {
+        "id": 4,
+        "field": "physics",
+        "question": "一个质量为 m=80 kg 的跳伞运动员正在进行自由落体。作用在他身上的阻力为 $F_D = kv^2$，其中 v 是相对于空气测得的速度。已知常数 k=0.27 [Ns^2/m^2]。求直到速度达到 v=0.95$v_t$ 时下落的距离 h（以 m 为单位），其中 $v_t$ 是终端速度。请返回数值。",
+        "answer": null,
+        "subfield": "Fluid mechanics",
+        "theorem": "newton's law of motion"
+    },
+    {
+        "id": 9,
+        "field": "physics",
+        "question": "一个质量 m = 0.200 kg 的滑块置于无摩擦的水平气垫导轨上，并与一根劲度系数为 k = 5.00 N/m 的弹簧相连。你拉动滑块使弹簧伸长 0.100 m，然后将其从静止释放。滑块向其平衡位置 (x = 0) 运动。当 x = 0.080 m 时，它的 x 方向速度是多少？（单位：m/s）",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "elastic potential energy"
+    },
+    {
+        "id": 2,
+        "field": "physics",
+        "question": "一辆质量为 1000 kg 的旧汽车的避震器已经完全磨损。当一个重 980-N 的人缓慢地在汽车重心处进入车内时，汽车下沉了 2.8 cm。汽车（连同车上的人）压过一个凸起，然后汽车开始上下做简谐运动（SHM）。将汽车和人模型化为连接在单根弹簧上的单一物体，求该振动的频率。（单位：Hz）",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "angular dynamics"
+    },
+    {
+        "id": 5,
+        "field": "physics",
+        "question": "求被厚度为 10^-6 m 的金箔偏转 90° 或更大角度的 7.7-MeV alpha 粒子的比例。",
+        "answer": null,
+        "subfield": "Atomic physics",
+        "theorem": "atomic theorem"
+    },
+    {
+        "id": 1,
+        "field": "physics",
+        "question": "在儒勒·凡尔纳1865年以此为题的小说中，三个人乘坐一发从深埋在佛罗里达州地下的巨型大炮中发射的炮弹前往月球。求能让炮弹完全脱离地球的最小炮口速度（即逃逸速度）。忽略空气阻力、地球自转以及月球的引力。地球的半径和质量分别为 $R_E}=$ $6.38 \\times 10^6 m$ 和 $m_E=5.97 \\times 10^{24} kg$。（单位：10 ^ 4 m/s）",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "energy conservation"
+    },
+    {
+        "id": 12,
+        "field": "physics",
+        "question": "一名潜水员戴着头灯，向上看着水面。如果导致全反射的与竖直方向的最小夹角为 25∘，水的折射率是多少？$\\theta_{air} = 1.00$。",
+        "answer": null,
+        "subfield": "Optics",
+        "theorem": "snell's law"
+    },
+    {
+        "id": 0,
+        "field": "physics",
+        "question": "一个空容器重 3.22 lb force。当装满 60°F 的水时，容器及其内含物的质量为 1.95 slugs。求其体积（以 ft3 为单位）。假设水的密度为 62.4 lb force/ft3。",
+        "answer": null,
+        "subfield": "Fluid mechanics",
+        "theorem": "newton's law of motion"
+    },
+    {
+        "id": 24,
+        "field": "physics",
+        "question": "一个玻璃杯中最初装有 0.25 kg 温度为 25°C 的 Omni-Cola（主要成分为水）。若要加入初始温度为 -20°C 的冰，使得最终温度达到 0°C 且冰全部融化，需要加入多少冰？忽略玻璃杯的热容。（单位：g）",
+        "answer": null,
+        "subfield": "Thermodynamics",
+        "theorem": "molar heat capacity"
+    },
+    {
+        "id": 36,
+        "field": "physics",
+        "question": "求铀-238原子核的半径与氦-4原子核的半径之比。",
+        "answer": null,
+        "subfield": "Atomic physics",
+        "theorem": "atomic theorem"
+    },
+    {
+        "id": 28,
+        "field": "physics",
+        "question": "一个静止的中子衰变（分裂）为一个质子和一个电子。在衰变中释放出能量，并表现为质子和电子的动能。质子的质量是电子质量的1836倍。释放的总能量中，有多大比例转化为质子的动能？",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "kinetics theorem"
+    },
+    {
+        "id": 29,
+        "field": "physics",
+        "question": "计算在夏至日正午，平放在萨斯喀彻温省里贾纳（纬度 50°N）地面上的太阳能收集器所能接收到的标准太阳辐射通量（约 1000 W/m^22）的比例。",
+        "answer": null,
+        "subfield": "Condensed matter physics",
+        "theorem": "semiconductor theory"
+    },
+    {
+        "id": 30,
+        "field": "physics",
+        "question": "一个露营者将原本在壶中、初始温度为 70.0°C 的 0.300 kg 咖啡倒入一个初始温度为 20.0°C 的 0.120 kg 铝杯中。平衡温度是多少？假设咖啡的比热容与水相同，且与外界没有热量交换。（单位：°C）",
+        "answer": null,
+        "subfield": "Thermodynamics",
+        "theorem": "molar heat capacity"
+    },
+    {
+        "id": 27,
+        "field": "physics",
+        "question": "计算重气体氡 (Rn) 中的平均分子速率 v，单位为 m/s",
+        "answer": null,
+        "subfield": "Statistical physics",
+        "theorem": "statistical physics"
+    },
+    {
+        "id": 37,
+        "field": "physics",
+        "question": "一个高 11cm 的物体距离镜子 9cm。如果像距是 -3cm，那么像的高度是多少 cm？",
+        "answer": null,
+        "subfield": "Optics",
+        "theorem": "len's equation"
+    },
+    {
+        "id": 39,
+        "field": "physics",
+        "question": "假设温度为 300 K，求使电子从硅的价带跃迁到导带所需的光子波长（单位为 nm）。",
+        "answer": null,
+        "subfield": "Condensed matter physics",
+        "theorem": "semiconductor theory"
+    },
+    {
+        "id": 40,
+        "field": "physics",
+        "question": "一扇宽 1.00 m、质量为 15 kg 的门，可以绕穿过其铰链的竖直轴自由转动。一颗质量为 10 g、速度为 400 m/s 的子弹沿垂直于门面的方向击中门的中心，并嵌入其中。求门的角速度。（单位：rad/s）",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "angular dynamics"
+    },
+    {
+        "id": 25,
+        "field": "physics",
+        "question": "用于医学诊断的超声换能器以 6.7 Mhz 的频率振动。角频率是多少？（单位：10^7 rad/s）",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "angular dynamics"
+    },
+    {
+        "id": 26,
+        "field": "physics",
+        "question": "设计了一门大炮，能够以 200 m/s 的速度发射一个质量为 10 kg 的弹体。这门大炮放置在一条笔直、水平的铁路线旁，并且其方向经过调整，使得弹体将落在铁路线的前方。一辆质量为 200 kg、行驶速度为 100 m/s 的轨道小车在大炮发射的瞬间恰好经过大炮。假设大炮和小车处于同一水平高度，弹体必须以多大的仰角发射，才能落入该轨道小车中？",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "kinetics theorem"
+    },
+    {
+        "id": 22,
+        "field": "physics",
+        "question": "一个液压机中装有 $0.25 m^3$ (250 L) 的油。求当油承受的压强增加量 $\\Delta p=1.6 \\times 10^7 Pa$（约 160 atm 或 2300 psi）时，其体积的减少量。已知该油的体积模量为 $B=5.0 \\times 10^9 Pa$（约 $5.0 \\times 10^4 atm$），其压缩率为 $k=1 / B=20 \\times 10^{-6} atm^{-1}$。（单位：10^{-4} m^3）",
+        "answer": null,
+        "subfield": "Fluid mechanics",
+        "theorem": "liquid compressibility"
+    },
+    {
+        "id": 45,
+        "field": "physics",
+        "question": "计算铜的费米温度，以 eV 为单位。",
+        "answer": null,
+        "subfield": "Statistical physics",
+        "theorem": "statistical physics"
+    },
+    {
+        "id": 32,
+        "field": "physics",
+        "question": "在骑行变速自行车时，骑行者可以选择固定在后轴上的后齿轮的半径。自行车的前齿轮半径为 12.0 cm。如果前齿轮的角速度为 0.6 rev/s，要使后轮轮缘上一点的切向速度为 5 m/s，后齿轮的半径（以 cm 为单位）是多少？后轮的半径为 0.330 m。",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "angular dynamics"
+    },
+    {
+        "id": 33,
+        "field": "physics",
+        "question": "在某些情况下，恒星可能会坍缩成一种主要由中子组成的极高密度天体，称为中子星。中子星的密度大约是普通固体物质的 $10^14$ 倍。假设我们在恒星坍缩前后都将其视为一个均匀的刚性实心球体。该恒星的初始半径为 $7 \\tims 10^5$ km（与我们的太阳相当）；其最终半径为 16 km。如果原本的恒星每 30 天自转一周，求该中子星的角速度（单位为 rad/s）。",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "angular dynamics"
+    },
+    {
+        "id": 34,
+        "field": "physics",
+        "question": "波长为 400 nm 的光入射到锂上（phi = 2.93 eV）。计算其遏止电压（单位为 V）。",
+        "answer": null,
+        "subfield": "Condensed matter physics",
+        "theorem": "photoelectric effect"
+    },
+    {
+        "id": 38,
+        "field": "physics",
+        "question": "考虑一个由空心碳圆柱体制成的电阻器，如下图所示。圆柱体的内半径为 $R_i=0.2$mm，外半径为 $R_o=0.3$mm。电阻器的长度为 $L=0.9$mm。碳的电阻率为 $\\rho=3.5 * 10^{-5} \\Omega \\cdot m$。其电阻是多少（单位为 $\\Omega \\cdot m$）？",
+        "answer": null,
+        "subfield": "Electromagnetism",
+        "theorem": "ohm's law"
+    },
+    {
+        "id": 23,
+        "field": "physics",
+        "question": "地球和太阳相距 8.3 光分。在本题中忽略它们的相对运动，并假设它们处于同一个惯性系，即地日参考系。事件 A 和 B 分别于 t = 0 在地球上发生，以及于 2 分钟在太阳上发生。求对于一个以 u = 0.8c 从太阳向地球运动的观察者，这两个事件之间的时间差（以分钟为单位）。",
+        "answer": null,
+        "subfield": "Relativity",
+        "theorem": "relativity"
+    },
+    {
+        "id": 35,
+        "field": "physics",
+        "question": "一个弹簧水平安装，其左端固定。连接在自由端并向右拉的弹簧测力计显示拉力与位移成正比，且 6.0 N 的力产生 0.030 m 的位移。我们用一个 0.50-kg 的滑块代替弹簧测力计，沿无摩擦的气垫导轨向右拉动 0.020 m，然后从静止释放。求所得振动的周期 T。（单位：s）",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "angular dynamics"
+    },
+    {
+        "id": 41,
+        "field": "physics",
+        "question": "小行星智神星的轨道周期为 4.62 年，轨道偏心率为 0.233。求其轨道的半长轴。（单位：10^11 m）",
+        "answer": null,
+        "subfield": "Celestial mechanics",
+        "theorem": "kepler's third law"
+    },
+    {
+        "id": 53,
+        "field": "physics",
+        "question": "计算一个质量为 57 g、以 25 m/s 的速度运动的网球的德布罗意波长（单位为 m）。",
+        "answer": null,
+        "subfield": "Wave",
+        "theorem": "wave theorem"
+    },
+    {
+        "id": 50,
+        "field": "physics",
+        "question": "一个高度为 5cm 的物体放置在曲率半径为 45.0 cm 的凸面镜前 10 cm 处。求像的放大倍数。",
+        "answer": null,
+        "subfield": "Optics",
+        "theorem": "len's equation"
+    },
+    {
+        "id": 55,
+        "field": "physics",
+        "question": "计算一个质子射向固定质子靶以产生反质子所需的最小动能，单位为 MeV。",
+        "answer": null,
+        "subfield": "Particle",
+        "theorem": "particle"
+    },
+    {
+        "id": 49,
+        "field": "physics",
+        "question": "一名运动员在一个半径为 80.0 cm 的圆周上旋转铁饼。在某一瞬间，该运动员以 10.0 rad / s 的角速度旋转，且角速度正以 50.0 rad / s^2 的变化率增加。在此瞬间，求加速度的大小（单位：m / s^2）。返回数值。",
+        "answer": null,
+        "subfield": "Classic mechanics",
+        "theorem": "rigid-body"
+    },
+    {
+        "id": 31,
+        "field": "physics",
+        "question": "体重为 800 N 的兰斯洛特爵士正在通过攀爬一根长 5.0 m、重 180 N 的均匀梯子来攻打一座城堡。梯子的底部支撑在一个壁架上，并跨越护城河斜靠在无摩擦的垂直城堡墙壁上，处于平衡状态。梯子与水平方向成53.1°的角。兰斯洛特在爬到梯子三分之一处时停了下来。求梯子底部受到的接触力的大小。（单位：N）",
+        "answer": null,
+        "subfield": "Classic mechanics",
+        "theorem": "rigid-body"
+    },
+    {
+        "id": 51,
+        "field": "physics",
+        "question": "布鲁克海文国家实验室的相对论重离子碰撞机（RHIC）使金离子与其它金离子迎头对撞。金离子的能量为每个核子 100 GeV。金离子的速度占光速的比例是多少？",
+        "answer": null,
+        "subfield": "Particle",
+        "theorem": "particle"
+    },
+    {
+        "id": 52,
+        "field": "physics",
+        "question": "在一个直径为 8.0 x 10^-15 m 的中等大小原子核中，质子的最小动能是多少 MeV？",
+        "answer": null,
+        "subfield": "Atomic physics",
+        "theorem": "atomic theorem"
+    },
+    {
+        "id": 60,
+        "field": "physics",
+        "question": "计算氢原子最小直径内电子的动量不确定度，单位为 kg m/s。",
+        "answer": null,
+        "subfield": "Quantum",
+        "theorem": "quantum theorem"
+    },
+    {
+        "id": 42,
+        "field": "physics",
+        "question": "假设地板为 $4.0 m \\times 5.0 m$、天花板高 3.0 m 的客厅中，温度为 $20^{\\circ} C$ 的空气充满客厅，求相同体积水的重力。（单位：10 ^ 5 N）",
+        "answer": null,
+        "subfield": "Classic mechanics",
+        "theorem": "density"
+    },
+    {
+        "id": 64,
+        "field": "physics",
+        "question": "计算轻质气体氢气 (H2) 中的平均分子速率 v，单位为 m/s",
+        "answer": null,
+        "subfield": "Statistical physics",
+        "theorem": "statistical physics"
+    },
+    {
+        "id": 44,
+        "field": "physics",
+        "question": "U-238 的自发裂变活度为 6.7 次裂变/kg s。一个页岩样品按质量计含有 0.055% 的 U-238。通过确定其中存在的 U-238 质量（以 kg 为单位），计算一堆 106-kg 的页岩在一天内发生的自发裂变次数。",
+        "answer": null,
+        "subfield": "Atomic physics",
+        "theorem": "nuclear physics"
+    },
+    {
+        "id": 43,
+        "field": "physics",
+        "question": "计算一摩尔理想气体的平均平动动能，以 J 为单位，均在室温 293 K 下。",
+        "answer": null,
+        "subfield": "Statistical physics",
+        "theorem": "statistical physics"
+    },
+    {
+        "id": 68,
+        "field": "physics",
+        "question": "波长为 400 nm 的光入射到锂 (phi = 2.93 eV) 上。计算以 eV 为单位的光子能量。",
+        "answer": null,
+        "subfield": "Condensed matter physics",
+        "theorem": "photoelectric effect"
+    },
+    {
+        "id": 48,
+        "field": "physics",
+        "question": "一个μ子在其静止参考系中的寿命为 2 x 10^{-6} s。它在地球上方 100 km 处产生，并以 2.97 x 10^8 m/s 的速度朝向地球运动。它在多少 km 的高度衰变？返回一个数字。",
+        "answer": null,
+        "subfield": "Relativity",
+        "theorem": "relativity"
+    },
+    {
+        "id": 65,
+        "field": "physics",
+        "question": "一条在水平路面上、半径为 120 m 的弯道，其倾斜角度恰好适合 20 m/s 的速度。如果一辆汽车以 30 m/s 的速度驶过该弯道，为防止发生侧滑，轮胎与路面之间所需的最小静摩擦因数是多少？",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "newton's law"
+    },
+    {
+        "id": 54,
+        "field": "physics",
+        "question": "所有行走的动物，包括人类，都有一个自然步行节奏——即每分钟的步数，这个节奏比更快或更慢的节奏更舒适。假设这个节奏对应于腿作为物理摆的摆动。化石证据表明，生活在约 6500 万年前的双足恐龙霸王龙（T. rex）的腿长 L = 3.1 m，步幅 S = 4.0 m（从一个脚印到同一个脚的下一个脚印的距离）。估算霸王龙的步行速度。（单位：m/s）",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "physical pendulum"
+    },
+    {
+        "id": 11,
+        "field": "physics",
+        "question": "马吕斯定律：$I=I_0*cos^2($\\theta$)$。其中 I 是穿过偏振片的偏振光强度，I_0 是穿过偏振片之前的偏振光强度，$\\theta$ 是偏振光与偏振片之间的夹角。非偏振光穿过一个偏振片。然后它穿过另一个与第一个偏振片成 40 度角的偏振片，接着再穿过一个与第二个偏振片成 15 度角的偏振片。从第二个偏振片射出的光强度占最初强度的百分之几？",
+        "answer": null,
+        "subfield": "Optics",
+        "theorem": "malus' law"
+    },
+    {
+        "id": 59,
+        "field": "physics",
+        "question": "在一个水上乐园里，通过释放一个巨大的压缩弹簧，载有乘客的滑橇被送往一个光滑的水平面上。这个劲度系数为 k = 40.0 N/cm 且质量可忽略不计的弹簧静止在无摩擦的水平面上。弹簧的一端与一面固定的墙壁接触。总质量为 70.0 kg 的滑橇和乘客被推向弹簧的另一端，将弹簧压缩了 0.375 m。随后，滑橇以零初速度释放。当弹簧恢复到未压缩长度时，滑橇的速度（以 m/s 为单位）是多少？",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "work energy"
+    },
+    {
+        "id": 63,
+        "field": "physics",
+        "question": "在某次由 5.5-MeV alpha 粒子引发的核反应中，测得出射粒子的动能分别为 1.1 MeV 和 8.4 MeV。该反应的 Q 值是多少（以 MeV 为单位）？",
+        "answer": null,
+        "subfield": "Atomic physics",
+        "theorem": "nuclear physics"
+    },
+    {
+        "id": 46,
+        "field": "physics",
+        "question": "马吕斯定律：$I=I_0*cos^2($\\theta$)$。其中 I 是通过偏振片的偏振光强度，I_0 是偏振片前的偏振光强度，而 $\\theta$ 是偏振光与偏振片之间的夹角。非偏振光通过一个偏振片。然后它通过另一个与第一个偏振片成 30 度角的偏振片，接着再通过一个与第二个偏振片成 50 度角的偏振片。从第三个偏振片射出的光强是原始光强的百分之多少？",
+        "answer": null,
+        "subfield": "Optics",
+        "theorem": "malus' law"
+    },
+    {
+        "id": 73,
+        "field": "physics",
+        "question": "已知HCl分子的振动能级间隔为0.36 eV，计算其有效力常数（单位为N/m）。",
+        "answer": null,
+        "subfield": "Atomic physics",
+        "theorem": "atomic theorem"
+    },
+    {
+        "id": 47,
+        "field": "physics",
+        "question": "一架飞机在 8000 m 的高度以 1.75 马赫的速度飞行，此处的声速为 320 m/s。在飞机飞过正头顶后多久，你会听到音爆？（单位：m/s）",
+        "answer": null,
+        "subfield": "Wave",
+        "theorem": "shock wave"
+    },
+    {
+        "id": 71,
+        "field": "physics",
+        "question": "位于 x 轴上的观察者 S 在 x = 1210 m 处看到一次红光闪烁，然后在 4.96 µs 后，在 x = 480 m 处看到一次蓝光闪烁。使用下标 R 和 B 来标记这些事件的坐标。这两次闪烁之间测得的时间间隔（以 µs 为单位）是多少？",
+        "answer": null,
+        "subfield": "Relativity",
+        "theorem": "relativity"
+    },
+    {
+        "id": 66,
+        "field": "physics",
+        "question": "土星最大的卫星土卫六（Titan）的平均轨道半径为 1.22x10^9 m。土卫六的轨道周期为 15.95 天。土星的另一颗卫星土卫七（Hyperion）的平均轨道半径为 1.48x10^9 m。利用开普勒行星运动第三定律，预测土卫七的轨道周期（以天为单位）。",
+        "answer": null,
+        "subfield": "Celestial mechanics",
+        "theorem": "kepler's third law"
+    },
+    {
+        "id": 74,
+        "field": "physics",
+        "question": "在一个顶部向大气敞开的储水箱中，水深 12.0 m。储水箱底部的表压是多少？（单位：10 ^ 5 Pa）",
+        "answer": null,
+        "subfield": "Fluid mechanics",
+        "theorem": "fluid pressure"
+    },
+    {
+        "id": 58,
+        "field": "physics",
+        "question": "通过切去一个半径为 $r=6$ 的球体的顶部三分之一，形成一个高度为 $4r/3$ 的“鱼缸”。该鱼缸固定在沙子中，其边缘与地面平行。一个质量为 $m$ 的小弹珠静止在鱼缸底部。假设所有表面都是无摩擦的，且忽略空气阻力，求在 $g=9.8$ 的情况下，能给予弹珠并使其最终落回鱼缸内的最大初始速度。",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "kinetics theorem"
+    },
+    {
+        "id": 62,
+        "field": "physics",
+        "question": "一根蹦极绳长 30.0 m，当被拉伸距离 x 时，它会产生大小为 kx 的回复力。你的岳父（质量为 95.0 kg）站在一个距离地面 45.0 m 的平台上，绳子的一端牢牢地系在他的脚踝上，另一端系在平台上。你向他承诺，当他从平台上跨步跳下时，在绳子将他拉停之前，他下落的最大距离仅为 41.0 m。你有几根蹦极绳可供选择，你通过拉伸它们来进行测试：将一端系在树上，用 380.0 N 的力拉另一端。当你这样做时，你应当选择的那根蹦极绳会被拉伸多少距离（以 m 为单位）？",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "kinetics theorem"
+    },
+    {
+        "id": 79,
+        "field": "physics",
+        "question": "一个电子需要被加速通过多少 V 的电势差才能达到速度 v = 1.8 x 10^7 m/s？请使用相对论进行计算。",
+        "answer": null,
+        "subfield": "Relativity",
+        "theorem": "relativity"
+    },
+    {
+        "id": 75,
+        "field": "physics",
+        "question": "一个2.0-MeV的中子（裂变释放的中子的典型能量）被U-238原子核吸收并引起裂变的截面是0.68 barn。对于厚度为3.2 cm的纯U-238样品，一个2.0-MeV的中子引起裂变的概率是多少？",
+        "answer": null,
+        "subfield": "Atomic physics",
+        "theorem": "nuclear physics"
+    },
+    {
+        "id": 80,
+        "field": "physics",
+        "question": "点电荷 q1=50μC 和 q2=−25μC 相距 1.0 m。放入 q1 和 q2 正中间的第三个电荷 q3=20μC 受到的力是多少？",
+        "answer": null,
+        "subfield": "Electromagnetism",
+        "theorem": "coulomb's law"
+    },
+    {
+        "id": 67,
+        "field": "physics",
+        "question": "一个长度为 10 cm、横截面积为 20 $cm^2$ 的铝制圆柱体被用作两面钢墙之间的间隔件。在 17.2°C 时，它刚好能滑入两面墙之间。假设墙壁是完全刚性的，且保持恒定距离，计算当温度升高到 22.3°C 时，圆柱体对每面墙施加的总力。（单位：10^4 N）",
+        "answer": null,
+        "subfield": "Thermodynamics",
+        "theorem": "thermal stress"
+    },
+    {
+        "id": 78,
+        "field": "physics",
+        "question": "你从距离地面 $8.0 \\mathrm{~m}$ 的窗户扔出一个球。当球离开你的手时，它的运动速度为 $10.0 \\mathrm{~m} / \\athrm{s}$，方向在水平方向下方 $20^{\\circ}$。球在落地时距离你窗户的水平距离是多少？忽略空气阻力。（单位：m）",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "projectile motion"
+    },
+    {
+        "id": 82,
+        "field": "physics",
+        "question": "布鲁克海文国家实验室的相对论重离子碰撞机（RHIC）使金离子与其它金离子进行迎头对撞。金离子的能量为每个核子 100 GeV。这次碰撞的质心能是多少 TeV？",
+        "answer": null,
+        "subfield": "Particle",
+        "theorem": "particle"
+    },
+    {
+        "id": 72,
+        "field": "physics",
+        "question": "假设温度为 300 K，求在锗中使电子从价带跃迁到导带所需的光子波长（单位为 nm）。",
+        "answer": null,
+        "subfield": "Condensed matter physics",
+        "theorem": "semiconductor theory"
+    },
+    {
+        "id": 61,
+        "field": "physics",
+        "question": "某医院有一个用于癌症治疗的 3.0 x 10^14 Bq Co-60 放射源。已知在距离该放射源 4.0 m 处，入射到一位面积为 0.30 m^2 的患者身上的伽马射线速率为 $X*10^11$ Bq，求 X 的值。Co-60 每次衰变会释放出一个 1.1-MeV 和一个 1.3-MeV 的伽马射线。",
+        "answer": null,
+        "subfield": "Atomic physics",
+        "theorem": "nuclear physics"
+    },
+    {
+        "id": 83,
+        "field": "physics",
+        "question": "求在冬至日正午，对于平放在迈阿密（纬度 26°N）地球表面上的太阳能收集器，其可利用的到达地球的标准太阳辐射通量（约 1000 W/m^2）的比例。",
+        "answer": null,
+        "subfield": "Condensed matter physics",
+        "theorem": "semiconductor theory"
+    },
+    {
+        "id": 90,
+        "field": "physics",
+        "question": "穿过一个球面的电通量为 $4.0\\times 10^4 N \\cdot m^2/C$。该球面所包围的净电荷是多少？",
+        "answer": null,
+        "subfield": "Electromagnetism",
+        "theorem": "gauss's law"
+    },
+    {
+        "id": 85,
+        "field": "physics",
+        "question": "凹面镜所成的像在 -16.2m 处，放大倍数是 1.79。以 m 为单位的物距是多少？",
+        "answer": null,
+        "subfield": "Optics",
+        "theorem": "len's equation"
+    },
+    {
+        "id": 57,
+        "field": "physics",
+        "question": "莎莉正驾驶着她1965年的野马汽车沿一条笔直的高速公路行驶。在t=0时刻，她正以10m/s速度沿 x 轴正方向运动，并经过了一个位于 $x_0 = 50m$ 的路标。她的 x 方向加速度随时间变化的关系为\na_x = 2.0 m/s^2 - (0.10 m / s^3) t\n汽车在行驶了 X 米后达到最大 x 方向速度。X 是多少？",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "projectile motion"
+    },
+    {
+        "id": 92,
+        "field": "physics",
+        "question": "地球的质量是 5.97x10^24 kg，月球的质量是 7.35x10^22 kg，月球到地球中心的平均距离是 3.84x105 km。地球对月球施加的引力大小为 X * 10^20 N。X 是多少？请返回一个数值。",
+        "answer": null,
+        "subfield": "Celestial mechanics",
+        "theorem": "kepler's third law"
+    },
+    {
+        "id": 87,
+        "field": "physics",
+        "question": "计算定域在典型原子核半径 6 x 10^-15 m 内的电子的最小动能，以 MeV 为单位。",
+        "answer": null,
+        "subfield": "Quantum",
+        "theorem": "quantum theorem"
+    },
+    {
+        "id": 77,
+        "field": "physics",
+        "question": "一个放射性样品含有两种不同的同位素A和B。A的半衰期为3天，B的半衰期为6天。起初，样品中A的原子数量是B的两倍。经过多少天后，A与B的原子数量之比会颠倒过来？",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "kinetics theorem"
+    },
+    {
+        "id": 93,
+        "field": "physics",
+        "question": "考虑在 CERN 的 LHC 对撞机中产生的 7.0-TeV 质子。如果这些质子在固定靶实验中与其他质子发生碰撞，求可用的质心能（以 GeV 为单位）。",
+        "answer": null,
+        "subfield": "Particle",
+        "theorem": "particle"
+    },
+    {
+        "id": 84,
+        "field": "physics",
+        "question": "卡文迪许扭秤中一个小球的质量是 0.0100 kg，离它最近的大球的质量是 0.500 kg，它们之间的中心距离是 0.0500 m。假设每个球受到另一个球的万有引力为 $X * 10^{-10}$ N，X 是多少？",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "gravitational force"
+    },
+    {
+        "id": 95,
+        "field": "physics",
+        "question": "假设一名患有远视的学生戴着眼镜，使他能够阅读距离眼睛 20cm 处的书。他的近点距离是 63cm。如果他的眼镜距离眼睛 1.5cm，那么他眼镜镜片的屈光度是多少？",
+        "answer": null,
+        "subfield": "Optics",
+        "theorem": "len's equation"
+    },
+    {
+        "id": 98,
+        "field": "physics",
+        "question": "一架空中客车 A380 客机上的四台喷气发动机中，每台都产生 322,000 N (72,000 lb) 的推力（对客机施加的向前作用力）。当飞机以 250 m/s 的速度飞行时，每台发动机产生的功率是多少马力？（单位：hp）",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "work energy"
+    },
+    {
+        "id": 88,
+        "field": "physics",
+        "question": "当一个人行走时，他的手臂在0.5s内摆动大约45°的角度。作为一个合理的近似，我们可以假设手臂在每次摆动期间以恒定速度运动。从肩关节量起，一条典型的手臂长70.0 cm。在摆动的最低点，指尖处一滴1.0 g的血液的加速度（单位为 m/s^2）是多少？",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "newton's law"
+    },
+    {
+        "id": 107,
+        "field": "physics",
+        "question": "计算动能为 50 eV 的电子的德布罗意波长，以 nm 为单位。",
+        "answer": null,
+        "subfield": "Wave",
+        "theorem": "wave theorem"
+    },
+    {
+        "id": 81,
+        "field": "physics",
+        "question": "两个氩原子由于范德华相互作用形成 $Ar_2$ 分子，其中 $U_0 = 1.68 \\times 10 ^ {-21}$ J，$R_0 = 3.82 \\times 10 ^ {-10}$ m。求一个 Ar 原子在其平衡位置附近微振动的频率。（单位：10^11 Hz）",
+        "answer": null,
+        "subfield": "Atomic physics",
+        "theorem": "molecule vibration"
+    },
+    {
+        "id": 89,
+        "field": "physics",
+        "question": "一根 2.00-kg 的绳子一端系在深 80.0 m 的矿井顶部的支撑物上。绳子被底部悬挂的一个 20.0-kg 的装有岩石的箱子拉紧。如果绳上的某一点作频率为 f = 2.00 Hz 的横向简谐运动，那么在整条绳子的长度内有多少个周期的波？",
+        "answer": null,
+        "subfield": "Wave",
+        "theorem": "wave speed"
+    },
+    {
+        "id": 69,
+        "field": "physics",
+        "question": "假设质子的半衰期是 10^33 年。在一个装有 350,000 升水的水箱中，你预计每年会发生多少次衰变？",
+        "answer": null,
+        "subfield": "Particle",
+        "theorem": "particle"
+    },
+    {
+        "id": 105,
+        "field": "physics",
+        "question": "游乐设施上的乘客在半径为 5.0 m 的水平圆周上以恒定速度运动，绕行一周需要 4.0 s。他们的加速度是多少？（单位：m/s^2）",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "centripetal acceleration"
+    },
+    {
+        "id": 104,
+        "field": "physics",
+        "question": "詹姆斯（质量为 90.0 kg）和拉蒙（质量为 60.0 kg）在一个结冰的池塘上相距 20.0 m。在他们正中间放着一杯他们最喜欢的饮料。他们拉着拉直在他们之间的一根轻绳的两端。当詹姆斯向饮料杯移动了 6.0 m 时，拉蒙移动了多远？（单位：m）",
+        "answer": null,
+        "subfield": "Classic mechanics",
+        "theorem": "center of mass"
+    },
+    {
+        "id": 91,
+        "field": "physics",
+        "question": "一根长度为 L = 6.0 m、质量为 M = 90 kg 的均匀木板搁在两个锯木架上，这两个锯木架相距 D = 1.5 m 且与木板中心的距离相等。表哥斯洛克莫顿想要站在木板的右端。如果要让木板保持静止，斯洛克莫顿的质量最大可以是多少？（单位：kg）",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "center of gravity"
+    },
+    {
+        "id": 97,
+        "field": "physics",
+        "question": "一辆阿斯顿·马丁 V8 Vantage 跑车的横向加速度为 $0.96g = (0.96)(9.8 m / s^2) = 9.4 m / s^2$。这是该车在不滑出弯道的情况下所能承受的最大向心加速度。如果该车在水平地面上以 40m/s 的恒定速度行驶，它所能通过的最急的无坡度弯道的半径 R 是多少？（单位：m）",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "uniform circular motion"
+    },
+    {
+        "id": 103,
+        "field": "physics",
+        "question": "用于产生医学X射线的电子在撞击金属靶之前，通过25,000伏特的电势差从静止开始加速。计算电子的速度，单位为 m/s。",
+        "answer": null,
+        "subfield": "Relativity",
+        "theorem": "relativity"
+    },
+    {
+        "id": 109,
+        "field": "physics",
+        "question": "在一个特定的半导体器件中，经5 V电势加速的电子试图穿透一个宽度为0.8 nm、高度为10 V的势垒。如果势垒外的电势为零，能够穿透该势垒的电子比例是多少？",
+        "answer": null,
+        "subfield": "Quantum",
+        "theorem": "quantum theorem"
+    },
+    {
+        "id": 86,
+        "field": "physics",
+        "question": "密度为 850 kg/m^3 的不可压缩油以 9.5 升/秒的流量被泵送通过一根圆柱形管道。管道第二段的直径为 4.0 cm。该段的流速是多少？（单位：m/s）",
+        "answer": null,
+        "subfield": "Fluid mechanics",
+        "theorem": "fluid flow"
+    },
+    {
+        "id": 96,
+        "field": "physics",
+        "question": "1985年，挑战者号航天飞机搭载了一台铯钟，并将其时间与留在地球上的静止时钟进行了对比。该航天飞机在距离地球约 330 km 的轨道上运行，速度为 7712 m/s。计算移动时钟每秒预期损失的时间（以皮秒为单位），并将其与 $-295.02 \\pm 0.29 ps/s$ 的测量结果进行对比，该测量结果中包含了由广义相对论预测的 $35.0 \\pm 0.06 ps/s$ 的效应。",
+        "answer": null,
+        "subfield": "Relativity",
+        "theorem": "relativity"
+    },
+    {
+        "id": 94,
+        "field": "physics",
+        "question": "在一个中等响度的正弦声波中，最大压强变化大约在大气压上下 $3.0 \\times 10 ^ {-2}$ Pa。如果频率为 1000 Hz，求对应的最大位移。在标准大气压和密度的空气中，声速为 344 m/s，体积弹性模量为 $1.42 \\times 10^5$ Pa。（单位：$10 ^ {-8}$）",
+        "answer": null,
+        "subfield": "Wave",
+        "theorem": "sound wave amplitude"
+    },
+    {
+        "id": 108,
+        "field": "physics",
+        "question": "计算铜的费米能（以 eV 为单位）。",
+        "answer": null,
+        "subfield": "Statistical physics",
+        "theorem": "statistical physics"
+    },
+    {
+        "id": 101,
+        "field": "physics",
+        "question": "你想将一颗 1000 kg 的卫星送入距离地球表面 300 km 的圆轨道。要将卫星送入轨道，需要对它做多少功？地球的半径和质量分别为 $R_E}=$ $6.38 \\times 10^6 m$ 和 $m_E=5.97 \\times 10^{24} kg$。（单位：10^10 J）",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "uniform circular motion"
+    },
+    {
+        "id": 56,
+        "field": "physics",
+        "question": "在声速为 345 m/s 的某天，某一特定闭口风琴管的基频为220 Hz。该管的第二泛音与一根开口风琴管的第三谐波具有相同的波长。这根开口风琴管有多长？（单位：m）",
+        "answer": null,
+        "subfield": "Wave",
+        "theorem": "standing sound wave"
+    },
+    {
+        "id": 111,
+        "field": "physics",
+        "question": "一根长度为 2.0 m 的钢杆，其横截面积为 $0.30 cm ^ 2$。它的一端悬挂在一个支架上，另一端悬挂着一台 550-kg 的铣床。求该钢杆受到的应力、由此产生的应变以及伸长量。（单位：mm）",
+        "answer": null,
+        "subfield": "Classic mechanics",
+        "theorem": "young's modulus"
+    },
+    {
+        "id": 115,
+        "field": "chemistry",
+        "question": "金属钾的阈值波长为 $564 \\mathrm{~nm}$。它的逸出功是多少？",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$10^{-19} \\mathrm{~J}$"
+    },
+    {
+        "id": 114,
+        "field": "chemistry",
+        "question": "计算动能为 $100 \\mathrm{eV}$ 的电子的德布罗意波长。",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "nm"
+    },
+    {
+        "id": 116,
+        "field": "chemistry",
+        "question": "计算级数\n$$\nS=\\sum_{n=0}^{\\infty} \\frac{1}{3^n}\n$$",
+        "answer": null,
+        "subfield": "chemmc"
+    },
+    {
+        "id": 76,
+        "field": "physics",
+        "question": "U-238的自发裂变活度率为 6.7 fissions/kg s。某页岩样品中含有按重量计 0.055% 的 U-238。通过确定裂变次数，计算一堆 106-kg 的页岩在一天内发生的自发裂变次数。",
+        "answer": null,
+        "subfield": "Atomic physics",
+        "theorem": "nuclear physics"
+    },
+    {
+        "id": 106,
+        "field": "physics",
+        "question": "即使光强低至 10^-8 W/m^2，钠 (phi = 2.36 eV) 也有可能发射出光电子。请根据经典物理学计算，光必须照射多长时间（以秒为单位）才能产生一个动能为 1.00 eV 的光电子。返回数值。",
+        "answer": null,
+        "subfield": "Quantum",
+        "theorem": "quantum theorem"
+    },
+    {
+        "id": 113,
+        "field": "physics",
+        "question": "一个在地球上重量为 3430 N 的机器人着陆器被送往火星。火星的半径为 $R_M=3.40 \\times 10^6 m$，质量为 $m_M=6.42 \\times$ $10^{23} kg$。求那里的重力加速度。（单位：$m/s^2$）",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "gravitational force"
+    },
+    {
+        "id": 110,
+        "field": "physics",
+        "question": "一位测量员使用一卷钢卷尺，在 20°C 的温度下其长度恰好为 50.000 m。卷尺上的刻度是针对该温度校准的。当温度为 35°C 时，测量员用该卷尺测量了一段距离。她从卷尺上读出的读数为 35.794 m。实际距离是多少？（单位：m）",
+        "answer": null,
+        "subfield": "Thermodynamics",
+        "theorem": "linear expansion"
+    },
+    {
+        "id": 112,
+        "field": "physics",
+        "question": "哈雷彗星沿着一个扁长的椭圆轨道绕太阳运动（图 13.20）。它在近日点和远日点距离太阳的距离分别为 $8.75 \\times 10^7 km$ 和 $5.26 \\times 10^9 km$。其公转周期为 X * 10^9 s。X 是多少？",
+        "answer": null,
+        "subfield": "Celestial mechanics",
+        "theorem": "kepler's third law"
+    },
+    {
+        "id": 124,
+        "field": "chemistry",
+        "question": "如果我们知道一个电子的位置在 $10 \\mathrm{pm}$ 的区间内，其动量的不确定度是多少？",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$10^{-23} \\mathrm{~kg} \\cdot \\mathrm{m} \\cdot \\mathrm{s}^{-1}$"
+    },
+    {
+        "id": 130,
+        "field": "chemistry",
+        "question": "热核爆炸中火球的温度可达到约 $10^7 \\mathrm{~K}$。这对应的 $\\lambda_{\\max }$ 值是多少？",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$10^{-10} \\mathrm{~m}$"
+    },
+    {
+        "id": 127,
+        "field": "chemistry",
+        "question": "计算与莱曼系系限相对应的光子的波长。",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "nm"
+    },
+    {
+        "id": 120,
+        "field": "chemistry",
+        "question": "一个初始静止的质子必须加速通过多大的电势差，才能使其德布罗意波长为 $1.0 \\times 10^{-10} \\mathrm{~m}$？",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "V"
+    },
+    {
+        "id": 122,
+        "field": "chemistry",
+        "question": "氢原子赖曼系中的一条谱线波长为 $1.03 \\times 10^{-7} \\mathrm{~m}$。求电子的初始能级。",
+        "answer": null,
+        "subfield": "chemmc"
+    },
+    {
+        "id": 119,
+        "field": "chemistry",
+        "question": "计算级数\n$$\nS=\\frac{1}{2}+\\frac{1}{4}+\\frac{1}{8}+\\frac{1}{16}+\\cdots\n$$",
+        "answer": null,
+        "subfield": "chemmc"
+    },
+    {
+        "id": 99,
+        "field": "physics",
+        "question": "一个 $200-cm^3$ 的玻璃烧瓶在 20°C 时装满了汞。当系统的温度升高到 100°C 时，会有多少汞溢出？玻璃的线膨胀系数为 $0.40 \\times 10^{-5} K^{-1}$。（单位：cm^3）",
+        "answer": null,
+        "subfield": "Thermodynamics",
+        "theorem": "volume thermal expansion"
+    },
+    {
+        "id": 123,
+        "field": "chemistry",
+        "question": "一台氦氖激光器（用于超市扫描仪）发出波长为 $632.8 \\mathrm{~nm}$ 的光。计算这种光的频率。",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$10^{14} \\mathrm{~Hz}$"
+    },
+    {
+        "id": 118,
+        "field": "chemistry",
+        "question": "家用灯泡是一个黑体辐射体。许多灯泡使用通过电流加热的钨丝。需要多高的温度才能使 $\\lambda_{\\max }=550 \\mathrm{~nm}$？",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$\\mathrm{~K}$"
+    },
+    {
+        "id": 126,
+        "field": "chemistry",
+        "question": "当处于激发态的原子核衰变时，它会发射一个 $\\gamma$ 射线。原子核激发态的寿命数量级为 $10^{-12} \\mathrm{~s}$。所产生的 $\\gamma$ 射线能量的不确定度是多少？",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$10^{-22} \\mathrm{~J}$"
+    },
+    {
+        "id": 134,
+        "field": "chemistry",
+        "question": "计算一个氮分子的约化质量，其中两个氮原子的原子质量均为 14.00。",
+        "answer": null,
+        "subfield": "chemmc"
+    },
+    {
+        "id": 102,
+        "field": "physics",
+        "question": "冥王星（半径 1180 km）上生活着三种紫色的毛毛虫。研究确立了以下事实：\n1. 5 只绛紫色毛毛虫排成一排的长度与 7 只紫罗兰色毛毛虫排成一排的长度相同。\n2. 3 只薰衣草色毛毛虫和 1 只绛紫色毛毛虫排成一排的长度与 8 只紫罗兰色毛毛虫排成一排的长度相同。\n3. 5 只薰衣草色毛毛虫、5 只绛紫色毛毛虫和 2 只紫罗兰色毛毛虫排成一排的总长度为 1 m。\n4. 一只薰衣草色毛毛虫爬过一只紫罗兰色毛毛虫的长度需要 10 s。\n5. 紫罗兰色和绛紫色毛毛虫的爬行速度都是薰衣草色毛毛虫的两倍。\n一只绛紫色毛毛虫绕冥王星赤道爬行一周需要多少年？",
+        "answer": null,
+        "subfield": "Kinetics",
+        "theorem": "kinetics theorem"
+    },
+    {
+        "id": 128,
+        "field": "chemistry",
+        "question": "已知背景信息，能量和时间之间也存在不确定性原理：\n$$\n\\Delta E \\Delta t \\geq h\n$$\n该关系的另一个应用与原子和分子的激发态能量及寿命有关。如果我们知道一个激发态的寿命是 $10^{-9} \\mathrm{~s}$，那么该状态能量的不确定度是多少？",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$10^{-25} \\mathrm{~J}$"
+    },
+    {
+        "id": 131,
+        "field": "chemistry",
+        "question": "分别用洛必达法则和分子分母泰勒展开两种方法，求极限\n$$\n\\lim _{x \\rightarrow 0} \\frac{\\ln (1+x)-x}{x^2}\n$$\n的值。只需给出最终结果。",
+        "answer": null,
+        "subfield": "chemmc"
+    },
+    {
+        "id": 129,
+        "field": "chemistry",
+        "question": "研究结构最强大的现代技术之一是中子衍射。该技术涉及利用高能中子源产生特定温度的准直中子束，并且已在全球数个加速器设施中实现。如果中子的速度由 $v_{\\mathrm{n}}=\\left(3 k_{\\mathrm{B}} T / m\\right)^{1 / 2}$ 给出，其中 $m$ 是中子的质量，那么需要多高的温度才能使中子的德布罗意波长为 $50 \\mathrm{pm}$？",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$\\mathrm{K}$"
+    },
+    {
+        "id": 133,
+        "field": "chemistry",
+        "question": "当 $x=0.0050$ 时，计算 $\\ln (1+x)$ 和 $x$ 之间的百分比差异。",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "%"
+    },
+    {
+        "id": 125,
+        "field": "chemistry",
+        "question": "利用玻尔理论，计算单电离氦的电离能（以电子伏特和 $\\mathrm{kJ} \\cdot \\mathrm{mol}^{-1}$ 为单位）。",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$\\mathrm{eV}$"
+    },
+    {
+        "id": 121,
+        "field": "chemistry",
+        "question": "例 5-3 表明，Morse 势的麦克劳林展开可以得到\n$$\nV(x)=D \\beta^2 x^2+\\cdots\n$$\n已知对于 $\\mathrm{HCl}$，$D=7.31 \\times 10^{-19} \\mathrm{~J} \\cdot$ molecule ${ }^{-1}$ 且 $\\beta=1.81 \\times 10^{10} \\mathrm{~m}^{-1}$，计算 $\\mathrm{HCl}$ 的力常数。",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$\\mathrm{~N} \\cdot \\mathrm{m}^{-1}$"
+    },
+    {
+        "id": 132,
+        "field": "chemistry",
+        "question": "求级数\n$$\nS=\\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{2^n}\n$$\n的值",
+        "answer": null,
+        "subfield": "chemmc"
+    },
+    {
+        "id": 144,
+        "field": "chemistry",
+        "question": "地球表面的平均温度是 $288 \\mathrm{~K}$。地球黑体辐射的最大波长是多少？",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "10^{-5} \\mathrm{~m}"
+    },
+    {
+        "id": 141,
+        "field": "chemistry",
+        "question": "$$\n\\beta=2 \\pi c \\tilde{\\omega}_{\\mathrm{obs}}\\left(\\frac{\\mu}{2 D}\\right)^{1 / 2}\n$$\n已知对于 $\\mathrm{H}^{35} \\mathrm{Cl}$，$\\tilde{\\omega}_{\\mathrm{obs}}=2886 \\mathrm{~cm}^{-1}$ 且 $D=440.2 \\mathrm{~kJ} \\cdot \\mathrm{mol}^{-1}$，计算 $\\beta$。",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$10^{10} \\mathrm{~m}^{-1}$"
+    },
+    {
+        "id": 150,
+        "field": "chemistry",
+        "question": "计算当 $x=0.0050$ 时 $e^x$ 与 $1+x$ 之间的百分比差异。",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$10^{-3} \\%$"
+    },
+    {
+        "id": 135,
+        "field": "chemistry",
+        "question": "用来自激光器的波长为 $694.3 \\mathrm{~nm}$ 的红光照射两个窄缝，在距离窄缝 $3.00 \\mathrm{~m}$ 处的屏上产生一组均匀分布的亮条纹。如果条纹之间的距离是 $1.50 \\mathrm{~cm}$，那么窄缝之间的距离是多少？",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "mm"
+    },
+    {
+        "id": 136,
+        "field": "chemistry",
+        "question": "计算一个通过 $4.0 \\mathrm{~V}$ 电势差的 $\\alpha$ 粒子所具有的能量。取 $\\alpha$ 粒子的质量为 $6.64 \\times 10^{-27} \\mathrm{~kg}$。",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$10^{-18} \\mathrm{~J} / \\alpha \\text {-particle}$"
+    },
+    {
+        "id": 138,
+        "field": "chemistry",
+        "question": "${ }^{35} \\mathrm{Cl}^{35} \\mathrm{Cl}$ 的力常数为 $319 \\mathrm{~N} \\cdot \\mathrm{m}^{-1}$。计算其基本振动频率。",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$\\mathrm{~cm}^{-1}$"
+    },
+    {
+        "id": 137,
+        "field": "chemistry",
+        "question": "计算一个 $2.00 \\mathrm{~mJ}$ 光脉冲在 (a) $1.06 \\mu \\mathrm{m}$ 处的光子数量",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$10^{16}$ photons"
+    },
+    {
+        "id": 143,
+        "field": "chemistry",
+        "question": "$$\n\\text { 如果我们将电子定位在 } 20 \\mathrm{pm} \\text { 以内，那么它的速度不确定度是多少？ }\n$$",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$10^7 \\mathrm{~m} \\cdot \\mathrm{s}^{-1}$"
+    },
+    {
+        "id": 117,
+        "field": "chemistry",
+        "question": "问题 $1-48$ 中引入的关系被解释为，一个质量为 $m\\left(E=m c^2\\right)$ 的粒子可以凭空产生，只要它在时间 $\\Delta t \\leq h / m c^2$ 之内归于虚无。持续时间达到或超过 $\\Delta t$ 的粒子被称为实粒子；持续时间少于 $\\Delta t$ 的粒子被称为虚粒子。带电 $\\pi$ 介子（一种亚原子粒子）的质量为 $2.5 \\times 10^{-28} \\mathrm{~kg}$。如果该 $\\pi$ 介子要被视为实粒子，其最小寿命是多少？",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$10^{-23} \\mathrm{~s}$"
+    },
+    {
+        "id": 142,
+        "field": "chemistry",
+        "question": "两个相距 $0.10 \\mathrm{~mm}$ 的窄缝被波长为 $600 \\mathrm{~nm}$ 的光照射。如果一个探测器位于窄缝后 $2.00 \\mathrm{~m}$ 处，中央极大值与第一级极大值之间的距离是多少？",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "mm"
+    },
+    {
+        "id": 146,
+        "field": "chemistry",
+        "question": "天狼星是已知最热的恒星之一，其光谱近似为黑体光谱，其中 $\\lambda_{\\max }=260 \\mathrm{~nm}$。估算天狼星的表面温度。",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$\\mathrm{~K}$"
+    },
+    {
+        "id": 149,
+        "field": "chemistry",
+        "question": "在 $\\mathrm{H}^{127} \\mathrm{I}$ 的红外光谱中，在 $2309 \\mathrm{~cm}^{-1}$ 处有一条强谱线。计算 $\\mathrm{H}^{127} \\mathrm{I}$ 的力常数。",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$ \\mathrm{~N} \\cdot \\mathrm{m}^{-1}$"
+    },
+    {
+        "id": 151,
+        "field": "chemistry",
+        "question": "计算被 $100 \\mathrm{~V}$ 电压增量加速的电子束中一个电子的动能。",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$10^{-17} \\mathrm{~J} \\cdot$ electron ${ }^{-1}$"
+    },
+    {
+        "id": 140,
+        "field": "chemistry",
+        "question": "一个质子和一个带负电的 $\\mu$ 介子（也称为 μ 子）可以形成一种寿命很短的、被称为介子原子的体系。μ 子的电荷与电子相同，其质量为 $207 m_{\\mathrm{e}}$。假设玻尔理论可以应用于这种介子原子，计算该介子原子中与 $n=1$ 到 $n=2$ 跃迁相关的频率。",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$10^{17} \\mathrm{~Hz}$"
+    },
+    {
+        "id": 147,
+        "field": "chemistry",
+        "question": "一个基态氢原子吸收了一个波长为 $97.2 \\mathrm{~nm}$ 的光子。然后，它释放出一个波长为 $486 \\mathrm{~nm}$ 的光子。该氢原子的最终状态是什么？",
+        "answer": null,
+        "subfield": "chemmc"
+    },
+    {
+        "id": 153,
+        "field": "chemistry",
+        "question": "在一个横截面积为 $50 \\mathrm{~cm}^2$ 的容器中发生了一个化学反应。由于反应的结果，活塞克服 $1.0 \\mathrm{~atm}$ 的外压被向外推送了 $15 \\mathrm{~cm}$。计算系统所做的功。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{~J}$"
+    },
+    {
+        "id": 139,
+        "field": "chemistry",
+        "question": "$$\n\\text {计算波长为 } 100 \\mathrm{pm} \\text { （约一个原子直径）的光子能量。}\n$$",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$10^{-15} \\mathrm{~J}$"
+    },
+    {
+        "id": 154,
+        "field": "chemistry",
+        "question": "制备一种水和乙醇的混合物，其中水的摩尔分数为 0.60。如果混合物组成的微小变化导致水的化学势增加了 $0.25 \\mathrm{~J} \\mathrm{~mol}^{-1}$，那么乙醇的化学势将改变多少？",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{~J} \\mathrm{~mol}^{-1}$"
+    },
+    {
+        "id": 148,
+        "field": "chemistry",
+        "question": "结果表明，Morse势的薛定谔方程的解可以表示为\n$$\nG(v)=\\tilde{\\omega}_{\\mathrm{e}}\\left(v+\\frac{1}{2}\\right)-\\tilde{\\omega}_{\\mathrm{e}} \\tilde{x}_{\\mathrm{e}}\\left(v+\\frac{1}{2}\\right)^2\n$$\n谐振子与振动光谱\n其中\n$$\n\\tilde{x}_{\\mathrm{e}}=\\frac{h c \\tilde{\\omega}_{\\mathrm{e}}}{4 D}\n$$\n已知对于 $\\mathrm{H}^{35} \\mathrm{Cl}$，$\\tilde{\\omega}_{\\mathrm{e}}=2886 \\mathrm{~cm}^{-1}$ 且 $D=440.2 \\mathrm{~kJ} \\cdot \\mathrm{mol}^{-1}$，计算 $\\tilde{x}_{\\mathrm{e}}$。",
+        "answer": null,
+        "subfield": "chemmc"
+    },
+    {
+        "id": 162,
+        "field": "chemistry",
+        "question": "假设长度为 $L=10.0 \\mathrm{~nm}$ 的碳纳米管中一个电子的归一化波函数为：$\\psi=(2 / L)^{1 / 2} \\sin (\\pi x / L)$。计算该电子处于 $x=4.95 \\mathrm{~nm}$ 和 $5.05 \\mathrm{~nm}$ 之间的概率。",
+        "answer": null,
+        "subfield": "matter"
+    },
+    {
+        "id": 100,
+        "field": "physics",
+        "question": "一根长度为 10 cm 的纯铅棒，其一端保持在 T &=300 K，另一端保持在 310 K。由此在两端感应出的温差电势差为 12.8 微伏。求铅在该温度范围内的温差电势率，单位为 V/K。（注意：Q 随温度呈非线性变化，但在如此窄的温度范围内，你可以使用线性近似。）",
+        "answer": null,
+        "subfield": "Condensed matter physics",
+        "theorem": "semiconductor theory"
+    },
+    {
+        "id": 156,
+        "field": "chemistry",
+        "question": "假设一个纳米结构被简化为一个限制在边长为 $L_1=1.0 \\mathrm{~nm}$ 和 $L_2=2.0 \\mathrm{~nm}$ 的矩形区域中的电子，并承受典型能量等于 $k T$ 的热运动，其中 $k$ 是玻尔兹曼常数。温度需要低到什么程度，热能才能与零点能相当？",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$10^3 \\mathrm{~K}$"
+    },
+    {
+        "id": 164,
+        "field": "chemistry",
+        "question": "一个被限制在金属纳米颗粒中的电子被建模为一个处于长度为 $L$ 的一维盒子中的粒子。如果该电子处于 $n=1$ 态，计算在以下区域中找到它的概率：$0 \\leq x \\leq \\frac{1}{2} L$。",
+        "answer": null,
+        "subfield": "matter"
+    },
+    {
+        "id": 160,
+        "field": "chemistry",
+        "question": "在电子显微镜中，一个电子从静止开始经 $\\Delta \\phi=100 \\mathrm{kV}$ 的电势差加速，并获得 $e \\Delta \\phi$ 的能量。它的最终速度是多少？",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$10^8 \\mathrm{~m} \\mathrm{~s}^{-1}$"
+    },
+    {
+        "id": 155,
+        "field": "chemistry",
+        "question": "汞的熔化焓为 $2.292 \\mathrm{~kJ} \\mathrm{~mol}^{-1}$，其正常凝固点为 $234.3 \\mathrm{~K}$，且熔化时的摩尔体积变化为 $+0.517 \\mathrm{~cm}^3 \\mathrm{~mol}^{-1}$。一根高度为 $10.0 \\mathrm{~m}$ 的汞柱（密度为 $13.6 \\mathrm{~g} \\mathrm{~cm}^{-3}$）的底部预计将在什么温度下凝固？",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$ \\mathrm{~K}$"
+    },
+    {
+        "id": 161,
+        "field": "chemistry",
+        "question": "以下数据展示了二氧化硫的标准摩尔定压热容随温度的变化情况。当温度从 $298.15 \\mathrm{~K}$ 升高到 $1500 \\mathrm{~K}$ 时，$\\mathrm{SO}_2(\\mathrm{~g})$ 的标准摩尔焓增加了多少？",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{~kJ} \\mathrm{~mol}^{-1}$"
+    },
+    {
+        "id": 157,
+        "field": "chemistry",
+        "question": "计算在等温条件下压力从 1 atm 增加到 3000 atm 时，$35 \\mathrm{~g}$ 乙醇（质量密度为 $0.789 \\mathrm{~g} \\mathrm{~cm}^{-3}$）的吉布斯能变化。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{~kJ}$"
+    },
+    {
+        "id": 167,
+        "field": "chemistry",
+        "question": "计算逆转一个距离 $\\mathrm{Li}^{+}$ 离子 $100 \\mathrm{pm}$ 的 $\\mathrm{H}_2 \\mathrm{O}$ 分子方向所需的摩尔能量。取水分子的偶极矩大小为 $1.85 \\mathrm{D}$。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$10^3 \\mathrm{~kJ} \\mathrm{~mol}^{-1}$"
+    },
+    {
+        "id": 159,
+        "field": "chemistry",
+        "question": "尽管生物大分子的结晶可能不像小分子那样容易实现，但它们的晶格并没有什么不同。烟草种子球蛋白形成面心立方晶体，其晶胞参数为 $12.3 \\mathrm{~nm}$，密度为 $1.287 \\mathrm{~g} \\mathrm{~cm}^{-3}$。确定其摩尔质量。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$10^5 \\mathrm{~g} \\mathrm{~mol}^{-1}$"
+    },
+    {
+        "id": 158,
+        "field": "chemistry",
+        "question": "在纯 $\\mathrm{TIO}_2$ 中，通过光吸收将电子从价带跃迁到导带需要波长小于 $350 \\mathrm{~nm}$ 的光。计算价带和导带之间的能隙（以电子伏特为单位）。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{eV}$"
+    },
+    {
+        "id": 145,
+        "field": "chemistry",
+        "question": "激光器的输出功率以瓦特 (W) 为单位进行测量，其中一瓦特等于每秒一焦耳。$\\left(1 \\mathrm{~W}=1 \\mathrm{~J} \\cdot \\mathrm{s}^{-1}\\right.$。)一个 $1.00 \\mathrm{~mW}$ 的氮气激光器每秒发射的光子数是多少？氮气激光器发射的波长为 $337 \\mathrm{~nm}$。",
+        "answer": null,
+        "subfield": "chemmc",
+        "unit": "$\r\n10^{15} \\text { photon } \\cdot \\mathrm{s}^{-1}\r\n$"
+    },
+    {
+        "id": 165,
+        "field": "chemistry",
+        "question": "金刚石中的碳碳键长为 $154.45 \\mathrm{pm}$。如果将金刚石视为由半径等于键长一半的硬球组成的最密堆积结构，其预期密度是多少？金刚石晶格为面心立方，其实际密度为 $3.516 \\mathrm{~g} \\mathrm{~cm}^{-3}$。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{~g} \\mathrm{~cm}^{-3}$"
+    },
+    {
+        "id": 152,
+        "field": "chemistry",
+        "question": "来自一个X射线源的辐射由波长分别为 $154.433 \\mathrm{pm}$ 和 $154.051 \\mathrm{pm}$ 的两个成分组成。计算在面间距为 $77.8 \\mathrm{pm}$ 的晶面所产生的衍射图谱中，由这两个成分引起的衍射线的掠射角 $(2 \\theta)$ 之差。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "${\\circ}$"
+    },
+    {
+        "id": 166,
+        "field": "chemistry",
+        "question": "游泳者在潜入更深处时，会进入一个（在某种意义上）更阴暗的世界。已知海水在可见光区的平均摩尔吸收系数为 $6.2 \\times 10^{-3} \\mathrm{dm}^3 \\mathrm{~mol}^{-1} \\mathrm{~cm}^{-1}$，计算潜水员感受到的光强为表面光强一半时的深度。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{~m}$"
+    },
+    {
+        "id": 169,
+        "field": "chemistry",
+        "question": "乙醛中 $\\mathrm{CH}_3$ 质子的化学位移为 $\\delta=2.20$，而 $\\mathrm{CHO}$ 质子的化学位移为 9.80。当外加磁场为 $1.5 \\mathrm{~T}$ 时，该分子这两个区域之间的局部磁场差异是多少？",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mu \\mathrm{T}$"
+    },
+    {
+        "id": 170,
+        "field": "chemistry",
+        "question": "假设两个半导体之间的结可以表示为一个高度为 $2.0 \\mathrm{eV}$、长度为 $100 \\mathrm{pm}$ 的势垒。计算一个能量为 $1.5 \\mathrm{eV}$ 的电子的透射概率。",
+        "answer": null,
+        "subfield": "matter"
+    },
+    {
+        "id": 175,
+        "field": "chemistry",
+        "question": "电子衍射利用了波长与键长相当的电子。要使电子的波长达到 $100 \\mathrm{pm}$，必须将其加速到多大的速度？",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$10^6 \\mathrm{~m} \\mathrm{~s}^{-1}$"
+    },
+    {
+        "id": 168,
+        "field": "chemistry",
+        "question": "在一个工业过程中，氮气在 $1.000 \\mathrm{~m}^3$ 的恒定体积下被加热至 $500 \\mathrm{~K}$。气体在 $300 \\mathrm{~K}$ 和 $100 \\mathrm{~atm}$ 下进入容器。气体的质量为 $92.4 \\mathrm{~kg}$。使用范德华方程确定该气体在 $500 \\mathrm{~K}$ 工作温度下的近似压力。对于氮气，$a=1.39 \\mathrm{dm}^6 \\mathrm{~atm} \\mathrm{~mol}^{-2}, b=0.0391 \\mathrm{dm}^3 \\mathrm{~mol}^{-1}$。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{~atm}$"
+    },
+    {
+        "id": 172,
+        "field": "chemistry",
+        "question": "在什么压强下，$20^{\\circ} \\mathrm{C}$ 时的氩气平均自由程会与装有它的 $100 \\mathrm{~cm}^3$ 容器的直径相当？取 $\\sigma=0.36 \\mathrm{~nm}^2$",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{Pa}$"
+    },
+    {
+        "id": 182,
+        "field": "chemistry",
+        "question": "通过特殊技术，可以在微小体积内产生极高的磁场。在 $1.0 \\mathrm{kT}$ 的磁场中，有机自由基中电子自旋的共振频率是多少？",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$10^{13} \\mathrm{~Hz}$"
+    },
+    {
+        "id": 178,
+        "field": "chemistry",
+        "question": "假设 $2.5 \\mathrm{mmol} \\mathrm{N}_2$ (g) 在 $300 \\mathrm{~K}$ 下占有 $42 \\mathrm{~cm}^3$ 的体积，并等温膨胀至 $600 \\mathrm{~cm}^3$。计算该过程的 $\\Delta G$。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{~J}$"
+    },
+    {
+        "id": 163,
+        "field": "chemistry",
+        "question": "将一份质量为 $0.727 \\mathrm{~g}$ 的D-核糖样品放入量热仪中，然后在过量氧气存在下点燃。温度升高了 $0.910 \\mathrm{~K}$。在同一量热仪中进行的另一项实验中，燃烧 $0.825 \\mathrm{~g}$ 苯甲酸（其燃烧内能为 $-3251 \\mathrm{~kJ} \\mathrm{~mol}^{-1}$）使温度升高了 $1.940 \\mathrm{~K}$。计算D-核糖的生成焓。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{~kJ} \\mathrm{~mol}^{-1}$"
+    },
+    {
+        "id": 174,
+        "field": "chemistry",
+        "question": "当碱金属溶解在液氨中时，它们的每个原子失去一个电子，从而产生一种深蓝色溶液，其中含有占据溶剂中空腔的未成对电子。这些“金属-氨溶液”在 $1500 \\mathrm{~nm}$ 处具有最大吸收。假设该吸收是由于球形方势阱中的电子从其基态激发到下一个更高状态（信息见前一题），那么该空腔的半径是多少？",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{~nm}$"
+    },
+    {
+        "id": 173,
+        "field": "chemistry",
+        "question": "在 $298 \\mathrm{~K}$ 下，固体银和氧化银 $\\mathrm{Ag}_2 \\mathrm{O}$ 上方的 $\\mathrm{O}_2$ 平衡压为 $11.85 \\mathrm{~Pa}$。计算 $\\mathrm{Ag}_2 \\mathrm{O}(\\mathrm{s})$ 在 $298 \\mathrm{~K}$ 下的标准生成吉布斯自由能。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{~kJ}   \\mathrm{~mol}^{-1}$"
+    },
+    {
+        "id": 177,
+        "field": "chemistry",
+        "question": "NOF分子是一个不对称转子，其转动常数为 $3.1752 \\mathrm{~cm}^{-1}$、$0.3951 \\mathrm{~cm}^{-1}$ 和 $0.3505 \\mathrm{~cm}^{-1}$。计算该分子在 $25^{\\circ} \\mathrm{C}$ 时的转动配分函数。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$10^3$"
+    },
+    {
+        "id": 183,
+        "field": "chemistry",
+        "question": "一个质量为 $1.0 \\mathrm{~g}$ 的粒子在地球表面附近被释放，此处的自由落体加速度为 $g=8.91 \\mathrm{~m} \\mathrm{~s}^{-2}$。在 $1.0 \\mathrm{~s}$ 后，它的动能是多少？忽略空气阻力。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{~mJ}$"
+    },
+    {
+        "id": 193,
+        "field": "chemistry",
+        "question": "1976年，人们曾错误地认为在云母样品中发现了第一种“超重”元素。其原子序数被认为是126。该元素原子的最内层电子离原子核的最概然距离是多少？（在此类元素中，相对论效应非常重要，但在此处予以忽略。）",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{pm}$"
+    },
+    {
+        "id": 176,
+        "field": "chemistry",
+        "question": "Nelson 等人 (Science 238, 1670 (1987)) 研究了氨的几种弱结合气相复合物，以寻找 $\\mathrm{NH}_3$ 中的 $\\mathrm{H}$ 原子形成氢键的例子，但未能找到。例如，他们发现 $\\mathrm{NH}_3$ 和 $\\mathrm{CO}_2$ 的复合物中，碳原子最靠近氮原子（距离为 299 pm）：$\\mathrm{CO}_2$ 分子与 $\\mathrm{C}-\\mathrm{N}$ “键”垂直，且 $\\mathrm{NH}_3$ 的 $\\mathrm{H}$ 原子指向背离 $\\mathrm{CO}_2$ 的方向。据报道，该复合物的永久偶极矩大小为 $1.77 \\mathrm{D}$。如果 $\\mathrm{N}$ 和 $\\mathrm{C}$ 原子分别是负电荷和正电荷分布的中心，那么这些部分电荷的大小是多少（以 $e$ 的倍数表示）？",
+        "answer": null,
+        "subfield": "matter"
+    },
+    {
+        "id": 192,
+        "field": "chemistry",
+        "question": "$90^{\\circ}$ 或 $180^{\\circ}$ 脉冲的持续时间取决于 $\\mathscr{B}_1$ 磁场的强度。如果一个 $180^{\\circ}$ 脉冲需要 $12.5 \\mu \\mathrm{s}$，那么 $\\mathscr{B}_1$ 磁场的强度是多少？",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$10^{-4} \\mathrm{~T}$"
+    },
+    {
+        "id": 185,
+        "field": "chemistry",
+        "question": "当用来自氦灯、波长为 $58.4 \\mathrm{~nm}$ 的紫外辐射照射氪样品时，出射电子的速度为 $1.59 \\times 10^6 \\mathrm{~m} \\mathrm{~s}^{-1}$。计算氪的电离能。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{eV}$"
+    },
+    {
+        "id": 180,
+        "field": "chemistry",
+        "question": "一个泻流池有一个直径为 $1.50 \\mathrm{~mm}$ 的圆孔。如果池内固体的摩尔质量为 $300 \\mathrm{~g} \\mathrm{~mol}^{-1}$，且在 $500 \\mathrm{~K}$ 时其蒸气压为 $0.735 \\mathrm{~Pa}$，那么在 $1.00 \\mathrm{~h}$ 的时间内，固体的质量会减少多少？",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{mg}$"
+    },
+    {
+        "id": 181,
+        "field": "chemistry",
+        "question": "某个质子的速度是 $6.1 \\times 10^6 \\mathrm{~m} \\mathrm{~s}^{-1}$。如果其动量的不确定度要降低到 0.0100%，那么其位置允许产生多大的不确定度？",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{pm}$"
+    },
+    {
+        "id": 188,
+        "field": "chemistry",
+        "question": "一项关于 $\\mathrm{DyCl}_3$ 的热力学研究 (E.H.P. Cordfunke, et al., J. Chem. Thermodynamics 28, 1387 (1996)) 根据以下信息确定了其标准生成焓：\n(1) $\\mathrm{DyCl}_3(\\mathrm{~s}) \\rightarrow \\mathrm{DyCl}_3(\\mathrm{aq}$, in $4.0 \\mathrm{M} \\mathrm{HCl}) \\quad \\Delta_{\\mathrm{r}} H^{\\ominus}=-180.06 \\mathrm{~kJ} \\mathrm{~mol}^{-1}$\n(2) $\\mathrm{Dy}(\\mathrm{s})+3 \\mathrm{HCl}(\\mathrm{aq}, 4.0 \\mathrm{~m}) \\rightarrow \\mathrm{DyCl}_3(\\mathrm{aq}$, in $4.0 \\mathrm{M} \\mathrm{HCl}(\\mathrm{aq}))+\\frac{3}{2} \\mathrm{H}_2(\\mathrm{~g})$ $\\Delta_{\\mathrm{r}} H^{\\ominus}=-699.43 \\mathrm{~kJ} \\mathrm{~mol}^{-1}$\n(3) $\\frac{1}{2} \\mathrm{H}_2(\\mathrm{~g})+\\frac{1}{2} \\mathrm{Cl}_2(\\mathrm{~g}) \\rightarrow \\mathrm{HCl}(\\mathrm{aq}, 4.0 \\mathrm{M}) \\quad \\Delta_{\\mathrm{r}} H^{\\ominus}=-158.31 \\mathrm{~kJ} \\mathrm{~mol}^{-1}$\n根据这些数据确定 $\\Delta_{\\mathrm{f}} H^{\\ominus}\\left(\\mathrm{DyCl}_3, \\mathrm{~s}\\right)$。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{~kJ} \\mathrm{~mol}^{-1}$"
+    },
+    {
+        "id": 190,
+        "field": "chemistry",
+        "question": "苯在 $60.6^{\\circ} \\mathrm{C}$ 时的蒸气压为 $53.3 \\mathrm{kPa}$，但当 $19.0 \\mathrm{~g}$ 非挥发性有机化合物溶解在 $500 \\mathrm{~g}$ 苯中时，其蒸气压降至 $51.5 \\mathrm{kPa}$。计算该化合物的摩尔质量。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{~g} \\mathrm{~mol}^{-1}$"
+    },
+    {
+        "id": 187,
+        "field": "chemistry",
+        "question": "$\\mathrm{Br}_2$ 的振动波数为 $323.2 \\mathrm{~cm}^{-1}$。通过精确计算（不作近似）振动配分函数，在什么温度下，该值与通过近似公式计算得到的值相差在 5% 以内？",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{~K}$"
+    },
+    {
+        "id": 210,
+        "field": "chemistry",
+        "question": "计算自旋函数为 $\\alpha$ 的电子的自旋矢量 $S$ 与 $z$ 轴之间的夹角。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$^{\\circ}$"
+    },
+    {
+        "id": 201,
+        "field": "chemistry",
+        "question": "计算质子的自旋角动量的大小。给出数值答案。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$10^{-35} \\mathrm{~J} \\mathrm{~s}$"
+    },
+    {
+        "id": 195,
+        "field": "chemistry",
+        "question": "计算在 50 bar 压力下冰的熔点。假设在这些条件下，冰的密度约为 $0.92 \\mathrm{~g} \\mathrm{~cm}^{-3}$，液态水的密度为 $1.00 \\mathrm{~g} \\mathrm{~cm}^{-3}$。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{K}$"
+    },
+    {
+        "id": 197,
+        "field": "chemistry",
+        "question": "在 $300 \\mathrm{~K}$ 和 $20 \\mathrm{~atm}$ 下，某气体的压缩因子为 0.86。计算在该条件下 $8.2 \\mathrm{mmol}$ 该气体所占的体积。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{~cm}^3$"
+    },
+    {
+        "id": 199,
+        "field": "chemistry",
+        "question": "利用 $\\mathrm{H}_2(4.478 \\mathrm{eV})$ 的 $D_0$ 值和 $\\mathrm{H}_2^{+}(2.651 \\mathrm{eV})$ 的 $D_0$ 值来计算 $\\mathrm{H}_2$ 的第一电离能（即从 $\\mathrm{H}_2$ 中移除一个电子所需的能量）。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$\\mathrm{eV}$"
+    },
+    {
+        "id": 194,
+        "field": "chemistry",
+        "question": "$\\mathrm{Cl}$ 的基态能级为 ${ }^2 \\mathrm{P}_{3 / 2}$，且一个 ${ }^2 \\mathrm{P}_{1 / 2}$ 能级在其上方 $881 \\mathrm{~cm}^{-1}$ 处。计算在 $500 \\mathrm{~K}$ 时电子对 $\\mathrm{Cl}$ 原子摩尔吉布斯能的贡献。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{~kJ} \\mathrm{~mol}^{-1}$"
+    },
+    {
+        "id": 209,
+        "field": "chemistry",
+        "question": "计算以 1/137 倍光速运动的电子的德布罗意波长。（在此速度下，质量的相对论修正可忽略不计。）",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$\\mathrm{~nm}$"
+    },
+    {
+        "id": 204,
+        "field": "chemistry",
+        "question": "$t$ 轨道的角动量量子数 $l$ 的值是多少？",
+        "answer": null,
+        "subfield": "quan"
+    },
+    {
+        "id": 189,
+        "field": "chemistry",
+        "question": "根据 $\\Delta_{\\mathrm{r}} G^{\\ominus}(298 \\mathrm{~K})$ 和 $\\Delta_{\\mathrm{r}} H^{\\ominus}(298 \\mathrm{~K})$ 的值以及吉布斯-亥姆霍兹方程，计算反应 $2 \\mathrm{CO}(\\mathrm{g})+\\mathrm{O}_2(\\mathrm{~g}) \\rightarrow 2 \\mathrm{CO}_2(\\mathrm{~g})$ 的 $\\Delta_{\\mathrm{r}} G^{\\ominus}(375 \\mathrm{~K})$。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{~kJ} \\mathrm{~mol}^{-1}$"
+    },
+    {
+        "id": 212,
+        "field": "chemistry",
+        "question": "已知 $\\mathrm{H}_2$ 的电子基态 $D_e=4.75 \\mathrm{eV}$ 且 $R_e=0.741 Å$，求该状态的 $U\\left(R_e\\right)$。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$\\mathrm{eV}$"
+    },
+    {
+        "id": 215,
+        "field": "chemistry",
+        "question": "计算质子和电子之间的静电力与万有引力之比。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$10^{39}$"
+    },
+    {
+        "id": 198,
+        "field": "chemistry",
+        "question": "巴克明斯特富勒烯分子 $\\left(\\mathrm{C}_{60}\\right)$ 的一个非常粗糙的模型是，将其视为处于立方体中的电子集合，该立方体的边长等于该分子的平均直径 $(0.7 \\mathrm{~nm})$。假设只有碳原子的 $\\pi$ 电子起贡献，预测 $\\mathrm{C}_{60}$ 的第一激发波长。（实际值为 $730 \\mathrm{~nm}$。）",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mu \\mathrm{m}$"
+    },
+    {
+        "id": 200,
+        "field": "chemistry",
+        "question": "计算波长为 $300 \\mathrm{~nm}$ 的一摩尔紫外光子的能量。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$\\mathrm{~kJ} / \\mathrm{mol}$"
+    },
+    {
+        "id": 222,
+        "field": "chemistry",
+        "question": "设变量 $w$ 定义为同时抛掷两枚硬币时出现正面朝上的次数。求 $\\langle w\\rangle$。",
+        "answer": null,
+        "subfield": "quan"
+    },
+    {
+        "id": 191,
+        "field": "chemistry",
+        "question": "J.G. Dojahn 等人 (J. Phys. Chem. 100, 9649 (1996)) 表征了同核双原子卤素阴离子的基态和电子态的势能曲线。$\\mathrm{F}_2^{-}$ 的基态为 ${ }^2 \\sum_{\\mathrm{u}}^{+}$，其基频振动波数为 $450.0 \\mathrm{~cm}^{-1}$，平衡核间距为 $190.0 \\mathrm{pm}$。前两个激发态比基态高 1.609 和 $1.702 \\mathrm{eV}$。计算 $\\mathrm{F}_2^{-}$ 在 $ 298 \\mathrm{~K}$ 下的标准摩尔熵。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{~J} \\mathrm{~mol}^{-1} \\mathrm{~K}^{-1}$"
+    },
+    {
+        "id": 203,
+        "field": "chemistry",
+        "question": "正电子的电荷为 $+e$，质量与电子质量相等。以电子伏特为单位，计算正电子素（一种由正电子和电子组成的“原子”）的基态能量。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$\\mathrm{eV}$"
+    },
+    {
+        "id": 205,
+        "field": "chemistry",
+        "question": "有多少个状态属于碳的电子构型 $1 s^2 2 s^2 2 p^2$？",
+        "answer": null,
+        "subfield": "quan"
+    },
+    {
+        "id": 208,
+        "field": "chemistry",
+        "question": "使用通过在 -5 到 5 之间以 0.1 为步长求解得到的归一化 Numerov 方法谐振子波函数，来估算 $v=0$ 态处于经典禁区的概率。",
+        "answer": null,
+        "subfield": "quan"
+    },
+    {
+        "id": 206,
+        "field": "chemistry",
+        "question": "计算将三个碳-碳单键压缩以及三个碳-碳双键拉伸至苯的键长 $1.397 Å$ 所需的能量。假设化学键的拉伸和压缩遵循谐振子势能函数。典型的碳-碳单键和双键键长分别为 1.53 和 $1.335 Å$；典型的碳-碳单键和双键拉伸力常数分别为 500 和 $950 \\mathrm{~N} / \\mathrm{m}$。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$\\mathrm{kcal} / \\mathrm{mol}$"
+    },
+    {
+        "id": 228,
+        "field": "chemistry",
+        "question": "计算电子自旋磁矩的大小。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$10^{-23} \\mathrm{~J} / \\mathrm{T}$"
+    },
+    {
+        "id": 213,
+        "field": "chemistry",
+        "question": "对于 $\\mathrm{NaCl}, R_e=2.36 Å$。$\\mathrm{Na}$ 的电离能为 $5.14 \\mathrm{eV}$，$\\mathrm{Cl}$ 的电子亲和能为 $3.61 \\mathrm{eV}$。利用将 $\\mathrm{NaCl}$ 视为一对接触的球形离子的简单模型来估算 $D_e$。[1 德拜 (D) 为 $3.33564 \\times 10^{-30} \\mathrm{C} \\mathrm{m}$。]",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$\\mathrm{eV}$"
+    },
+    {
+        "id": 218,
+        "field": "chemistry",
+        "question": "假设质子的电荷均匀分布在半径为 $10^{-13} \\mathrm{~cm}$ 的球体体积内。利用微扰理论估算由于质子有限大小引起的氢原子基态能量的移动。当电子穿透原子核并与核中心距离为 $r$ 时，它所受到的势能为 $-e Q / 4 \\pi \\varepsilon_0 r$，其中 $Q$ 是半径为 $r$ 的球体内质子的电荷量。通过注意到在原子核内 $\\psi$ 中的指数因子基本等于 1，可以简化积分的计算。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$10^{-8} \\mathrm{eV}$"
+    },
+    {
+        "id": 223,
+        "field": "chemistry",
+        "question": "计算一个 alpha 粒子在距离金原子核 $0.00300 Å$ 处经过时受到的力。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$\\mathrm{~N}$"
+    },
+    {
+        "id": 216,
+        "field": "chemistry",
+        "question": "一个单粒子一维系统的态函数为\n$$\n\\Psi=(\\sin a t)\\left(2 / \\pi c^2\\right)^{1 / 4} e^{-x^2 / c^2}+(\\cos a t)\\left(32 / \\pi c^6\\right)^{1 / 4} x e^{-x^2 / c^2}\n$$\n其中 $a$ 是常数，且 $c=2.000 Å$。如果在 $t=0$ 时测量粒子的位置，估算测量结果落在 $2.000 Å$ 和 $2.001 Å$ 之间的概率。",
+        "answer": null,
+        "subfield": "quan"
+    },
+    {
+        "id": 217,
+        "field": "chemistry",
+        "question": "某种双原子分子中 $J=2$ 到 3 的转动跃迁发生在 $126.4 \\mathrm{GHz}$，其中 $1 \\mathrm{GHz} \\equiv 10^9 \\mathrm{~Hz}$。求该分子中 $J=5$ 到 6 吸收的频率。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$\\mathrm{GHz}$"
+    },
+    {
+        "id": 214,
+        "field": "chemistry",
+        "question": "求使用 6-31G** 基组对 $\\mathrm{CH}_2 \\mathrm{SiHF}$ 进行全组态相互作用（full CI）计算时的组态态函数（CSFs）数量。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$10^{28} $"
+    },
+    {
+        "id": 211,
+        "field": "chemistry",
+        "question": "原子 $\\mathrm{H}$ 和 $\\mathrm{O}$ 的 AM1 价电子能量分别为 $-11.396 \\mathrm{eV}$ 和 $-316.100 \\mathrm{eV}$。对于处于 AM1 计算的平衡几何构型下的 $\\mathrm{H}_2 \\mathrm{O}$，其 AM1 价电子能量（不计核-核排斥）为 $-493.358 \\mathrm{eV}$，AM1 核-核排斥能为 $144.796 \\mathrm{eV}$。对于 $\\mathrm{H}(g)$ 和 $\\mathrm{O}(g)$，它们的 $\\Delta H_{f, 298}^{\\circ}$ 值分别为 52.102 和 $59.559 \\mathrm{kcal} / \\mathrm{mol}$。求 AM1 预测的 $\\mathrm{H}_2 \\mathrm{O}(g)$ 的 $\\Delta H_{f, 298}^{\\circ}$。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$\\mathrm{kcal} / \\mathrm{mol}$"
+    },
+    {
+        "id": 220,
+        "field": "chemistry",
+        "question": "对 $\\mathrm{OCOH}$ 二面角为 $0^{\\circ}$ 的 $\\mathrm{HCOOH}$ 的一种构象进行 $\\mathrm{HF} / 6-31 \\mathrm{G}^*$ 几何优化。计算其偶极矩。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$\\mathrm{D}$"
+    },
+    {
+        "id": 224,
+        "field": "chemistry",
+        "question": "当长度为 $2.00  Å$ 的一维盒子中处于某一激发能级的电子跃迁到基态时，会发射一个波长为 $8.79 \\mathrm{~nm}$ 的光子。求初始态的量子数。",
+        "answer": null,
+        "subfield": "quan"
+    },
+    {
+        "id": 219,
+        "field": "chemistry",
+        "question": "一个处于尺寸为 $5.00 Å, 3.00 Å$ 和 $6.00 Å$ 的三维长方体盒子中的电子，从最低激发态向基态发生辐射跃迁。计算发射的光子的频率。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$10^{14} \\mathrm{~s}^{-1}$"
+    },
+    {
+        "id": 221,
+        "field": "chemistry",
+        "question": "在平衡构型下对 $\\mathrm{H}_2 \\mathrm{O}$ 进行冻芯 $\\mathrm{SCF} / \\mathrm{DZP}$ 和 CI-SD/DZP 计算，得到的能量分别为 -76.040542 和 -76.243772 hartrees。应用 Davidson 修正后，能量变为 -76.254549 hartrees。求归一化 CI-SD 波函数中 $\\Phi_0$ 的系数。",
+        "answer": null,
+        "subfield": "quan"
+    },
+    {
+        "id": 202,
+        "field": "chemistry",
+        "question": "${ }^7 \\mathrm{Li}^1 \\mathrm{H}$ 的电子基态具有 $D_0=2.4287 \\mathrm{eV}, \\nu_e / c=1405.65 \\mathrm{~cm}^{-1}$ 和 $\\nu_e x_e / c=23.20 \\mathrm{~cm}^{-1}$，其中 $c$ 是光速。（后面这两个物理量在文献中通常被记为 $\\omega_e$ 和 $\\omega_e x_e$。）计算 ${ }^7 \\mathrm{Li}^1 \\mathrm{H}$ 的 $D_e$。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$\\mathrm{eV}$"
+    },
+    {
+        "id": 225,
+        "field": "chemistry",
+        "question": "对于一个质量为 $1.0 \\mathrm{~g}$、在长度为 $1.0 \\mathrm{~cm}$ 的一维盒子中以 $1.0 \\mathrm{~cm} / \\mathrm{s}$ 的速度运动的宏观物体，求其量子数 $n$。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$10^{26}$"
+    },
+    {
+        "id": 226,
+        "field": "chemistry",
+        "question": "对于$\\mathrm{H}_2$的电子基态，$D_0=4.4781 \\mathrm{eV}$。求反应 $\\mathrm{H}_2(g) \\rightarrow 2 \\mathrm{H}(g)$ 的 $\\Delta H_0^{\\circ}$（单位为 $\\mathrm{kJ} / \\mathrm{mol}$）。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$\\mathrm{~kJ} / \\mathrm{mol}$"
+    },
+    {
+        "id": 229,
+        "field": "chemistry",
+        "question": "一个粒子处于势能 $V=a x^4+b y^4+c z^4$ 中。如果其基态能量为 $10 \\mathrm{eV}$，计算基态的 $\\langle V\\rangle$。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$\\mathrm{eV}$"
+    },
+    {
+        "id": 231,
+        "field": "chemistry",
+        "question": "计算氢原子定态 $2 p_z$ 的不确定度 $\\Delta L_z$。",
+        "answer": null,
+        "subfield": "quan"
+    },
+    {
+        "id": 196,
+        "field": "chemistry",
+        "question": "当上能级的布居数是下能级的三分之一时，能量间隔相当于 $400 \\mathrm{~cm}^{-1}$ 的两能级系统的温度是多少？",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$ \\mathrm{~K}$"
+    },
+    {
+        "id": 179,
+        "field": "chemistry",
+        "question": "根据 $\\mathrm{Ce}^{3+} / \\mathrm{Ce}$ 和 $\\mathrm{Ce}^{4+} / \\mathrm{Ce}^{3+}$ 电对的值，计算 $\\mathrm{Ce}^{4+} / \\mathrm{Ce}$ 电对的标准电势。",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{V}$"
+    },
+    {
+        "id": 230,
+        "field": "chemistry",
+        "question": "对于处于深为 $20.0 \\mathrm{eV}$ 的某矩形势阱中的电子，其最低能级位于阱底上方 $3.00 \\mathrm{eV}$ 处。求该势阱的宽度。提示：使用 $\\tan \\theta=\\sin \\theta / \\cos \\theta$",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$\\mathrm{~nm}$"
+    },
+    {
+        "id": 186,
+        "field": "chemistry",
+        "question": "如果 $125 \\mathrm{~cm}^3$ 的氢气在 135 秒内通过一个小孔泻流，在相同的温度和压力下，相同体积的氧气发生泻流需要多长时间？",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$\\mathrm{s}$"
+    },
+    {
+        "id": 171,
+        "field": "chemistry",
+        "question": "某种特定t-RNA分子在细胞内部介质中的扩散系数为 $D=1.0 \\times 10^{-11} \\mathrm{~m}^2 \\mathrm{~s}^{-1}$。在细胞核中产生的分子到达距离为 $1.0 \\mu \\mathrm{m}$（对应于细胞半径）的细胞壁需要多长时间？",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$10^{-2} \\mathrm{~s}$"
+    },
+    {
+        "id": 207,
+        "field": "chemistry",
+        "question": "当某个一维盒子中一个质量为 $9.1 \\times 10^{-28} \\mathrm{~g}$ 的粒子从 $n=5$ 能级跃迁到 $n=2$ 能级时，它发射了一个频率为 $6.0 \\times 10^{14} \\mathrm{~s}^{-1}$ 的光子。求该盒子的长度。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$\\mathrm{~nm}$"
+    },
+    {
+        "id": 227,
+        "field": "chemistry",
+        "question": "分子振动对非线性 $N$ 原子分子气体的摩尔内能 $U_{\\mathrm{m}}$ 的贡献（不包括零点振动能）为 $U_{\\mathrm{m}, \\mathrm{vib}}=R \\sum_{s=1}^{3 N-6} \\theta_s /\\left(e^{\\theta_s / T}-1\\right)$，其中 $\\theta_s \\equiv h \\nu_s / k$，$\\nu_s$ 是简正模式 $s$ 的振动频率。计算波数 $\\widetilde{v} \\equiv v_s / c$ 为 $900 \\mathrm{~cm}^{-1}$ 的简正模式在 $25^{\\circ} \\mathrm{C}$ 时对 $U_{\\mathrm{m}, \\text { vib }}$ 的贡献。",
+        "answer": null,
+        "subfield": "quan",
+        "unit": "$\\mathrm{kJ} / \\mathrm{mol}$"
+    },
+    {
+        "id": 184,
+        "field": "chemistry",
+        "question": "从北极星到达地球的可见光子通量约为 $4 \\times 10^3 \\mathrm{~mm}^{-2} \\mathrm{~s}^{-1}$。在这些光子中，有 30% 被大气层吸收或散射，而幸存下来的光子中有 25% 被眼睛角膜表面散射。另有 9% 在角膜内部被吸收。夜间瞳孔的面积约为 $40 \\mathrm{~mm}^2$，眼睛的响应时间约为 $0.1 \\mathrm{~s}$。在穿过瞳孔的光子中，约有 43% 在眼内介质中被吸收。在 $0.1 \\mathrm{~s}$ 内，有多少个来自北极星的光子聚焦到视网膜上？",
+        "answer": null,
+        "subfield": "matter",
+        "unit": "$10^3$"
+    }
+]
