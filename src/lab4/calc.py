@@ -56,7 +56,7 @@ def format_number(value: float) -> str:
         raise ValueError("non-finite result")
     if value == 0:
         return "0"
-    if abs(value - round(value)) < 1e-12 and abs(value) < 1e12:
+    if abs(value) >= 1e-9 and abs(value - round(value)) < 1e-12 and abs(value) < 1e12:
         return str(int(round(value)))
     return f"{value:.12g}"
 

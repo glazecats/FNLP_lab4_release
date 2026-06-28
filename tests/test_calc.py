@@ -15,6 +15,7 @@ class CalculationTests(unittest.TestCase):
     def test_safe_eval_math_expression(self):
         self.assertEqual(safe_eval_expression("sqrt(9) + sin(radians(30))"), "3.5")
         self.assertEqual(safe_eval_expression("6.7 * (10**6 * 0.00055) * 86400"), "318384000")
+        self.assertEqual(safe_eval_expression("1.0545718e-34 / (2 * 4.0e-15)"), "1.31821475e-20")
 
     def test_safe_eval_rejects_code(self):
         with self.assertRaises(Exception):
