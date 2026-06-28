@@ -146,6 +146,28 @@ def _is_plain_numeric(value: str) -> bool:
     return bool(re.fullmatch(r"[-+]?\d+(?:\.\d+)?(?:e[-+]?\d+)?", cleaned, flags=re.I))
 
 
+def _as_float(value: str) -> float | None:
+    try:
+        return float(clean_answer(value))
+    except ValueError:
+        return None
+
+
+def _looks_like_decimal_or_scale_loss(raw_answer: str, unit_answer: str) -> bool:
+    raw_clean = clean_answer(raw_answer)
+    unit_clean = clean_answer(unit_answer)
+    if not re.fullmatch(r"[-+]?\d+", raw_clean):
+        return False
+    raw_number = _as_float(raw_clean)
+    unit_number = _as_float(unit_clean)
+    if raw_number is None or unit_number is None or unit_number == 0:
+        return False
+    if abs(raw_number) < 1000 or abs(unit_number) >= abs(raw_number):
+        return False
+    ratio = abs(raw_number / unit_number)
+    return any(abs(ratio - scale) / scale < 1e-6 for scale in (100, 1000, 10000))
+
+
 def _extract_by_target_unit(response: str, target_unit: str | None) -> str | None:
     aliases = _target_unit_aliases(target_unit)
     if not aliases:
@@ -227,6 +249,10 @@ def extract_answer(response: str, target_unit: str | None = None) -> str:
             if target_unit and not _is_plain_numeric(raw_answer):
                 unit_answer = _extract_by_target_unit(response, target_unit)
                 if unit_answer:
+                    return unit_answer
+            if target_unit:
+                unit_answer = _extract_by_target_unit(response, target_unit)
+                if unit_answer and _looks_like_decimal_or_scale_loss(raw_answer, unit_answer):
                     return unit_answer
             return clean_answer(raw_answer)
 

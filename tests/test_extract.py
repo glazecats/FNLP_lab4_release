@@ -74,6 +74,14 @@ class ExtractAnswerTest(unittest.TestCase):
         text = "After checking the standard value, the result should be 7 eV."
         self.assertEqual(extract_answer(text, target_unit="eV"), "7")
 
+    def test_target_unit_repairs_lost_decimal_in_large_integer_final(self):
+        text = "The corrected freezing point is 234.37 K.\nFINAL_ANSWER: 23437"
+        self.assertEqual(extract_answer(text, target_unit="$\\mathrm{K}$"), "234.37")
+
+    def test_target_unit_repairs_liter_to_cubic_centimeter_scale_slip(self):
+        text = "The actual volume is about 8.7 cm^3.\nFINAL_ANSWER: 8700"
+        self.assertEqual(extract_answer(text, target_unit="$\\mathrm{cm}^3$"), "8.7")
+
 
 if __name__ == "__main__":
     unittest.main()
