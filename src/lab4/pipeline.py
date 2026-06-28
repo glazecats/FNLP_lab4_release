@@ -422,10 +422,16 @@ def _verifier_explicitly_rejected_candidate(verifier: dict[str, Any]) -> bool:
 def _submission_answer_from_trace(question: Question, trace: dict[str, Any]) -> str | None:
     working = dict(trace)
     attempts = working.get("attempts") or []
-    if attempts and ((attempts[-1].get("verifier") or {}).get("decision") == "LOOP"):
-        fallback = _fallback_after_failed_verification(attempts[-1])
-        if fallback:
-            working["answer"] = fallback
+    if attempts:
+        last = attempts[-1]
+        verifier = last.get("verifier") or {}
+        final = last.get("final") or {}
+        if verifier.get("decision") in {"PASS", "FIX"}:
+            working["answer"] = verifier.get("answer") or final.get("answer") or working.get("answer")
+        elif verifier.get("decision") == "LOOP":
+            fallback = _fallback_after_failed_verification(last)
+            if fallback:
+                working["answer"] = fallback
     return _postprocess_trace_answer(question, working)
 
 

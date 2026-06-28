@@ -160,6 +160,20 @@ class PipelineTests(unittest.TestCase):
 
         self.assertEqual(_submission_answer_from_trace(question, trace), "1.3038")
 
+    def test_submission_answer_prefers_successful_verifier_over_stale_trace_answer(self) -> None:
+        question = Question(id=12, field="physics", question="Find the value.")
+        trace = {
+            "answer": "1.1562",
+            "attempts": [
+                {
+                    "final": {"answer": "1.3038"},
+                    "verifier": {"decision": "PASS", "answer": "1.3038"},
+                }
+            ],
+        }
+
+        self.assertEqual(_submission_answer_from_trace(question, trace), "1.3038")
+
     def test_postprocess_abs_for_magnitude_targets_only(self) -> None:
         height_question = Question(id=1, field="physics", question="What is the image height?")
         energy_question = Question(id=2, field="physics", question="Find the potential energy change.")
