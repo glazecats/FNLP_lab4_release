@@ -35,41 +35,16 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(result["answer"], "2")
 
     def test_postprocess_abs_for_magnitude_targets_only(self) -> None:
-        height_question = Question(id=1, field="physics", question="像的高度是多少 cm？")
-        energy_question = Question(id=2, field="physics", question="求势能变化量。")
+        height_question = Question(id=1, field="physics", question="What is the image height?")
+        energy_question = Question(id=2, field="physics", question="Find the potential energy change.")
 
         self.assertEqual(_postprocess_answer(height_question, "-3.67"), "3.67")
         self.assertEqual(_postprocess_answer(energy_question, "-3.67"), "-3.67")
 
-    def test_postprocess_refines_rounded_tool_constants(self) -> None:
-        question = Question(id=3, field="physics", question="求一个常数比值。")
-        trace = {
-            "answer": "8.625000000000e-5",
-            "verifier": {
-                "transcript": (
-                    "TOOL_CALC: 1.38e-23 / 1.6e-19\n"
-                    "TOOL_RESULT: 1.38e-23 / 1.6e-19 = 8.625000000000e-5"
-                )
-            },
-        }
-
-        self.assertEqual(_postprocess_trace_answer(question, trace), "8.617333262145e-5")
-
-    def test_postprocess_does_not_refine_unmatched_tool_result(self) -> None:
-        question = Question(id=4, field="physics", question="求一个常数比值。")
-        trace = {
-            "answer": "123",
-            "verifier": {
-                "transcript": "TOOL_CALC: 1.38e-23 / 1.6e-19"
-            },
-        }
-
-        self.assertEqual(_postprocess_trace_answer(question, trace), "123")
-
     def test_postprocess_uses_numeric_fallback_for_invalid_answer(self) -> None:
-        question = Question(id=5, field="physics", question="求量子数。")
+        question = Question(id=3, field="physics", question="Find the number.")
         trace = {
-            "answer": "无法确定",
+            "answer": "unknown",
             "direct": {"answer": "2"},
             "rag": {"answer": "2"},
         }
@@ -77,10 +52,10 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(_postprocess_trace_answer(question, trace), "2")
 
     def test_postprocess_uses_zero_when_no_numeric_fallback_exists(self) -> None:
-        question = Question(id=6, field="physics", question="求数值。")
+        question = Question(id=4, field="physics", question="Find the value.")
         trace = {
-            "answer": "无法确定",
-            "direct": {"answer": "无法计算"},
+            "answer": "unknown",
+            "direct": {"answer": "cannot determine"},
             "rag": {"answer": ""},
         }
 

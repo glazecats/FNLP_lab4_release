@@ -2,14 +2,13 @@ from __future__ import annotations
 
 import csv
 import json
-import re
 import traceback
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-from .calculator import CalculatorError, evaluate_expression, format_number
+from .calculator import CalculatorError, evaluate_expression
 from .data import Question, load_questions, select_questions
 from .extract import equivalent_answer_text, extract_final_answer, extract_tool_expression, looks_invalid_answer
 from .llm import LLMClient, Message
@@ -402,21 +401,8 @@ SIGNED_TARGET_TERMS = {
     "voltage",
 }
 
-TOOL_CALC_LINE_RE = re.compile(r"TOOL_CALC\s*[:：]\s*(.+)")
-ROUNDED_CONSTANT_REPLACEMENTS = (
-    (re.compile(r"(?<![\w.])1\.38e-23(?![\w.])"), "k_B"),
-    (re.compile(r"(?<![\w.])1\.381e-23(?![\w.])"), "k_B"),
-    (re.compile(r"(?<![\w.])1\.3806e-23(?![\w.])"), "k_B"),
-    (re.compile(r"(?<![\w.])1\.6e-19(?![\w.])"), "e_charge"),
-    (re.compile(r"(?<![\w.])1\.602e-19(?![\w.])"), "e_charge"),
-    (re.compile(r"(?<![\w.])1\.6022e-19(?![\w.])"), "e_charge"),
-)
-
-
 def _postprocess_trace_answer(question: Question, trace: dict[str, Any]) -> str | None:
     answer = _postprocess_answer(question, trace.get("answer"))
-    answer = _postprocess_rounded_constant_tools(answer, trace)
-    answer = _postprocess_answer(question, answer)
     if looks_invalid_answer(answer or ""):
         answer = _numeric_answer_fallback(trace) or "0"
         answer = _postprocess_answer(question, answer)
@@ -447,49 +433,6 @@ def _postprocess_answer(question: Question, answer: str | None) -> str | None:
     if any(term in target_text for term in POSITIVE_TARGET_TERMS):
         return answer[1:] if answer.startswith("-") else str(abs(value))
     return answer
-
-
-def _postprocess_rounded_constant_tools(answer: str | None, trace: dict[str, Any]) -> str | None:
-    current_value = _to_float(answer)
-    if current_value is None:
-        return answer
-    replacement: str | None = None
-    for transcript in _iter_transcripts(trace):
-        for match in TOOL_CALC_LINE_RE.finditer(transcript):
-            expression = match.group(1).splitlines()[0].strip()
-            adjusted = _replace_rounded_constants(expression)
-            if not adjusted:
-                continue
-            try:
-                original = float(evaluate_expression(expression).value)
-                refined = float(evaluate_expression(adjusted).value)
-            except Exception:
-                continue
-            scale = max(abs(current_value), 1e-300)
-            if abs(abs(original) - abs(current_value)) > 0.02 * scale:
-                continue
-            refined_value = abs(refined) if current_value >= 0 else refined
-            replacement = format_number(refined_value)
-    return replacement or answer
-
-
-def _replace_rounded_constants(expression: str) -> str | None:
-    adjusted = expression
-    for pattern, replacement in ROUNDED_CONSTANT_REPLACEMENTS:
-        adjusted = pattern.sub(replacement, adjusted)
-    return adjusted if adjusted != expression else None
-
-
-def _iter_transcripts(value: Any):
-    if isinstance(value, dict):
-        for key, item in value.items():
-            if key == "transcript" and isinstance(item, str):
-                yield item
-            else:
-                yield from _iter_transcripts(item)
-    elif isinstance(value, list):
-        for item in value:
-            yield from _iter_transcripts(item)
 
 
 def _to_float(answer: str | None) -> float | None:
