@@ -11,6 +11,8 @@ FINAL_PATTERNS = [
 
 SUPERSCRIPT_DIGITS = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻", "0123456789+-")
 
+NUMBER_RE = r"[-+]?\d+(?:\.\d+)?(?:\s*(?:e[+-]?\d+|\\times\s*10\s*\^\s*\{?\s*[+-]?\d+\s*\}?))?"
+
 
 def normalize_unicode_math(text: str) -> str:
     value = text.strip().translate(SUPERSCRIPT_DIGITS)
@@ -95,6 +97,67 @@ def _decimalize_simple_fraction(value: str) -> str:
     return value
 
 
+def _target_unit_aliases(target_unit: str | None) -> list[str]:
+    if not target_unit or "10" in target_unit:
+        return []
+    unit = target_unit.replace("~", " ")
+    unit = re.sub(r"\\(?:mathrm|text)\{([^{}]+)\}", r"\1", unit)
+    unit = unit.replace("{", " ").replace("}", " ").replace("$", " ")
+    aliases: list[str] = []
+    known_units = [
+        "kJ",
+        "MeV",
+        "eV",
+        "mm",
+        "cm",
+        "pm",
+        "nm",
+        "kg",
+        "mol",
+        "atm",
+        "Pa",
+        "Hz",
+        "J",
+        "K",
+        "V",
+        "A",
+        "C",
+        "N",
+        "m",
+        "%",
+    ]
+    for alias in known_units:
+        if re.search(rf"(?<![A-Za-z]){re.escape(alias)}(?![A-Za-z])", unit, flags=re.I):
+            aliases.append(re.escape(alias))
+    return aliases
+
+
+def _extract_by_target_unit(response: str, target_unit: str | None) -> str | None:
+    aliases = _target_unit_aliases(target_unit)
+    if not aliases:
+        return None
+    matches: list[str] = []
+    for alias in aliases:
+        pattern = re.compile(
+            rf"({NUMBER_RE})\s*(?:\(?\s*)?(?<![A-Za-z\\])(?:{alias})(?![A-Za-z])",
+            flags=re.I,
+        )
+        matches.extend(match.group(1) for match in pattern.finditer(response))
+    if not matches:
+        return None
+    return clean_answer(matches[-1])
+
+
+def _has_multiple_numeric_tokens(value: str) -> bool:
+    normalized = normalize_unicode_math(value).splitlines()[0]
+    tokens = normalized.split()
+    return (
+        len(tokens) > 1
+        and "\\" not in normalized
+        and all(re.fullmatch(r"[-+]?\d+(?:\.\d+)?(?:e[-+]?\d+)?", token, flags=re.I) for token in tokens)
+    )
+
+
 def clean_answer(answer: str) -> str:
     value = normalize_unicode_math(answer)
     value = value.splitlines()[0].strip()
@@ -138,11 +201,16 @@ def clean_answer(answer: str) -> str:
     return value or "0"
 
 
-def extract_answer(response: str) -> str:
+def extract_answer(response: str, target_unit: str | None = None) -> str:
     for pattern in FINAL_PATTERNS:
         matches = list(pattern.finditer(response))
         if matches:
-            return clean_answer(matches[-1].group(1))
+            raw_answer = matches[-1].group(1)
+            if _has_multiple_numeric_tokens(raw_answer):
+                unit_answer = _extract_by_target_unit(response, target_unit)
+                if unit_answer:
+                    return unit_answer
+            return clean_answer(raw_answer)
 
     boxed = _boxed_value(response)
     if boxed:

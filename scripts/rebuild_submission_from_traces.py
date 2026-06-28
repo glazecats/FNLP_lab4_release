@@ -51,6 +51,7 @@ def main() -> None:
 
     questions = load_questions(args.data)
     units = {question.id: infer_target_unit(question.question, question.unit) for question in questions}
+    questions_by_id = {question.id: question for question in questions}
     answers: dict[int, str] = (
         load_existing_submission(args.fill_from_submission) if args.fill_from_submission else {}
     )
@@ -61,14 +62,15 @@ def main() -> None:
             if responses:
                 qid = int(row["id"])
                 last_trace = row.get("traces", [])[-1]
-                answer = extract_answer(responses[-1])
+                answer = extract_answer(responses[-1], target_unit=units.get(qid))
                 draft_answer = last_trace.get("draft_answer")
                 if draft_answer is not None and is_bad_verified_answer(answer):
                     answer = str(draft_answer)
                 if is_bad_verified_answer(answer):
                     answer = "0"
                 if args.normalize_units:
-                    answer = normalize_for_unit(answer, units.get(qid))
+                    question = questions_by_id[qid]
+                    answer = normalize_for_unit(answer, units.get(qid), question.question)
                 answers[qid] = answer
             else:
                 answers[int(row["id"])] = str(row.get("answer", "0"))

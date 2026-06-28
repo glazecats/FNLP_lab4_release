@@ -53,6 +53,15 @@ class ExtractAnswerTest(unittest.TestCase):
     def test_strips_xml_like_answer_tags(self):
         self.assertEqual(extract_answer("FINAL_ANSWER: <number>9.37e7</number>"), "9.37e7")
 
+    def test_target_unit_prefers_matching_value(self):
+        text = "ionization energy is 54.4 eV, or 5250 kJ/mol.\nFINAL_ANSWER: 54.4 5250"
+        self.assertEqual(extract_answer(text, target_unit="$\\mathrm{eV}$"), "54.4")
+        self.assertEqual(extract_answer(text), "5250")
+
+    def test_target_unit_can_select_later_matching_value(self):
+        text = "stress is 1.8e8 Pa, strain is 9.0e-4, elongation is 1.8 mm.\nFINAL_ANSWER: 1.8e8 9.0e-4 1.8"
+        self.assertEqual(extract_answer(text, target_unit="mm"), "1.8")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -43,6 +43,10 @@ class UnitNormalizationTest(unittest.TestCase):
         self.assertEqual(normalize_for_unit("0.1549", "%"), "15.49")
         self.assertEqual(normalize_for_unit("15.49", "%"), "15.49")
 
+    def test_height_questions_use_magnitude(self):
+        self.assertEqual(normalize_for_unit("-3.6667", "cm", "像的高度是多少 cm？"), "3.6667")
+        self.assertEqual(normalize_for_unit("-0.5", None, "求极限的值"), "-0.5")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -97,6 +97,7 @@ def solve_one(
     retrieved = index.search(expand_query(question), field=question.field, top_k=top_k) if index else []
     retrieved = [chunk for chunk in retrieved if chunk.score >= MIN_RAG_SCORE]
     system_prompt = get_system_prompt(prompt_style)
+    target_unit = infer_target_unit(question.question, question.unit)
 
     def build_messages(context: list | None) -> list[dict[str, str]]:
         messages = []
@@ -120,7 +121,7 @@ def solve_one(
             temperature=temperature if samples > 1 else min(temperature, 0.2),
             max_tokens=max_tokens,
         )
-        answer = extract_answer(response)
+        answer = extract_answer(response, target_unit=target_unit)
         trace = {f"{label}_response": response, f"{label}_answer": answer}
         if uses_verify:
             verify_messages = [
@@ -140,7 +141,7 @@ def solve_one(
                 temperature=0.0,
                 max_tokens=max_tokens,
             )
-            verified_answer = extract_answer(verified_response)
+            verified_answer = extract_answer(verified_response, target_unit=target_unit)
             if is_bad_verified_answer(verified_answer):
                 verified_answer = answer
             if is_bad_verified_answer(verified_answer):
@@ -178,11 +179,11 @@ def solve_one(
             temperature=0.0,
             max_tokens=max_tokens,
         )
-        answer = extract_answer(arbiter_response)
+        answer = extract_answer(arbiter_response, target_unit=target_unit)
         if is_bad_verified_answer(answer):
             answer = rag_candidate["answer"]
         if normalize_units:
-            answer = normalize_for_unit(answer, infer_target_unit(question.question, question.unit))
+            answer = normalize_for_unit(answer, target_unit, question.question)
         return {
             "id": question.id,
             "field": question.field,
@@ -213,7 +214,7 @@ def solve_one(
             temperature=temperature if samples > 1 else min(temperature, 0.2),
             max_tokens=max_tokens,
         )
-        answer = extract_answer(response)
+        answer = extract_answer(response, target_unit=target_unit)
         trace = {"sample": sample_idx, "response": response, "answer": answer}
         if uses_verify:
             verify_messages = [
@@ -233,7 +234,7 @@ def solve_one(
                 temperature=0.0,
                 max_tokens=max_tokens,
             )
-            verified_answer = extract_answer(verified_response)
+            verified_answer = extract_answer(verified_response, target_unit=target_unit)
             if is_bad_verified_answer(verified_answer):
                 verified_answer = answer
             if is_bad_verified_answer(verified_answer):
@@ -248,7 +249,7 @@ def solve_one(
             )
             answer = verified_answer
         if normalize_units:
-            answer = normalize_for_unit(answer, infer_target_unit(question.question, question.unit))
+            answer = normalize_for_unit(answer, target_unit, question.question)
             trace["answer"] = answer
         traces.append(trace)
         answers.append(answer)

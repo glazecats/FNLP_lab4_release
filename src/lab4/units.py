@@ -82,7 +82,7 @@ def _prefix_scale(unit: str | None) -> float | None:
     return None
 
 
-def normalize_for_unit(answer: str, unit: str | None) -> str:
+def normalize_for_unit(answer: str, unit: str | None, question_text: str | None = None) -> str:
     """Convert obvious absolute numeric answers to coefficients for 10^n units.
 
     Example: answer=4.74e14, unit=10^14 Hz -> 4.74.
@@ -115,5 +115,9 @@ def normalize_for_unit(answer: str, unit: str | None) -> str:
 
     if unit == "%" and 0 < abs(number) <= 1:
         return _format_number(number * 100)
+
+    if question_text and number < 0:
+        if re.search(r"高度是多少|高多少|height", question_text, flags=re.IGNORECASE):
+            return _format_number(abs(number))
 
     return answer
