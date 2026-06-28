@@ -25,7 +25,11 @@ def infer_target_unit(question_text: str, explicit_unit: str | None = None) -> s
     for pattern in TARGET_UNIT_PATTERNS:
         match = pattern.search(question_text)
         if match:
-            return match.group(1).strip()
+            unit = match.group(1).strip()
+            tail = question_text[match.end() :]
+            if "kg" in unit and re.search(r"次数|发生次数|fissions", tail, flags=re.IGNORECASE):
+                continue
+            return unit
     return None
 
 

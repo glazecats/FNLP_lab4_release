@@ -25,6 +25,10 @@ class UnitNormalizationTest(unittest.TestCase):
     def test_infer_percent_target(self):
         self.assertEqual(infer_target_unit("从第三个偏振片射出的光强是原始光强的百分之多少？"), "%")
 
+    def test_does_not_treat_intermediate_mass_unit_as_final_count_unit(self):
+        text = "通过确定其中存在的 U-238 质量（以 kg 为单位），计算一天内发生的自发裂变次数。"
+        self.assertIsNone(infer_target_unit(text))
+
     def test_negative_power_unit(self):
         self.assertEqual(normalize_for_unit("1.2816e-18", "$10^{-18} \\mathrm{J}$"), "1.2816")
         self.assertEqual(normalize_for_unit("1.2816", "$10^{-18} \\mathrm{J}$"), "1.2816")

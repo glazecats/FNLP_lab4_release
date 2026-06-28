@@ -1,8 +1,16 @@
 from __future__ import annotations
 
+import re
+
 from .data import Question
 from .retrieval import RetrievedChunk
 from .units import infer_target_unit
+
+
+def normalize_question_text_for_prompt(text: str) -> str:
+    """Repair a small class of TeX/OCR exponent losses before sending to the LLM."""
+
+    return re.sub(r"\b10([1-9])-(?=[A-Za-zμµ\\])", r"10^\1-", text)
 
 
 BASELINE_SYSTEM_PROMPT = """你是一个专业的大学物理和大学化学解题助手。请根据题目给出的所有条件做简洁的逐步推理，并计算最终答案。
@@ -106,7 +114,7 @@ def build_user_prompt(
         f"学科：{question.field}",
         f"子领域：{question.subfield or '未给出'}",
         f"相关定律/原理提示：{question.theorem or '未给出'}",
-        f"题目：{question.question}",
+        f"题目：{normalize_question_text_for_prompt(question.question)}",
     ]
 
     target_unit = infer_target_unit(question.question, question.unit)
@@ -147,7 +155,7 @@ def build_verifier_prompt(
         f"学科：{question.field}",
         f"子领域：{question.subfield or '未给出'}",
         f"相关定律/原理提示：{question.theorem or '未给出'}",
-        f"题目：{question.question}",
+        f"题目：{normalize_question_text_for_prompt(question.question)}",
         f"目标答案单位/形式：{infer_target_unit(question.question, question.unit) or '题目文字指定或无单位'}",
     ]
     if context:
@@ -186,7 +194,7 @@ def build_arbiter_prompt(
         f"学科：{question.field}",
         f"子领域：{question.subfield or '未给出'}",
         f"相关定律/原理提示：{question.theorem or '未给出'}",
-        f"题目：{question.question}",
+        f"题目：{normalize_question_text_for_prompt(question.question)}",
         f"目标答案单位/形式：{infer_target_unit(question.question, question.unit) or '题目文字指定或无单位'}",
     ]
     if context:
