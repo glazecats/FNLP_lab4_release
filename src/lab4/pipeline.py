@@ -11,7 +11,7 @@ from typing import Any
 
 from .calculator import CalculatorError, evaluate_expression, format_number
 from .data import Question, load_questions, select_questions
-from .extract import equivalent_answer_text, extract_final_answer, extract_tool_expression, looks_invalid_answer
+from .extract import equivalent_answer_text, extract_final_answer, extract_tool_expression, looks_invalid_answer, normalize_answer
 from .llm import LLMClient, Message
 from .prompts import (
     ARBITER_SYSTEM,
@@ -549,7 +549,9 @@ SIGNED_TARGET_TERMS = {
 }
 
 def _postprocess_trace_answer(question: Question, trace: dict[str, Any]) -> str | None:
-    answer = _postprocess_answer(question, trace.get("answer"))
+    raw_answer = trace.get("answer")
+    answer = normalize_answer(str(raw_answer)) if raw_answer else raw_answer
+    answer = _postprocess_answer(question, answer)
     answer = _postprocess_calculable_expression(answer)
     answer = _postprocess_scaled_coefficient(question, answer)
     if looks_invalid_answer(answer or ""):

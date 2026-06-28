@@ -174,6 +174,20 @@ class PipelineTests(unittest.TestCase):
 
         self.assertEqual(_submission_answer_from_trace(question, trace), "1.3038")
 
+    def test_submission_answer_normalizes_raw_verifier_answer_from_trace(self) -> None:
+        question = Question(id=13, field="physics", question="Find the value.")
+        trace = {
+            "answer": r"\boxed{\frac{1}{1837}}",
+            "attempts": [
+                {
+                    "final": {"answer": None},
+                    "verifier": {"decision": "PASS", "answer": r"\boxed{\frac{1}{1837}}"},
+                }
+            ],
+        }
+
+        self.assertEqual(_submission_answer_from_trace(question, trace), "0.000544365813827")
+
     def test_postprocess_abs_for_magnitude_targets_only(self) -> None:
         height_question = Question(id=1, field="physics", question="What is the image height?")
         energy_question = Question(id=2, field="physics", question="Find the potential energy change.")
