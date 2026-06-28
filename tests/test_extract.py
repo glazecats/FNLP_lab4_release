@@ -15,6 +15,11 @@ class ExtractAnswerTest(unittest.TestCase):
     def test_boxed_latex(self):
         self.assertEqual(extract_answer("Therefore \\boxed{\\frac{22}{\\sqrt{7}}}."), "\\frac{22}{\\sqrt{7}}")
 
+    def test_decimalizes_simple_fractions(self):
+        self.assertEqual(extract_answer("FINAL_ANSWER: \\frac{3}{2}"), "1.5")
+        self.assertEqual(extract_answer("FINAL_ANSWER: -1/2"), "-0.5")
+        self.assertEqual(extract_answer("FINAL_ANSWER: 1/3"), "0.333333333333")
+
     def test_final_answer_overrides_boxed(self):
         text = "\\boxed{P(\\theta \\geq 90^\\circ) \\approx 1.8 \\times 10^{-5}}\nFINAL_ANSWER: 1.8e-5"
         self.assertEqual(extract_answer(text), "1.8e-5")

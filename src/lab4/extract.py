@@ -63,6 +63,38 @@ def _has_single_wrapping_pair(value: str, open_ch: str, close_ch: str) -> bool:
     return depth == 0
 
 
+def _format_decimal(value: float) -> str:
+    if value == 0:
+        return "0"
+    if abs(value - round(value)) < 1e-12 and abs(value) < 1e12:
+        return str(int(round(value)))
+    return f"{value:.12g}"
+
+
+def _decimalize_simple_fraction(value: str) -> str:
+    latex_match = re.fullmatch(
+        r"([+-]?)\\frac\{\s*([+-]?\d+(?:\.\d+)?)\s*\}\{\s*([+-]?\d+(?:\.\d+)?)\s*\}",
+        value,
+    )
+    if latex_match:
+        sign, numerator, denominator = latex_match.groups()
+        denom = float(denominator)
+        if denom != 0:
+            number = float(numerator) / denom
+            if sign == "-":
+                number = -number
+            return _format_decimal(number)
+
+    slash_match = re.fullmatch(r"([+-]?\d+(?:\.\d+)?)\s*/\s*([+-]?\d+(?:\.\d+)?)", value)
+    if slash_match:
+        numerator, denominator = slash_match.groups()
+        denom = float(denominator)
+        if denom != 0:
+            return _format_decimal(float(numerator) / denom)
+
+    return value
+
+
 def clean_answer(answer: str) -> str:
     value = normalize_unicode_math(answer)
     value = value.splitlines()[0].strip()
@@ -101,6 +133,7 @@ def clean_answer(answer: str) -> str:
     ):
         value = numeric_tokens[-1]
     value = value.strip("。.;,，：:")
+    value = _decimalize_simple_fraction(value)
     return value or "0"
 
 

@@ -22,6 +22,9 @@ class UnitNormalizationTest(unittest.TestCase):
         self.assertEqual(normalize_for_unit("5.45", "$10^3 \\mathrm{K}$"), "5.45")
         self.assertEqual(normalize_for_unit("10^{39}", "$10^{39}$"), "1")
 
+    def test_infer_percent_target(self):
+        self.assertEqual(infer_target_unit("从第三个偏振片射出的光强是原始光强的百分之多少？"), "%")
+
     def test_negative_power_unit(self):
         self.assertEqual(normalize_for_unit("1.2816e-18", "$10^{-18} \\mathrm{J}$"), "1.2816")
         self.assertEqual(normalize_for_unit("1.2816", "$10^{-18} \\mathrm{J}$"), "1.2816")
@@ -35,6 +38,10 @@ class UnitNormalizationTest(unittest.TestCase):
         self.assertEqual(normalize_for_unit("5.166e-11", "$\\mathrm{pm}$"), "51.66")
         self.assertEqual(normalize_for_unit("0.0397", "$\\mathrm{mJ}$"), "39.7")
         self.assertEqual(normalize_for_unit("0.13886", "mm"), "0.13886")
+
+    def test_percent_target(self):
+        self.assertEqual(normalize_for_unit("0.1549", "%"), "15.49")
+        self.assertEqual(normalize_for_unit("15.49", "%"), "15.49")
 
 
 if __name__ == "__main__":

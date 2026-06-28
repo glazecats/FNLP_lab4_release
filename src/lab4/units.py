@@ -20,6 +20,8 @@ def infer_target_unit(question_text: str, explicit_unit: str | None = None) -> s
 
     if explicit_unit:
         return explicit_unit.strip()
+    if re.search(r"百分之多少|百分比|percentage|what\s+percent", question_text, flags=re.IGNORECASE):
+        return "%"
     for pattern in TARGET_UNIT_PATTERNS:
         match = pattern.search(question_text)
         if match:
@@ -110,5 +112,8 @@ def normalize_for_unit(answer: str, unit: str | None) -> str:
         coefficient = number / prefix_scale
         if 1e-6 <= abs(coefficient) <= 1e6:
             return _format_number(coefficient)
+
+    if unit == "%" and 0 < abs(number) <= 1:
+        return _format_number(number * 100)
 
     return answer
