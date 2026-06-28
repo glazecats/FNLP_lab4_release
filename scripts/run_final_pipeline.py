@@ -43,6 +43,12 @@ def main() -> None:
         action="store_true",
         help="Reuse existing primary/secondary submissions and only rerun the pairwise judge.",
     )
+    parser.add_argument(
+        "--calculation-check",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Enable the pair-judge calculation checker that extracts expressions and evaluates them locally.",
+    )
     args = parser.parse_args()
 
     if not (os.getenv("DASHSCOPE_API_KEY") or os.getenv("OPENAI_API_KEY") or os.getenv("LAB4_MOCK_LLM") == "1"):
@@ -120,6 +126,7 @@ def main() -> None:
             str(final_submission),
             "--trace-out",
             str(judge_trace),
+            "--calculation-check" if args.calculation_check else "--no-calculation-check",
             *common,
             *maybe_resume_args(judge_trace, args.resume),
         ],
