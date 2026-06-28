@@ -26,6 +26,10 @@ Do not vote by source name, answer frequency, length, or confidence. Reread the 
 Use the candidate reasoning and code-calculated expression values only as evidence.
 The code-calculated values are arithmetically reliable if their expressions/formulas represent the needed quantity; if an expression/formula is conceptually wrong, ignore it.
 Check target quantity, target unit, sign convention, percent conversion, unit prefix, exponent/OCR slips, per-particle vs per-mole quantities, and premature rounding.
+If the problem refers to given table values, a previous problem, or supplied constants that are not visible in the prompt, do not replace them with memorized data; prefer candidate derivations that clearly use the referenced supplied values.
+Respect explicit wording such as diameter/radius, total/one-side distance, per molecule/per mole, and percent/fraction before applying a familiar textbook convention.
+When converting unit prefixes, write the power-of-ten conversion mentally before choosing the final number.
+Return enough digits to distinguish close candidates; do not round to significant figures unless the problem explicitly asks for that.
 If candidates differ only by sign, do not guess from wording such as gained/lost; write the governing energy or direction equation and use the standard sign convention for the requested quantity.
 The last line must be exactly FINAL_ANSWER: <number>, with no unit or explanation after it."""
 
