@@ -71,14 +71,7 @@ class Solver:
         for loop_index in range(self.max_verify_loops + 1):
             direct = self._direct(question, feedback=feedback)
             rag = self._rag(question, feedback=feedback)
-            if equivalent_answer_text(direct.get("answer"), rag.get("answer")):
-                final = {
-                    "role": "agreement",
-                    "answer": direct.get("answer"),
-                    "transcript": "DIRECT_SOLVER and RAG_SOLVER produced equivalent final answers.",
-                }
-            else:
-                final = self._arbiter(question, direct, rag, feedback=feedback)
+            final = self._arbiter(question, direct, rag, feedback=feedback)
 
             history = "\n\n".join(
                 [
@@ -107,7 +100,7 @@ class Solver:
                     attempts=attempts,
                     direct=direct,
                     rag=rag,
-                    arbiter=final if final.get("role") != "agreement" else None,
+                    arbiter=final,
                     verifier=verifier,
                     retrieval=rag.get("retrieval", []),
                 )
