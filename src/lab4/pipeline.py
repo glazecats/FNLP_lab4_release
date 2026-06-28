@@ -272,7 +272,7 @@ class Solver:
             "invalid_reason": looks_invalid_answer(answer or ""),
             **extra,
         }
-        trace["answer"] = _postprocess_trace_answer(question, trace) or ""
+        trace["answer"] = _submission_answer_from_trace(question, trace) or ""
         trace["invalid_reason"] = looks_invalid_answer(trace["answer"])
         return trace
 
@@ -348,7 +348,7 @@ def write_submission(questions: list[Question], traces: list[dict[str, Any] | No
         writer = csv.writer(file)
         writer.writerow(["id", "answer"])
         for question, trace in zip(questions, traces, strict=True):
-            answer = _postprocess_trace_answer(question, trace) if trace else ""
+            answer = _submission_answer_from_trace(question, trace) if trace else ""
             writer.writerow([question.id, answer or ""])
 
 
@@ -417,6 +417,16 @@ def _verifier_explicitly_rejected_candidate(verifier: dict[str, Any]) -> bool:
     candidate_markers = ["候选", "candidate"]
     rejection_markers = ["错误", "不可靠", "wrong", "incorrect", "unreliable", "invalid"]
     return any(marker in text for marker in candidate_markers) and any(marker in text for marker in rejection_markers)
+
+
+def _submission_answer_from_trace(question: Question, trace: dict[str, Any]) -> str | None:
+    working = dict(trace)
+    attempts = working.get("attempts") or []
+    if attempts and ((attempts[-1].get("verifier") or {}).get("decision") == "LOOP"):
+        fallback = _fallback_after_failed_verification(attempts[-1])
+        if fallback:
+            working["answer"] = fallback
+    return _postprocess_trace_answer(question, working)
 
 
 def _load_existing_traces(path: str | Path) -> dict[int, dict[str, Any]]:

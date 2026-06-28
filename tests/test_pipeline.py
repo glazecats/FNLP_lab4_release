@@ -14,6 +14,7 @@ from lab4.pipeline import (
     _postprocess_answer,
     _postprocess_trace_answer,
     _safe_solve,
+    _submission_answer_from_trace,
 )
 from lab4.retrieval import RetrievedChunk
 
@@ -142,6 +143,22 @@ class PipelineTests(unittest.TestCase):
         }
 
         self.assertEqual(_fallback_after_failed_verification(attempt), "1.3038")
+
+    def test_submission_answer_recomputes_failed_loop_fallback_from_trace(self) -> None:
+        question = Question(id=11, field="physics", question="Find the value.")
+        trace = {
+            "answer": "2.77",
+            "attempts": [
+                {
+                    "direct": {"answer": "2.77"},
+                    "rag": {"answer": "1.3038"},
+                    "final": {"answer": "2.770"},
+                    "verifier": {"decision": "LOOP", "reason": "候选答案使用了错误的公式。"},
+                }
+            ],
+        }
+
+        self.assertEqual(_submission_answer_from_trace(question, trace), "1.3038")
 
     def test_postprocess_abs_for_magnitude_targets_only(self) -> None:
         height_question = Question(id=1, field="physics", question="What is the image height?")
