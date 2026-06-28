@@ -51,6 +51,11 @@ class UnitNormalizationTest(unittest.TestCase):
         self.assertEqual(normalize_for_unit("-3.6667", "cm", "像的高度是多少 cm？"), "3.6667")
         self.assertEqual(normalize_for_unit("-0.5", None, "求极限的值"), "-0.5")
 
+    def test_one_mole_joule_answer_scales_particle_energy(self):
+        text = "计算一摩尔理想气体的平均平动动能，以 J 为单位"
+        self.assertEqual(normalize_for_unit("6.07e-21", "J", text), "3655.439441")
+        self.assertEqual(normalize_for_unit("6.07e-21", "kJ/mol", text), "6.07e-21")
+
 
 if __name__ == "__main__":
     unittest.main()
