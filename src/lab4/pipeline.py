@@ -443,7 +443,10 @@ def _load_existing_traces(path: str | Path) -> dict[int, dict[str, Any]]:
     for line in trace_path.read_text(encoding="utf-8").splitlines():
         if not line.strip():
             continue
-        item = json.loads(line)
+        try:
+            item = json.loads(line)
+        except json.JSONDecodeError:
+            continue
         if item.get("answer"):
             done[int(item["id"])] = item
     return done

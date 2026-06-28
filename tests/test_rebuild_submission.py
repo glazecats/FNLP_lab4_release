@@ -9,10 +9,24 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
-from scripts.rebuild_submission_from_traces import rebuild_submission
+from scripts.rebuild_submission_from_traces import load_traces, rebuild_submission
 
 
 class RebuildSubmissionTests(unittest.TestCase):
+    def test_load_traces_skips_corrupt_jsonl_lines(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            traces = Path(tmp) / "traces.jsonl"
+            traces.write_text(
+                '{"id": 1, "answer": "old"}\n'
+                '{"id": bad json\n'
+                '{"id": 1, "answer": "new"}\n',
+                encoding="utf-8",
+            )
+
+            loaded = load_traces(traces)
+
+            self.assertEqual(loaded[1]["answer"], "new")
+
     def test_rebuild_submission_uses_current_trace_postprocessing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             temp = Path(tmp)

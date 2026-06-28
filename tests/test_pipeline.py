@@ -1,4 +1,5 @@
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -10,6 +11,7 @@ from lab4.pipeline import (
     Solver,
     _extract_retrieval_query,
     _fallback_after_failed_verification,
+    _load_existing_traces,
     _merge_retrieved_chunks,
     _postprocess_answer,
     _postprocess_trace_answer,
@@ -99,6 +101,20 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(result["answer"], "42")
         self.assertEqual(solver.calls, 2)
         self.assertIn("retry_errors", result)
+
+    def test_load_existing_traces_skips_corrupt_jsonl_lines(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "traces.jsonl"
+            path.write_text(
+                '{"id": 1, "answer": "old"}\n'
+                '{"id": bad json\n'
+                '{"id": 1, "answer": "new"}\n',
+                encoding="utf-8",
+            )
+
+            traces = _load_existing_traces(path)
+
+            self.assertEqual(traces[1]["answer"], "new")
 
     def test_history_includes_curator_notes_for_downstream_roles(self) -> None:
         result = {

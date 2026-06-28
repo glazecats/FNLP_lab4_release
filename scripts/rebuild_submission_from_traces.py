@@ -18,7 +18,10 @@ def load_traces(path: str | Path) -> dict[int, dict[str, Any]]:
     for line in Path(path).read_text(encoding="utf-8").splitlines():
         if not line.strip():
             continue
-        trace = json.loads(line)
+        try:
+            trace = json.loads(line)
+        except json.JSONDecodeError:
+            continue
         traces[int(trace["id"])] = trace
     return traces
 
