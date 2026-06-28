@@ -133,6 +133,16 @@ class PipelineTests(unittest.TestCase):
 
         self.assertEqual(_fallback_after_failed_verification(attempt), "1.3038")
 
+    def test_failed_verification_fallback_skips_candidate_explicitly_rejected_by_verifier(self) -> None:
+        attempt = {
+            "direct": {"answer": "2.77"},
+            "rag": {"answer": "1.3038"},
+            "final": {"answer": "2.770"},
+            "verifier": {"decision": "LOOP", "reason": "候选答案使用了错误的公式。"},
+        }
+
+        self.assertEqual(_fallback_after_failed_verification(attempt), "1.3038")
+
     def test_postprocess_abs_for_magnitude_targets_only(self) -> None:
         height_question = Question(id=1, field="physics", question="What is the image height?")
         energy_question = Question(id=2, field="physics", question="Find the potential energy change.")

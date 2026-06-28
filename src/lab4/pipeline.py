@@ -381,11 +381,42 @@ def _safe_solve(solver: Solver, question: Question, method: str, retries: int = 
 
 
 def _fallback_after_failed_verification(attempt: dict[str, Any]) -> str | None:
+    rejected_final = (attempt.get("final") or {}).get("answer")
+    skip_rejected_final = _verifier_explicitly_rejected_candidate(attempt.get("verifier") or {})
     for role in ("direct", "rag", "final", "verifier"):
         answer = (attempt.get(role) or {}).get("answer")
+        if (
+            skip_rejected_final
+            and rejected_final
+            and answer
+            and role != "verifier"
+            and _same_answer_value(answer, rejected_final)
+        ):
+            continue
         if answer and not looks_invalid_answer(answer):
             return answer
     return None
+
+
+def _same_answer_value(left: str, right: str) -> bool:
+    if equivalent_answer_text(left, right):
+        return True
+    left_value = _to_float(left)
+    right_value = _to_float(right)
+    if left_value is None or right_value is None:
+        return False
+    return abs(left_value - right_value) <= max(1e-12, 1e-9 * max(abs(left_value), abs(right_value), 1.0))
+
+
+def _verifier_explicitly_rejected_candidate(verifier: dict[str, Any]) -> bool:
+    if verifier.get("decision") != "LOOP":
+        return False
+    text = str(verifier.get("reason") or verifier.get("transcript") or "").lower()
+    if not text:
+        return False
+    candidate_markers = ["候选", "candidate"]
+    rejection_markers = ["错误", "不可靠", "wrong", "incorrect", "unreliable", "invalid"]
+    return any(marker in text for marker in candidate_markers) and any(marker in text for marker in rejection_markers)
 
 
 def _load_existing_traces(path: str | Path) -> dict[int, dict[str, Any]]:
