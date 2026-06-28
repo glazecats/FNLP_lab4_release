@@ -6,7 +6,13 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from lab4.data import Question
-from lab4.pipeline import Solver, _postprocess_answer, _postprocess_trace_answer, _safe_solve
+from lab4.pipeline import (
+    Solver,
+    _fallback_after_failed_verification,
+    _postprocess_answer,
+    _postprocess_trace_answer,
+    _safe_solve,
+)
 
 
 class FakeClient:
@@ -54,6 +60,16 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(result["answer"], "42")
         self.assertEqual(solver.calls, 2)
         self.assertIn("retry_errors", result)
+
+    def test_failed_verification_fallback_avoids_rejected_final_first(self) -> None:
+        attempt = {
+            "direct": {"answer": "1.3038"},
+            "rag": {"answer": "1.1562"},
+            "final": {"answer": "1.1562"},
+            "verifier": {"decision": "LOOP"},
+        }
+
+        self.assertEqual(_fallback_after_failed_verification(attempt), "1.3038")
 
     def test_postprocess_abs_for_magnitude_targets_only(self) -> None:
         height_question = Question(id=1, field="physics", question="What is the image height?")

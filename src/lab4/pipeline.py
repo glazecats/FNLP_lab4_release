@@ -107,7 +107,7 @@ class Solver:
                 )
             feedback = verifier.get("reason") or "Verifier requested a full redo."
         last = attempts[-1]
-        answer = last["final"].get("answer") or last["direct"].get("answer") or last["rag"].get("answer")
+        answer = _fallback_after_failed_verification(last)
         return self._trace(
             question,
             method,
@@ -331,6 +331,14 @@ def _safe_solve(solver: Solver, question: Question, method: str, retries: int = 
         "retry_errors": errors,
         "traceback": errors[-1]["traceback"] if errors else "",
     }
+
+
+def _fallback_after_failed_verification(attempt: dict[str, Any]) -> str | None:
+    for role in ("direct", "rag", "final", "verifier"):
+        answer = (attempt.get(role) or {}).get("answer")
+        if answer and not looks_invalid_answer(answer):
+            return answer
+    return None
 
 
 def _load_existing_traces(path: str | Path) -> dict[int, dict[str, Any]]:
