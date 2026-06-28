@@ -17,6 +17,7 @@ from lab4.pipeline import (
     _postprocess_trace_answer,
     _safe_solve,
     _submission_answer_from_trace,
+    _worker_error_trace,
 )
 from lab4.retrieval import RetrievedChunk
 
@@ -101,6 +102,19 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(result["answer"], "42")
         self.assertEqual(solver.calls, 2)
         self.assertIn("retry_errors", result)
+
+    def test_worker_error_trace_preserves_question_context(self) -> None:
+        question = Question(id=10, field="physics", question="Find the value.")
+
+        try:
+            raise RuntimeError("worker failed")
+        except RuntimeError as exc:
+            trace = _worker_error_trace(question, "rag-verify", exc)
+
+        self.assertEqual(trace["id"], 10)
+        self.assertEqual(trace["answer"], "")
+        self.assertIn("worker failed", trace["error"])
+        self.assertIn("RuntimeError", trace["traceback"])
 
     def test_load_existing_traces_skips_corrupt_jsonl_lines(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

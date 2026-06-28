@@ -333,7 +333,11 @@ def solve_questions(
             with ThreadPoolExecutor(max_workers=workers) as executor:
                 futures = {executor.submit(_safe_solve, solver, question, method): question for question in to_run}
                 for future in as_completed(futures):
-                    trace = future.result()
+                    question = futures[future]
+                    try:
+                        trace = future.result()
+                    except Exception as exc:
+                        trace = _worker_error_trace(question, method, exc)
                     trace_file.write(json.dumps(trace, ensure_ascii=False) + "\n")
                     trace_file.flush()
                     done[trace["id"]] = trace
@@ -377,6 +381,25 @@ def _safe_solve(solver: Solver, question: Question, method: str, retries: int = 
         "error": errors[-1]["error"] if errors else "unknown error",
         "retry_errors": errors,
         "traceback": errors[-1]["traceback"] if errors else "",
+    }
+
+
+def _worker_error_trace(question: Question, method: str, exc: Exception) -> dict[str, Any]:
+    return {
+        "id": question.id,
+        "field": question.field,
+        "question": question.question,
+        "method": method,
+        "answer": "",
+        "error": str(exc),
+        "retry_errors": [
+            {
+                "attempt": "future",
+                "error": str(exc),
+                "traceback": traceback.format_exc(),
+            }
+        ],
+        "traceback": traceback.format_exc(),
     }
 
 
