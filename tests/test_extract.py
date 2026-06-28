@@ -22,6 +22,9 @@ class ExtractTests(unittest.TestCase):
     def test_invalid_answer_flags_units(self) -> None:
         self.assertIsNotNone(looks_invalid_answer("3e8 m/s"))
 
+    def test_invalid_answer_flags_chinese_refusal(self) -> None:
+        self.assertIsNotNone(looks_invalid_answer("\u65e0\u6cd5\u8ba1\u7b97"))
+
     def test_normalizes_numeric_fraction(self) -> None:
         self.assertEqual(extract_final_answer(r"FINAL_ANSWER: \frac{1}{4}"), "0.25")
 
