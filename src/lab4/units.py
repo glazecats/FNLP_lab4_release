@@ -123,6 +123,8 @@ def normalize_for_unit(answer: str, unit: str | None, question_text: str | None 
     if question_text and number < 0:
         if re.search(r"高度是多少|高多少|height", question_text, flags=re.IGNORECASE):
             return _format_number(abs(number))
+        if re.search(r"损失|减少量|loss|decrease", question_text, flags=re.IGNORECASE):
+            return _format_number(abs(number))
 
     if question_text and unit and "J" in unit and "mol" not in unit and 0 < abs(number) < 1e-15:
         if re.search(r"一摩尔|1\.?0*\s*mol|one\s+mole", question_text, flags=re.IGNORECASE):

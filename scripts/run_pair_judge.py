@@ -136,6 +136,11 @@ def main() -> None:
     predictions = dict(primary)
     for qid, row in judged.items():
         answer = str(row.get("answer", ""))
+        question = questions_by_id.get(qid)
+        if question is not None:
+            unit = infer_target_unit(question.question, question.unit)
+            answer = normalize_for_unit(answer, unit, question.question)
+            row["answer"] = answer
         if valid_numeric(answer) and not close_enough(answer, primary.get(qid, ""), rtol=args.rtol):
             predictions[qid] = answer
 
