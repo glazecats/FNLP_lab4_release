@@ -6,7 +6,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from lab4.data import Question
-from lab4.pipeline import Solver, _postprocess_answer
+from lab4.pipeline import Solver, _postprocess_answer, _postprocess_trace_answer
 
 
 class FakeClient:
@@ -40,6 +40,31 @@ class PipelineTests(unittest.TestCase):
 
         self.assertEqual(_postprocess_answer(height_question, "-3.67"), "3.67")
         self.assertEqual(_postprocess_answer(energy_question, "-3.67"), "-3.67")
+
+    def test_postprocess_refines_rounded_tool_constants(self) -> None:
+        question = Question(id=3, field="physics", question="求一个常数比值。")
+        trace = {
+            "answer": "8.625000000000e-5",
+            "verifier": {
+                "transcript": (
+                    "TOOL_CALC: 1.38e-23 / 1.6e-19\n"
+                    "TOOL_RESULT: 1.38e-23 / 1.6e-19 = 8.625000000000e-5"
+                )
+            },
+        }
+
+        self.assertEqual(_postprocess_trace_answer(question, trace), "8.617333262145e-5")
+
+    def test_postprocess_does_not_refine_unmatched_tool_result(self) -> None:
+        question = Question(id=4, field="physics", question="求一个常数比值。")
+        trace = {
+            "answer": "123",
+            "verifier": {
+                "transcript": "TOOL_CALC: 1.38e-23 / 1.6e-19"
+            },
+        }
+
+        self.assertEqual(_postprocess_trace_answer(question, trace), "123")
 
 
 if __name__ == "__main__":
