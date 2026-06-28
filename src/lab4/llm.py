@@ -14,6 +14,16 @@ from typing import Any
 Message = dict[str, str]
 
 
+def _optional_int_from_env(name: str, default: int | None = None) -> int | None:
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    value = value.strip()
+    if not value:
+        return None
+    return int(value)
+
+
 @dataclass
 class LLMConfig:
     model: str = os.environ.get("LLM_MODEL", "qwen3-8b")
@@ -22,6 +32,7 @@ class LLMConfig:
     )
     api_key: str | None = os.environ.get("DASHSCOPE_API_KEY")
     timeout: int = int(os.environ.get("LLM_TIMEOUT", "120"))
+    seed: int | None = _optional_int_from_env("LLM_SEED", 1)
     mock: bool = os.environ.get("LAB4_MOCK_LLM", "").lower() in {"1", "true", "yes"}
 
 
@@ -49,6 +60,8 @@ class LLMClient:
             "stream": False,
             "enable_thinking": bool(enable_thinking),
         }
+        if self.config.seed is not None:
+            payload["seed"] = self.config.seed
         data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
         headers = {
             "Authorization": f"Bearer {self.config.api_key}",
