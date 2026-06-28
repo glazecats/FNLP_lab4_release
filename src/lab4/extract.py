@@ -33,6 +33,7 @@ def normalize_answer(answer: str) -> str:
         answer = answer[1:-1].strip()
     answer = re.sub(r"\s+", " ", answer)
     answer = answer.rstrip(".。;,，")
+    answer = _unwrap_latex_boxed(answer)
     numeric_percent = _percent_to_decimal(answer)
     if numeric_percent is not None:
         return numeric_percent
@@ -40,6 +41,13 @@ def normalize_answer(answer: str) -> str:
     if numeric_fraction is not None:
         return numeric_fraction
     return answer.strip()
+
+
+def _unwrap_latex_boxed(answer: str) -> str:
+    match = re.fullmatch(r"\\boxed\s*\{\s*(.+)\s*\}", answer)
+    if match:
+        return match.group(1).strip()
+    return answer
 
 
 def _percent_to_decimal(answer: str) -> str | None:

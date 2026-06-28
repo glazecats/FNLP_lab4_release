@@ -35,6 +35,12 @@ class ExtractTests(unittest.TestCase):
     def test_normalizes_numeric_fraction(self) -> None:
         self.assertEqual(extract_final_answer(r"FINAL_ANSWER: \frac{1}{4}"), "0.25")
 
+    def test_normalizes_boxed_fraction(self) -> None:
+        self.assertEqual(extract_final_answer(r"FINAL_ANSWER: \boxed{\frac{1}{4}}"), "0.25")
+
+    def test_unwraps_boxed_numeric_answer(self) -> None:
+        self.assertEqual(extract_final_answer(r"FINAL_ANSWER: \boxed{3.14}"), "3.14")
+
     def test_normalizes_signed_latex_fraction(self) -> None:
         self.assertEqual(extract_final_answer(r"FINAL_ANSWER: -\frac{11}{3}"), "-3.66666666667")
 
