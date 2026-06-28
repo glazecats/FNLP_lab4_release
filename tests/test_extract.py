@@ -25,6 +25,9 @@ class ExtractTests(unittest.TestCase):
     def test_invalid_answer_flags_chinese_refusal(self) -> None:
         self.assertIsNotNone(looks_invalid_answer("\u65e0\u6cd5\u8ba1\u7b97"))
 
+    def test_invalid_answer_flags_chinese_explanation(self) -> None:
+        self.assertIsNotNone(looks_invalid_answer("\u9700\u8981\u8865\u5145\u6750\u6599\u53c2\u6570\u624d\u80fd\u8ba1\u7b97"))
+
     def test_invalid_answer_flags_unresolved_variable(self) -> None:
         self.assertIsNotNone(looks_invalid_answer(r"\frac{3}{2} k_B T"))
 
