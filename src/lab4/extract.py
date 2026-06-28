@@ -41,13 +41,17 @@ def normalize_answer(answer: str) -> str:
 
 def _fraction_to_decimal(answer: str) -> str | None:
     text = answer.strip()
-    latex = re.fullmatch(r"\\frac\s*\{\s*([-+]?\d+(?:\.\d+)?)\s*\}\s*\{\s*([-+]?\d+(?:\.\d+)?)\s*\}", text)
+    latex = re.fullmatch(r"([-+]?)\s*\\frac\s*\{\s*([-+]?\d+(?:\.\d+)?)\s*\}\s*\{\s*([-+]?\d+(?:\.\d+)?)\s*\}", text)
     simple = re.fullmatch(r"([-+]?\d+(?:\.\d+)?)\s*/\s*([-+]?\d+(?:\.\d+)?)", text)
-    match = latex or simple
-    if not match:
+    if latex:
+        sign = -1.0 if latex.group(1) == "-" else 1.0
+        numerator = sign * float(latex.group(2))
+        denominator = float(latex.group(3))
+    elif simple:
+        numerator = float(simple.group(1))
+        denominator = float(simple.group(2))
+    else:
         return None
-    numerator = float(match.group(1))
-    denominator = float(match.group(2))
     if denominator == 0:
         return None
     return format_number(numerator / denominator)

@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import csv
 import json
+import re
 import traceback
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-from .calculator import CalculatorError, evaluate_expression
+from .calculator import CalculatorError, evaluate_expression, format_number
 from .data import Question, load_questions, select_questions
 from .extract import equivalent_answer_text, extract_final_answer, extract_tool_expression, looks_invalid_answer
 from .llm import LLMClient, Message
@@ -304,19 +305,32 @@ def write_submission(questions: list[Question], traces: list[dict[str, Any] | No
             writer.writerow([question.id, answer or ""])
 
 
-def _safe_solve(solver: Solver, question: Question, method: str) -> dict[str, Any]:
-    try:
-        return solver.solve(question, method)
-    except Exception as exc:  # trace failures so resume can target them later.
-        return {
-            "id": question.id,
-            "field": question.field,
-            "question": question.question,
-            "method": method,
-            "answer": "",
-            "error": str(exc),
-            "traceback": traceback.format_exc(),
-        }
+def _safe_solve(solver: Solver, question: Question, method: str, retries: int = 2) -> dict[str, Any]:
+    errors: list[dict[str, str]] = []
+    for attempt in range(retries + 1):
+        try:
+            trace = solver.solve(question, method)
+            if errors:
+                trace["retry_errors"] = errors
+            return trace
+        except Exception as exc:  # trace failures so resume can target them later.
+            errors.append(
+                {
+                    "attempt": str(attempt),
+                    "error": str(exc),
+                    "traceback": traceback.format_exc(),
+                }
+            )
+    return {
+        "id": question.id,
+        "field": question.field,
+        "question": question.question,
+        "method": method,
+        "answer": "",
+        "error": errors[-1]["error"] if errors else "unknown error",
+        "retry_errors": errors,
+        "traceback": errors[-1]["traceback"] if errors else "",
+    }
 
 
 def _load_existing_traces(path: str | Path) -> dict[int, dict[str, Any]]:
@@ -403,9 +417,11 @@ SIGNED_TARGET_TERMS = {
 
 def _postprocess_trace_answer(question: Question, trace: dict[str, Any]) -> str | None:
     answer = _postprocess_answer(question, trace.get("answer"))
+    answer = _postprocess_scaled_coefficient(question, answer)
     if looks_invalid_answer(answer or ""):
         answer = _numeric_answer_fallback(trace) or "0"
         answer = _postprocess_answer(question, answer)
+        answer = _postprocess_scaled_coefficient(question, answer)
     return answer
 
 
@@ -432,6 +448,37 @@ def _postprocess_answer(question: Question, answer: str | None) -> str | None:
         return answer
     if any(term in target_text for term in POSITIVE_TARGET_TERMS):
         return answer[1:] if answer.startswith("-") else str(abs(value))
+    return answer
+
+
+SCALED_COEFFICIENT_RE = re.compile(
+    r"\b[xX]\b\s*(?:\*|×|\\times)\s*10\s*(?:\^|\*\*)\s*\{?\s*([-+]?\d+)\s*\}?"
+)
+
+
+def _postprocess_scaled_coefficient(question: Question, answer: str | None) -> str | None:
+    value = _to_float(answer)
+    if value is None or value == 0:
+        return answer
+    target_text = " ".join(
+        part
+        for part in [
+            question.question,
+            question.unit or "",
+        ]
+        if part
+    )
+    for match in SCALED_COEFFICIENT_RE.finditer(target_text):
+        exponent = int(match.group(1))
+        if exponent == 0:
+            continue
+        scale = 10.0**exponent
+        coefficient = value / scale
+        if 1 <= abs(coefficient) < 100:
+            if exponent > 0 and abs(value) >= abs(scale):
+                return format_number(coefficient)
+            if exponent < 0 and abs(value) <= abs(scale):
+                return format_number(coefficient)
     return answer
 
 
