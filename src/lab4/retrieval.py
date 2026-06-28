@@ -78,6 +78,13 @@ class TextbookIndex:
 
     def search(self, question: Question, top_k: int = 4) -> list[RetrievedChunk]:
         query_tokens = _query_tokens(question)
+        return self._search_tokens(query_tokens, top_k)
+
+    def search_text(self, text: str, top_k: int = 4) -> list[RetrievedChunk]:
+        query_tokens = _tokens_from_text(text)
+        return self._search_tokens(query_tokens, top_k)
+
+    def _search_tokens(self, query_tokens: Counter[str], top_k: int) -> list[RetrievedChunk]:
         if not query_tokens:
             return []
         scores = []
@@ -150,6 +157,10 @@ def _query_tokens(question: Question) -> Counter[str]:
         question.question or "",
     ]
     raw = " ".join(parts)
+    return _tokens_from_text(raw)
+
+
+def _tokens_from_text(raw: str) -> Counter[str]:
     tokens = Counter(_tokenize(raw))
     for token in list(tokens):
         if token.isdigit() and len(token) < 3:

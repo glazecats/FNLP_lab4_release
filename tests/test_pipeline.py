@@ -8,11 +8,14 @@ sys.path.insert(0, str(ROOT / "src"))
 from lab4.data import Question
 from lab4.pipeline import (
     Solver,
+    _extract_retrieval_query,
     _fallback_after_failed_verification,
+    _merge_retrieved_chunks,
     _postprocess_answer,
     _postprocess_trace_answer,
     _safe_solve,
 )
+from lab4.retrieval import RetrievedChunk
 
 
 class FakeClient:
@@ -108,6 +111,17 @@ class PipelineTests(unittest.TestCase):
         self.assertIn("curator_notes", history)
         self.assertIn("matching equation", history)
         self.assertIn("FINAL_ANSWER: 2", history)
+
+    def test_extract_retrieval_query_line(self) -> None:
+        self.assertEqual(_extract_retrieval_query("QUERY: x ray wavelength crystal"), "x ray wavelength crystal")
+
+    def test_merge_retrieved_chunks_keeps_primary_and_adds_unique_extra(self) -> None:
+        primary = [RetrievedChunk("a", "A", 2.0), RetrievedChunk("b", "B", 1.0)]
+        extra = [RetrievedChunk("b", "B2", 3.0), RetrievedChunk("c", "C", 2.0), RetrievedChunk("d", "D", 1.0)]
+
+        merged = _merge_retrieved_chunks(primary, extra, max_extra=1)
+
+        self.assertEqual([chunk.source for chunk in merged], ["a", "b", "c"])
 
     def test_failed_verification_fallback_avoids_rejected_final_first(self) -> None:
         attempt = {

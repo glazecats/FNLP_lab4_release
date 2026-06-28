@@ -79,6 +79,8 @@ class LLMClient:
     def _mock_response(self, messages: list[Message]) -> str:
         system = messages[0].get("content", "") if messages else ""
         text = "\n".join(message.get("content", "") for message in messages)
+        if "你是 RETRIEVAL_QUERY_WRITER" in system:
+            return "QUERY: physics chemistry textbook target quantity units"
         if "你是 RAG_CURATOR" in system:
             return "RAG_NOTES:\n- Mock note: use the equation that matches the requested quantity.\n- Check target units."
         if "你是 VERIFIER" in system:

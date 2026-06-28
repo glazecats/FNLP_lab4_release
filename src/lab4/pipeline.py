@@ -18,11 +18,13 @@ from .prompts import (
     DIRECT_SYSTEM,
     RAG_CURATOR_SYSTEM,
     RAG_SOLVER_SYSTEM,
+    RETRIEVAL_QUERY_SYSTEM,
     VERIFIER_SYSTEM,
     arbiter_user_prompt,
     curator_user_prompt,
     direct_user_prompt,
     rag_solver_user_prompt,
+    retrieval_query_user_prompt,
     verifier_user_prompt,
 )
 from .retrieval import RetrievedChunk, TextbookIndex
@@ -129,6 +131,10 @@ class Solver:
 
     def _rag(self, question: Question, feedback: str | None = None) -> dict[str, Any]:
         chunks = self.index.search(question, self.top_k) if self.index else []
+        retrieval_query = self._retrieval_query(question) if self.index else None
+        if self.index and retrieval_query:
+            extra_chunks = self.index.search_text(retrieval_query, max(2, self.top_k // 2))
+            chunks = _merge_retrieved_chunks(chunks, extra_chunks)
         curator_messages = [
             {"role": "system", "content": RAG_CURATOR_SYSTEM},
             {"role": "user", "content": curator_user_prompt(question, chunks)},
@@ -145,8 +151,22 @@ class Solver:
         ]
         result = self._run_role("rag", solver_messages)
         result["curator_notes"] = notes
+        result["retrieval_query"] = retrieval_query
         result["retrieval"] = [asdict(chunk) for chunk in chunks]
         return result
+
+    def _retrieval_query(self, question: Question) -> str | None:
+        messages = [
+            {"role": "system", "content": RETRIEVAL_QUERY_SYSTEM},
+            {"role": "user", "content": retrieval_query_user_prompt(question)},
+        ]
+        response = self.client.chat(
+            messages,
+            temperature=0.0,
+            max_tokens=256,
+            enable_thinking=self.enable_thinking,
+        )
+        return _extract_retrieval_query(response)
 
     def _arbiter(
         self,
@@ -397,6 +417,37 @@ def _extract_reason(response: str) -> str:
         if line.strip().upper().startswith("REASON"):
             return line.split(":", 1)[-1].strip()
     return response.strip()[:500]
+
+
+def _extract_retrieval_query(response: str) -> str | None:
+    for line in response.splitlines():
+        text = line.strip().strip("`*_ ")
+        if not text:
+            continue
+        if text.upper().startswith("QUERY"):
+            text = text.split(":", 1)[-1].strip() if ":" in text else text[5:].strip()
+        return text[:500] if text else None
+    return None
+
+
+def _merge_retrieved_chunks(
+    primary: list[RetrievedChunk],
+    extra: list[RetrievedChunk],
+    *,
+    max_extra: int = 2,
+) -> list[RetrievedChunk]:
+    merged = list(primary)
+    seen = {chunk.source for chunk in merged}
+    added = 0
+    for chunk in extra:
+        if chunk.source in seen:
+            continue
+        merged.append(chunk)
+        seen.add(chunk.source)
+        added += 1
+        if added >= max_extra:
+            break
+    return merged
 
 
 POSITIVE_TARGET_TERMS = {
