@@ -4,6 +4,8 @@ import ast
 import math
 from dataclasses import dataclass
 
+import sympy as sp
+
 
 class CalculatorError(ValueError):
     pass
@@ -67,6 +69,28 @@ ALLOWED_NAMES = {
     "g": 9.80665,
     "sigma": 5.670374419e-8,
     "amu": 1.66053906660e-27,
+    "u": 1.66053906660e-27,
+    "m_e": 9.1093837015e-31,
+    "m_p": 1.67262192369e-27,
+    "m_n": 1.67492749804e-27,
+}
+
+SYMPY_FUNCS = {
+    "sqrt": sp.sqrt,
+    "log": sp.log,
+    "ln": sp.log,
+    "log10": lambda x: sp.log(x, 10),
+    "exp": sp.exp,
+    "sin": sp.sin,
+    "cos": sp.cos,
+    "tan": sp.tan,
+    "asin": sp.asin,
+    "acos": sp.acos,
+    "atan": sp.atan,
+    "sind": lambda x: sp.sin(sp.pi * x / 180),
+    "cosd": lambda x: sp.cos(sp.pi * x / 180),
+    "tand": lambda x: sp.tan(sp.pi * x / 180),
+    "abs": sp.Abs,
 }
 
 
@@ -89,6 +113,9 @@ def evaluate_expression(expression: str) -> Calculation:
     except SyntaxError as exc:
         raise CalculatorError(str(exc)) from exc
     _reject_ambiguous_power(tree)
+    if isinstance(tree.body, ast.Compare):
+        value = _eval_equation(tree.body)
+        return Calculation(expression=expression, value=value, text=format_number(value))
     value = _eval_node(tree.body)
     if isinstance(value, float) and not math.isfinite(value):
         raise CalculatorError("non-finite result")
@@ -156,6 +183,94 @@ def _eval_node(node: ast.AST, variables: dict[str, float | int] | None = None) -
         args = [_eval_node(arg, variables) for arg in node.args]
         return func(*args)
     raise CalculatorError(f"unsupported expression element: {type(node).__name__}")
+
+
+def _eval_equation(node: ast.Compare) -> float:
+    if len(node.ops) != 1 or not isinstance(node.ops[0], ast.Eq) or len(node.comparators) != 1:
+        raise CalculatorError("only single equality equations are supported")
+    unknowns = sorted(_unknown_names(node.left) | _unknown_names(node.comparators[0]))
+    if len(unknowns) != 1:
+        raise CalculatorError("equations must contain exactly one unknown variable")
+    variable = sp.Symbol(unknowns[0])
+    variables = {unknowns[0]: variable}
+    left = _sympy_node(node.left, variables)
+    right = _sympy_node(node.comparators[0], variables)
+    solutions = sp.solve(sp.Eq(left, right), variable)
+    real_solutions = []
+    for solution in solutions:
+        numeric = complex(sp.N(solution))
+        if abs(numeric.imag) < 1e-9 and math.isfinite(numeric.real):
+            real_solutions.append(float(numeric.real))
+    if not real_solutions:
+        raise CalculatorError("equation has no real numeric solution")
+    if len(real_solutions) == 1:
+        return real_solutions[0]
+    nonnegative = [value for value in real_solutions if value >= 0]
+    if len(nonnegative) == 1:
+        return nonnegative[0]
+    raise CalculatorError("equation has multiple real solutions; isolate the desired root")
+
+
+def _unknown_names(node: ast.AST) -> set[str]:
+    names: set[str] = set()
+    if isinstance(node, ast.Name):
+        if node.id not in ALLOWED_NAMES and node.id not in ALLOWED_FUNCS and node.id not in {"math", "np", "numpy"}:
+            names.add(node.id)
+        return names
+    if isinstance(node, ast.Call):
+        for arg in node.args:
+            names.update(_unknown_names(arg))
+        return names
+    for child in ast.iter_child_nodes(node):
+        names.update(_unknown_names(child))
+    return names
+
+
+def _sympy_node(node: ast.AST, variables: dict[str, sp.Symbol]) -> sp.Expr:
+    if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+        return sp.Float(node.value) if isinstance(node.value, float) else sp.Integer(node.value)
+    if isinstance(node, ast.Name):
+        if node.id in variables:
+            return variables[node.id]
+        if node.id in ALLOWED_NAMES:
+            return sp.Float(ALLOWED_NAMES[node.id])
+        raise CalculatorError(f"unknown name: {node.id}")
+    if isinstance(node, ast.Attribute):
+        prefix = getattr(node.value, "id", None)
+        if prefix in {"math", "np", "numpy"} and node.attr in ALLOWED_NAMES:
+            return sp.Float(ALLOWED_NAMES[node.attr])
+        raise CalculatorError("only math/np constants are allowed")
+    if isinstance(node, ast.UnaryOp):
+        value = _sympy_node(node.operand, variables)
+        if isinstance(node.op, ast.UAdd):
+            return value
+        if isinstance(node.op, ast.USub):
+            return -value
+        raise CalculatorError("unsupported unary operator")
+    if isinstance(node, ast.BinOp):
+        left = _sympy_node(node.left, variables)
+        right = _sympy_node(node.right, variables)
+        if isinstance(node.op, ast.Add):
+            return left + right
+        if isinstance(node.op, ast.Sub):
+            return left - right
+        if isinstance(node.op, ast.Mult):
+            return left * right
+        if isinstance(node.op, ast.Div):
+            return left / right
+        if isinstance(node.op, ast.Pow):
+            return left**right
+        raise CalculatorError("unsupported binary operator")
+    if isinstance(node, ast.Call):
+        func_name = _call_name(node.func)
+        func = SYMPY_FUNCS.get(func_name)
+        if func is None:
+            raise CalculatorError(f"unknown function in equation: {func_name}")
+        if node.keywords:
+            raise CalculatorError("keyword arguments are not allowed")
+        args = [_sympy_node(arg, variables) for arg in node.args]
+        return func(*args)
+    raise CalculatorError(f"unsupported equation element: {type(node).__name__}")
 
 
 def _call_name(node: ast.AST) -> str:

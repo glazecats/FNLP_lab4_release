@@ -34,6 +34,20 @@ class CalculatorTests(unittest.TestCase):
         self.assertAlmostEqual(evaluate_expression("integral(x**2, x, 0, 1)").value, 1 / 3, places=8)
         self.assertAlmostEqual(evaluate_expression("integrate(sin(x), x, 0, pi)").value, 2.0, places=8)
 
+    def test_particle_mass_constants(self) -> None:
+        self.assertGreater(evaluate_expression("m_e").value, 9.0e-31)
+        self.assertLess(evaluate_expression("m_e").value, 9.2e-31)
+
+    def test_solves_single_variable_linear_equation(self) -> None:
+        self.assertAlmostEqual(evaluate_expression("5.5 + Q == 1.1 + 8.4").value, 4.0)
+
+    def test_solves_quadratic_with_unique_nonnegative_root(self) -> None:
+        self.assertAlmostEqual(evaluate_expression("t**2 - 4 == 0").value, 2.0)
+
+    def test_rejects_ambiguous_multiple_roots(self) -> None:
+        with self.assertRaises(CalculatorError):
+            evaluate_expression("(x - 1) * (x - 2) == 0")
+
     def test_rejects_ambiguous_chained_exponent(self) -> None:
         with self.assertRaises(CalculatorError):
             evaluate_expression("(5.8e10)**3 ** 0.5")

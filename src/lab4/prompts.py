@@ -6,9 +6,10 @@ from .retrieval import RetrievedChunk
 
 FINAL_PROTOCOL = """输出协议：
 - 如果需要计算三位有效数字乘除、开方、指数、对数、三角函数、积分、复杂分数或多步数值运算，不要心算。只输出一行：TOOL_CALC: <python_expression>
-- <python_expression> 只能使用数字、+ - * / **、括号，以及 sqrt/log/ln/log10/exp/sin/cos/tan/asin/acos/atan/sind/cosd/tand/asind/acosd/atand/sinh/cosh/tanh/atanh/radians/degrees/integral/pi/e/e_charge/c/h/hbar/k_B/kB/kB_eV/N_A/R/F/G/g/epsilon0/amu 等常量或函数；也可使用 math. 或 np. 前缀；不要写单位。
+- <python_expression> 只能使用数字、+ - * / **、括号，以及 sqrt/log/ln/log10/exp/sin/cos/tan/asin/acos/atan/sind/cosd/tand/asind/acosd/atand/sinh/cosh/tanh/atanh/radians/degrees/integral/pi/e/e_charge/c/h/hbar/k_B/kB/kB_eV/N_A/R/F/G/g/epsilon0/amu/u/m_e/m_p/m_n 等常量或函数；也可使用 math. 或 np. 前缀；不要写单位。
 - 对标准物理常数，优先使用上面列出的符号常量（如 k_B、kB_eV、e_charge、h、c、N_A、R、F、G、g），不要手写低精度近似值；题目显式给出的数值仍按题目使用；注意 e 是自然常数，电子电荷用 e_charge。
 - 定积分写成 integral(expr, x, lower, upper)，例如 integral(x**2, x, 0, 1)；被积变量必须是单个字母名。
+- 如果需要解一个只含一个未知量的一元方程，可以写成 TOOL_CALC: left_expression == right_expression；程序会返回唯一实根，或在只有一个非负实根时返回该根。
 - Python 的 sin/cos/tan/asin/acos/atan 使用弧度。题目角度若以 degree/度/° 给出，优先使用 sind/cosd/tand/asind/acosd/atand，或显式乘 pi/180。
 - 对整个表达式开方时必须写 sqrt(<whole_expression>)，不要写 a**3**0.5 或 a**3 ** 0.5 这类连续幂。
 - 你绝对不要自己输出 TOOL_RESULT；TOOL_RESULT 只能由程序返回。若你输出 TOOL_CALC，本轮不要同时输出 FINAL_ANSWER。
