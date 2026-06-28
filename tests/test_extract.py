@@ -31,6 +31,9 @@ class ExtractTests(unittest.TestCase):
     def test_normalizes_signed_latex_fraction(self) -> None:
         self.assertEqual(extract_final_answer(r"FINAL_ANSWER: -\frac{11}{3}"), "-3.66666666667")
 
+    def test_normalizes_percent_to_fraction(self) -> None:
+        self.assertEqual(extract_final_answer(r"FINAL_ANSWER: 44.6%"), "0.446")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -33,10 +33,21 @@ def normalize_answer(answer: str) -> str:
         answer = answer[1:-1].strip()
     answer = re.sub(r"\s+", " ", answer)
     answer = answer.rstrip(".。;,，")
+    numeric_percent = _percent_to_decimal(answer)
+    if numeric_percent is not None:
+        return numeric_percent
     numeric_fraction = _fraction_to_decimal(answer)
     if numeric_fraction is not None:
         return numeric_fraction
     return answer.strip()
+
+
+def _percent_to_decimal(answer: str) -> str | None:
+    text = answer.strip().replace(r"\%", "%")
+    match = re.fullmatch(r"([-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?)\s*%", text)
+    if not match:
+        return None
+    return format_number(float(match.group(1)) / 100)
 
 
 def _fraction_to_decimal(answer: str) -> str | None:
