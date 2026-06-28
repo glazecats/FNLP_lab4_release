@@ -102,6 +102,7 @@ def clean_answer(answer: str) -> str:
     value = re.sub(r"^\s*\}+\s*", "", value).strip()
     value = value.strip("*_ ")
     value = re.sub(r"^\$+|\$+$", "", value).strip()
+    value = re.sub(r"^<[^>\s]+>\s*|\s*</[^>\s]+>$", "", value).strip()
     if _has_single_wrapping_pair(value, "(", ")") or _has_single_wrapping_pair(value, "[", "]"):
         value = value[1:-1].strip()
     value = re.sub(

@@ -50,6 +50,9 @@ class ExtractAnswerTest(unittest.TestCase):
         self.assertEqual(extract_answer("**FINAL_ANSWER: 4.357**"), "4.357")
         self.assertEqual(extract_answer("$$\n\\text{FINAL_ANSWER: } 3.2997\n$$"), "3.2997")
 
+    def test_strips_xml_like_answer_tags(self):
+        self.assertEqual(extract_answer("FINAL_ANSWER: <number>9.37e7</number>"), "9.37e7")
+
 
 if __name__ == "__main__":
     unittest.main()

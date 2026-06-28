@@ -45,7 +45,11 @@ def is_bad_verified_answer(answer: str) -> bool:
         "unknown",
         "undetermined",
     )
-    return any(phrase in lowered for phrase in bad_phrases) or any("\u4e00" <= ch <= "\u9fff" for ch in answer)
+    return (
+        any(phrase in lowered for phrase in bad_phrases)
+        or any("\u4e00" <= ch <= "\u9fff" for ch in answer)
+        or not any(ch.isdigit() for ch in answer)
+    )
 
 
 def choose_answer(candidates: list[str]) -> str:
