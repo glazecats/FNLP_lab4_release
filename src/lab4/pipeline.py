@@ -416,7 +416,11 @@ ROUNDED_CONSTANT_REPLACEMENTS = (
 def _postprocess_trace_answer(question: Question, trace: dict[str, Any]) -> str | None:
     answer = _postprocess_answer(question, trace.get("answer"))
     answer = _postprocess_rounded_constant_tools(answer, trace)
-    return _postprocess_answer(question, answer)
+    answer = _postprocess_answer(question, answer)
+    if looks_invalid_answer(answer or ""):
+        answer = _numeric_answer_fallback(trace) or "0"
+        answer = _postprocess_answer(question, answer)
+    return answer
 
 
 def _postprocess_answer(question: Question, answer: str | None) -> str | None:
@@ -495,3 +499,23 @@ def _to_float(answer: str | None) -> float | None:
         return float(answer)
     except ValueError:
         return None
+
+
+def _numeric_answer_fallback(trace: dict[str, Any]) -> str | None:
+    fallback = None
+    for answer in _iter_answer_values(trace):
+        if _to_float(answer) is not None:
+            fallback = str(answer)
+    return fallback
+
+
+def _iter_answer_values(value: Any):
+    if isinstance(value, dict):
+        for key, item in value.items():
+            if key == "answer" and isinstance(item, str):
+                yield item
+            else:
+                yield from _iter_answer_values(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from _iter_answer_values(item)
