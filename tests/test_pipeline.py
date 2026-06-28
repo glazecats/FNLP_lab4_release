@@ -47,6 +47,14 @@ class RepeatingBadToolClient:
         return "TOOL_CALC: import scipy; scipy.optimize.fsolve(x, 1)"
 
 
+class FixedResponseClient:
+    def __init__(self, response: str) -> None:
+        self.response = response
+
+    def chat(self, messages, *, temperature=0.0, max_tokens=4096, enable_thinking=False):
+        return self.response
+
+
 class PipelineTests(unittest.TestCase):
     def test_tool_calc_takes_precedence_over_model_tool_result(self) -> None:
         solver = Solver(
@@ -136,6 +144,52 @@ class PipelineTests(unittest.TestCase):
         }
 
         self.assertEqual(_postprocess_trace_answer(question, trace), "0")
+
+    def test_postprocess_evaluates_calculable_final_expression(self) -> None:
+        question = Question(id=7, field="physics", question="Find the value.")
+        trace = {"answer": "e^(ln(4))"}
+
+        self.assertEqual(_postprocess_trace_answer(question, trace), "4")
+
+    def test_postprocess_keeps_expression_with_unknown_variable(self) -> None:
+        question = Question(id=8, field="physics", question="Find the value.")
+        trace = {"answer": r"\frac{3}{2} k_B T"}
+
+        self.assertEqual(_postprocess_trace_answer(question, trace), r"\frac{3}{2} k_B T")
+
+    def test_verifier_invalid_pass_forces_loop(self) -> None:
+        solver = Solver(
+            client=FixedResponseClient("PASS\nFINAL_ANSWER: 无法确定"),
+            index=None,
+            top_k=0,
+            temperature=0,
+            max_tokens=256,
+            enable_thinking=False,
+        )
+        question = Question(id=9, field="physics", question="Find the value.")
+
+        result = solver._verify(question, "无法确定", "history")
+
+        self.assertEqual(result["decision"], "LOOP")
+        self.assertIsNone(result["answer"])
+        self.assertIn("invalid final answer", result["reason"])
+
+    def test_verifier_invalid_replacement_keeps_valid_candidate(self) -> None:
+        solver = Solver(
+            client=FixedResponseClient("FIX\nFINAL_ANSWER: 无法确定"),
+            index=None,
+            top_k=0,
+            temperature=0,
+            max_tokens=256,
+            enable_thinking=False,
+        )
+        question = Question(id=10, field="physics", question="Find the value.")
+
+        result = solver._verify(question, "42", "history")
+
+        self.assertEqual(result["decision"], "FIX")
+        self.assertEqual(result["answer"], "42")
+        self.assertIn("invalid replacement answer", result["reason"])
 
 
 if __name__ == "__main__":

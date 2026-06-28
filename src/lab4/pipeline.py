@@ -179,6 +179,16 @@ class Solver:
             result["reason"] = _extract_reason(response)
         if decision in {"PASS", "FIX"} and not result.get("answer"):
             result["answer"] = candidate_answer
+        if decision in {"PASS", "FIX"}:
+            invalid_reason = looks_invalid_answer(result.get("answer") or "")
+            if invalid_reason:
+                if candidate_answer and not looks_invalid_answer(candidate_answer):
+                    result["answer"] = candidate_answer
+                    result["reason"] = f"Verifier returned an invalid replacement answer: {invalid_reason}"
+                else:
+                    result["answer"] = None
+                    result["decision"] = "LOOP"
+                    result["reason"] = f"Verifier returned an invalid final answer: {invalid_reason}"
         return result
 
     def _run_role(self, role: str, messages: list[Message]) -> dict[str, Any]:
@@ -437,10 +447,12 @@ SIGNED_TARGET_TERMS = {
 
 def _postprocess_trace_answer(question: Question, trace: dict[str, Any]) -> str | None:
     answer = _postprocess_answer(question, trace.get("answer"))
+    answer = _postprocess_calculable_expression(answer)
     answer = _postprocess_scaled_coefficient(question, answer)
     if looks_invalid_answer(answer or ""):
         answer = _numeric_answer_fallback(trace) or "0"
         answer = _postprocess_answer(question, answer)
+        answer = _postprocess_calculable_expression(answer)
         answer = _postprocess_scaled_coefficient(question, answer)
     return answer
 
@@ -469,6 +481,30 @@ def _postprocess_answer(question: Question, answer: str | None) -> str | None:
     if any(term in target_text for term in POSITIVE_TARGET_TERMS):
         return answer[1:] if answer.startswith("-") else str(abs(value))
     return answer
+
+
+def _postprocess_calculable_expression(answer: str | None) -> str | None:
+    if not answer or _to_float(answer) is not None:
+        return answer
+    expression = _answer_to_calculator_expression(answer)
+    if not expression:
+        return answer
+    try:
+        return evaluate_expression(expression).text
+    except CalculatorError:
+        return answer
+
+
+def _answer_to_calculator_expression(answer: str) -> str | None:
+    expression = answer.strip()
+    expression = expression.strip("$` ")
+    expression = expression.replace("×", "*")
+    expression = expression.replace(r"\times", "*").replace(r"\cdot", "*")
+    expression = re.sub(r"10\s*\^\s*\{\s*([-+]?\d+(?:\.\d+)?)\s*\}", r"10**(\1)", expression)
+    expression = expression.replace("{", "(").replace("}", ")")
+    if not re.search(r"[+\-*/^()]|\b(?:sqrt|log|ln|log10|exp|sin|cos|tan|e|pi|k_B|kB|kB_eV|e_charge|c|h|hbar|N_A|R|F|G|g|epsilon0|amu|u|m_e|m_p|m_n)\b", expression):
+        return None
+    return expression
 
 
 SCALED_COEFFICIENT_RE = re.compile(
