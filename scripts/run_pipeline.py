@@ -283,7 +283,7 @@ def main() -> None:
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--max-tokens", type=int, default=4096)
     parser.add_argument("--top-k", type=int, default=4)
-    parser.add_argument("--prompt-style", choices=["baseline"], default="baseline")
+    parser.add_argument("--prompt-style", choices=["baseline", "concise"], default="baseline")
     parser.add_argument(
         "--normalize-units",
         action=argparse.BooleanOptionalAction,
