@@ -14,12 +14,19 @@ sys.path.insert(0, str(ROOT / "src"))
 from lab4.data import load_questions, write_submission  # noqa: E402
 from lab4.extract import extract_answer  # noqa: E402
 from lab4.llm import ChatClient, LLMConfig  # noqa: E402
+from lab4.prompts import normalize_question_text_for_prompt  # noqa: E402
 from lab4.units import infer_target_unit, normalize_for_unit  # noqa: E402
 
 
-SYSTEM_PROMPT = """你是严格的大学物理/化学数值题仲裁器。你会看到同一题两个强候选。
-请不要按候选投票，必须独立重读题干，确定目标量和目标单位，重新建立公式，检查单位、数量级、符号、百分数、10 的幂、每粒子/每摩尔。
-若两个候选都错，请给出你独立计算的数值。最后一行严格写 FINAL_ANSWER: <number>，只能是一个数值，不写单位。"""
+SYSTEM_PROMPT = """You are a strict physics and chemistry numeric-answer judge.
+You will see one problem and two candidate solutions. Do not vote by length or style.
+First reread the problem, identify the requested quantity and target unit, then solve independently.
+Use the candidates only as hints to find possible mistakes.
+Common mistakes to check: wrong target quantity, sign convention, percent conversion, unit prefix,
+order of magnitude, OCR-lost exponent, per-particle vs per-mole quantity, and rounding too early.
+Retrieved context or a candidate derivation may be irrelevant or misleading; trust the problem statement.
+If both candidates are wrong, give your own best numeric result.
+The last line must be exactly FINAL_ANSWER: <number>, with no unit or explanation after it."""
 
 
 def load_submission(path: str | Path) -> dict[int, str]:
@@ -84,25 +91,27 @@ def valid_numeric(value: str) -> bool:
 
 
 def build_prompt(question, primary_answer: str, secondary_answer: str, primary_response: str, secondary_response: str) -> str:
-    target_unit = infer_target_unit(question.question, question.unit) or "题目指定或无单位"
+    question_text = normalize_question_text_for_prompt(question.question)
+    target_unit = infer_target_unit(question_text, question.unit) or "as specified by the problem"
     return "\n".join(
         [
-            f"题目编号：{question.id}",
-            f"学科：{question.field}",
-            f"子领域：{question.subfield or ''}",
-            f"相关提示：{question.theorem or ''}",
-            f"题目：{question.question}",
-            f"目标答案单位/形式：{target_unit}",
+            f"Problem id: {question.id}",
+            f"Field: {question.field}",
+            f"Subfield: {question.subfield or ''}",
+            f"Topic hint: {question.theorem or ''}",
+            f"Problem: {question_text}",
+            f"Target answer unit/form: {target_unit}",
             "",
-            f"候选A答案：{primary_answer}",
-            "候选A过程摘录：",
+            f"Candidate A answer: {primary_answer}",
+            "Candidate A reasoning excerpt:",
             primary_response[-1800:],
             "",
-            f"候选B答案：{secondary_answer}",
-            "候选B过程摘录：",
+            f"Candidate B answer: {secondary_answer}",
+            "Candidate B reasoning excerpt:",
             secondary_response[-1800:],
             "",
-            "请独立重算。若某候选只是最终格式、单位缩放或符号错，可以修正；不要因为候选过程看起来详细就相信它。最后只输出一个可提交数值。",
+            "Now solve independently. If a candidate only has a final-format, unit-scale, or sign error, correct it.",
+            "Return one submit-ready number on the final line.",
         ]
     )
 
@@ -135,10 +144,13 @@ def main() -> None:
 
     predictions = dict(primary)
     for qid, row in judged.items():
-        answer = str(row.get("answer", ""))
         question = questions_by_id.get(qid)
+        answer = str(row.get("answer", ""))
         if question is not None:
             unit = infer_target_unit(question.question, question.unit)
+            response = str(row.get("response", ""))
+            if response:
+                answer = extract_answer(response, target_unit=unit)
             answer = normalize_for_unit(answer, unit, question.question)
             row["answer"] = answer
         if valid_numeric(answer) and not close_enough(answer, primary.get(qid, ""), rtol=args.rtol):
