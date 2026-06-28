@@ -24,15 +24,15 @@ def maybe_resume_args(path: Path, resume: bool) -> list[str]:
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
-            "Reproduce the current best submission with a three-stage pipeline: "
+            "Run the final three-stage submission pipeline: "
             "concise solver, baseline-thinking solver, then pairwise judge."
         )
     )
     parser.add_argument("--workers", type=int, default=15)
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--max-tokens", type=int, default=4096)
-    parser.add_argument("--output-dir", default=str(ROOT / "outputs" / "repro_best"))
-    parser.add_argument("--final-submission", default=str(ROOT / "outputs" / "repro_best_submission.csv"))
+    parser.add_argument("--output-dir", default=str(ROOT / "outputs" / "final_pipeline"))
+    parser.add_argument("--final-submission", default=str(ROOT / "outputs" / "final_pipeline_submission.csv"))
     parser.add_argument(
         "--resume",
         action="store_true",

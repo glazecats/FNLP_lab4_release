@@ -25,7 +25,7 @@ Use the candidates only as hints to find possible mistakes.
 Common mistakes to check: wrong target quantity, sign convention, percent conversion, unit prefix,
 order of magnitude, OCR-lost exponent, per-particle vs per-mole quantity, and rounding too early.
 Retrieved context or a candidate derivation may be irrelevant or misleading; trust the problem statement.
-If both candidates are wrong, give your own best numeric result.
+If both candidates are wrong, give your own numeric result.
 The last line must be exactly FINAL_ANSWER: <number>, with no unit or explanation after it."""
 
 
