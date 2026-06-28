@@ -38,6 +38,15 @@ class FlakySolver:
         return {"id": question.id, "method": method, "answer": "42"}
 
 
+class RepeatingBadToolClient:
+    def __init__(self) -> None:
+        self.calls = 0
+
+    def chat(self, messages, *, temperature=0.0, max_tokens=4096, enable_thinking=False):
+        self.calls += 1
+        return "TOOL_CALC: import scipy; scipy.optimize.fsolve(x, 1)"
+
+
 class PipelineTests(unittest.TestCase):
     def test_tool_calc_takes_precedence_over_model_tool_result(self) -> None:
         solver = Solver(
@@ -50,6 +59,24 @@ class PipelineTests(unittest.TestCase):
         )
         result = solver._run_role("test", [{"role": "user", "content": "x"}])
         self.assertEqual(result["answer"], "2")
+
+    def test_repeated_bad_tool_expression_stops_role_loop(self) -> None:
+        client = RepeatingBadToolClient()
+        solver = Solver(
+            client=client,
+            index=None,
+            top_k=0,
+            temperature=0,
+            max_tokens=256,
+            enable_thinking=False,
+            max_tool_rounds=5,
+        )
+
+        result = solver._run_role("test", [{"role": "user", "content": "x"}])
+
+        self.assertIsNone(result["answer"])
+        self.assertEqual(client.calls, 2)
+        self.assertIn("repeated invalid expression", result["transcript"])
 
     def test_safe_solve_retries_transient_failures(self) -> None:
         question = Question(id=9, field="physics", question="Find the value.")

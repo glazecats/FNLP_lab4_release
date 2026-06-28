@@ -184,6 +184,7 @@ class Solver:
     def _run_role(self, role: str, messages: list[Message]) -> dict[str, Any]:
         transcript: list[dict[str, str]] = []
         answer = None
+        failed_tool_expressions: set[str] = set()
         for _ in range(self.max_tool_rounds + 1):
             response = self.client.chat(
                 messages,
@@ -200,6 +201,17 @@ class Solver:
                     calculation = evaluate_expression(expression)
                     tool_text = f"TOOL_RESULT: {calculation.expression} = {calculation.text}"
                 except Exception as exc:
+                    if expression in failed_tool_expressions:
+                        transcript.append(
+                            {
+                                "tool": (
+                                    f"TOOL_ERROR: repeated invalid expression {expression!r}; "
+                                    "stopping this role's tool loop."
+                                )
+                            }
+                        )
+                        break
+                    failed_tool_expressions.add(expression)
                     tool_text = f"TOOL_ERROR: {expression} failed with {exc}. Rewrite a valid Python expression."
                 transcript.append({"tool": tool_text})
                 messages.append({"role": "user", "content": tool_text + "\nContinue from the tool result."})
