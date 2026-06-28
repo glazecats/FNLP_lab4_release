@@ -249,7 +249,7 @@ def solve_questions(
     data_path: str | Path,
     submission_out: str | Path,
     trace_out: str | Path,
-    top_k: int = 6,
+    top_k: int = 4,
     workers: int = 1,
     temperature: float = 0.0,
     max_tokens: int = 4096,

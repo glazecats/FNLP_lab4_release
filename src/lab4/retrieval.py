@@ -76,7 +76,7 @@ class TextbookIndex:
         cache.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
         return cls(records, dict(doc_freq))
 
-    def search(self, question: Question, top_k: int = 6) -> list[RetrievedChunk]:
+    def search(self, question: Question, top_k: int = 4) -> list[RetrievedChunk]:
         query_tokens = _query_tokens(question)
         if not query_tokens:
             return []
