@@ -258,7 +258,12 @@ class Solver:
 
     @staticmethod
     def _history(result: dict[str, Any]) -> str:
-        return f"answer: {result.get('answer')}\n{result.get('transcript', '')}"
+        parts = [f"answer: {result.get('answer')}"]
+        if result.get("curator_notes"):
+            parts.append("curator_notes:\n" + str(result.get("curator_notes")))
+        if result.get("transcript"):
+            parts.append(str(result.get("transcript")))
+        return "\n".join(parts)
 
 
 def solve_questions(

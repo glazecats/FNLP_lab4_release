@@ -96,6 +96,19 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(solver.calls, 2)
         self.assertIn("retry_errors", result)
 
+    def test_history_includes_curator_notes_for_downstream_roles(self) -> None:
+        result = {
+            "answer": "2",
+            "curator_notes": "RAG_NOTES:\n- Use only the matching equation.",
+            "transcript": "ASSISTANT:\nFINAL_ANSWER: 2",
+        }
+
+        history = Solver._history(result)
+
+        self.assertIn("curator_notes", history)
+        self.assertIn("matching equation", history)
+        self.assertIn("FINAL_ANSWER: 2", history)
+
     def test_failed_verification_fallback_avoids_rejected_final_first(self) -> None:
         attempt = {
             "direct": {"answer": "1.3038"},
@@ -151,11 +164,11 @@ class PipelineTests(unittest.TestCase):
 
         self.assertEqual(_postprocess_trace_answer(question, trace), "4")
 
-    def test_postprocess_keeps_expression_with_unknown_variable(self) -> None:
+    def test_postprocess_rejects_expression_with_unknown_variable(self) -> None:
         question = Question(id=8, field="physics", question="Find the value.")
         trace = {"answer": r"\frac{3}{2} k_B T"}
 
-        self.assertEqual(_postprocess_trace_answer(question, trace), r"\frac{3}{2} k_B T")
+        self.assertEqual(_postprocess_trace_answer(question, trace), "0")
 
     def test_verifier_invalid_pass_forces_loop(self) -> None:
         solver = Solver(

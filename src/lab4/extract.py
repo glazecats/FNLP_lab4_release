@@ -109,4 +109,44 @@ def looks_invalid_answer(answer: str) -> str | None:
     for pattern in unit_patterns:
         if re.search(pattern, answer, re.IGNORECASE):
             return "appears to contain a unit"
+    if _contains_unresolved_variable(answer):
+        return "contains unresolved variable"
     return None
+
+
+def _contains_unresolved_variable(answer: str) -> bool:
+    text = normalize_answer(answer)
+    try:
+        float(text)
+        return False
+    except ValueError:
+        pass
+    text = re.sub(r"[-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?", " ", text)
+    text = re.sub(r"\\[A-Za-z]+", " ", text)
+    allowed_names = [
+        "kB_eV",
+        "e_charge",
+        "epsilon0",
+        "hbar",
+        "k_B",
+        "N_A",
+        "m_e",
+        "m_p",
+        "m_n",
+        "amu",
+        "kB",
+        "pi",
+        "mu0",
+        "NA",
+        "c",
+        "e",
+        "h",
+        "R",
+        "F",
+        "G",
+        "g",
+        "u",
+    ]
+    for name in allowed_names:
+        text = re.sub(rf"\b{re.escape(name)}\b", " ", text)
+    return bool(re.search(r"[A-Za-z]", text))

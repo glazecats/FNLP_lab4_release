@@ -25,6 +25,13 @@ class ExtractTests(unittest.TestCase):
     def test_invalid_answer_flags_chinese_refusal(self) -> None:
         self.assertIsNotNone(looks_invalid_answer("\u65e0\u6cd5\u8ba1\u7b97"))
 
+    def test_invalid_answer_flags_unresolved_variable(self) -> None:
+        self.assertIsNotNone(looks_invalid_answer(r"\frac{3}{2} k_B T"))
+
+    def test_invalid_answer_allows_scientific_notation_and_latex_math(self) -> None:
+        self.assertIsNone(looks_invalid_answer("6.32e25"))
+        self.assertIsNone(looks_invalid_answer(r"\frac{22}{\sqrt{7}}"))
+
     def test_normalizes_numeric_fraction(self) -> None:
         self.assertEqual(extract_final_answer(r"FINAL_ANSWER: \frac{1}{4}"), "0.25")
 

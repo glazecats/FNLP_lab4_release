@@ -149,11 +149,17 @@ def rag_solver_user_prompt(question: Question, notes: str, feedback: str | None 
     return "\n\n".join(parts)
 
 
-def arbiter_user_prompt(question: Question, direct: dict, rag: dict, feedback: str | None = None) -> str:
+def arbiter_user_prompt(
+    question: Question,
+    direct: dict,
+    rag: dict,
+    feedback: str | None = None,
+) -> str:
     parts = [
         "ARBITER task: compare both solutions and produce the best final answer.",
         question_block(question),
         f"DIRECT_SOLVER answer: {direct.get('answer')}\nDIRECT_SOLVER transcript:\n{direct.get('transcript')}",
+        f"RAG_CURATOR notes:\n{rag.get('curator_notes')}",
         f"RAG_SOLVER answer: {rag.get('answer')}\nRAG_SOLVER transcript:\n{rag.get('transcript')}",
     ]
     if feedback:
