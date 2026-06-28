@@ -103,6 +103,15 @@ def _target_unit_aliases(target_unit: str | None) -> list[str]:
     unit = target_unit.replace("~", " ")
     unit = re.sub(r"\\(?:mathrm|text)\{([^{}]+)\}", r"\1", unit)
     unit = unit.replace("{", " ").replace("}", " ").replace("$", " ")
+    unit = re.sub(r"\s+", " ", unit).strip()
+    compound_aliases: list[str] = []
+    if re.search(r"kg\s*m\s*/\s*s|kg\s*m\s*s\^-?1", unit, flags=re.I):
+        compound_aliases.append(r"kg\s*m\s*/\s*s")
+    if re.search(r"\bm\s*/\s*s\b|\bm\s*s\^-?1\b", unit, flags=re.I):
+        compound_aliases.append(r"m\s*/\s*s")
+    if compound_aliases:
+        return compound_aliases
+
     aliases: list[str] = []
     known_units = [
         "kJ",
@@ -130,6 +139,11 @@ def _target_unit_aliases(target_unit: str | None) -> list[str]:
         if re.search(rf"(?<![A-Za-z]){re.escape(alias)}(?![A-Za-z])", unit, flags=re.I):
             aliases.append(re.escape(alias))
     return aliases
+
+
+def _is_plain_numeric(value: str) -> bool:
+    cleaned = clean_answer(value)
+    return bool(re.fullmatch(r"[-+]?\d+(?:\.\d+)?(?:e[-+]?\d+)?", cleaned, flags=re.I))
 
 
 def _extract_by_target_unit(response: str, target_unit: str | None) -> str | None:
@@ -210,7 +224,16 @@ def extract_answer(response: str, target_unit: str | None = None) -> str:
                 unit_answer = _extract_by_target_unit(response, target_unit)
                 if unit_answer:
                     return unit_answer
+            if target_unit and not _is_plain_numeric(raw_answer):
+                unit_answer = _extract_by_target_unit(response, target_unit)
+                if unit_answer:
+                    return unit_answer
             return clean_answer(raw_answer)
+
+    if target_unit:
+        unit_answer = _extract_by_target_unit(response, target_unit)
+        if unit_answer:
+            return unit_answer
 
     boxed = _boxed_value(response)
     if boxed:

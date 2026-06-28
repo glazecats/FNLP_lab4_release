@@ -62,6 +62,18 @@ class ExtractAnswerTest(unittest.TestCase):
         text = "stress is 1.8e8 Pa, strain is 9.0e-4, elongation is 1.8 mm.\nFINAL_ANSWER: 1.8e8 9.0e-4 1.8"
         self.assertEqual(extract_answer(text, target_unit="mm"), "1.8")
 
+    def test_target_unit_fallback_for_malformed_final_answer(self):
+        text = "The Fermi energy is about 7 eV after conversion.\nFINAL_ANSWER: 1.117e-"
+        self.assertEqual(extract_answer(text, target_unit="eV"), "7")
+
+    def test_compound_unit_does_not_match_bare_meter(self):
+        text = "Use v=1500 m/s and length 2 m.\nFINAL_ANSWER: 1.117e-"
+        self.assertEqual(extract_answer(text, target_unit="m/s"), "1500")
+
+    def test_target_unit_fallback_without_final_marker(self):
+        text = "After checking the standard value, the result should be 7 eV."
+        self.assertEqual(extract_answer(text, target_unit="eV"), "7")
+
 
 if __name__ == "__main__":
     unittest.main()
